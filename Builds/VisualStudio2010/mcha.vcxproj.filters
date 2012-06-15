@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mcha">
+      <UniqueIdentifier>{4E45256B-040C-7942-8B1D-51822307B16D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mcha\Source">
+      <UniqueIdentifier>{3EBEC159-BB3F-28B1-E0E7-C70DA6AE1BE4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mcha\Source\Filter">
+      <UniqueIdentifier>{1F35F704-D88A-42B8-3B40-33ABF8563C3D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Juce Library Code">
+      <UniqueIdentifier>{F7048EA6-F4B2-F31B-E402-E05D678A1111}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Filter\mchaFilter.cpp">
+      <Filter>mcha\Source\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Filter\mchaFIRFilter.cpp">
+      <Filter>mcha\Source\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Filter\mchaIIRClass.cpp">
+      <Filter>mcha\Source\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Filter\mchaIIRFilter.cpp">
+      <Filter>mcha\Source\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\AudioDeviceSettings.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\AudioFileConverter.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\AudioSampleProcessor.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DataReader.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DataWriter.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DiskSamplePlayer.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DiskSampleRecorder.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\mcha.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\mchaRecordPlayer.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MemorySamplePlayer.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MemorySampleRecorder.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\JuceLibraryCode1.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\JuceLibraryCode2.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\JuceLibraryCode3.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\JuceLibraryCode4.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\mchaWavAudioFormat.cpp">
+      <Filter>mcha\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Filter\mchaFilter.h">
+      <Filter>mcha\Source\Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Filter\mchaIIRClass.h">
+      <Filter>mcha\Source\Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\AudioDeviceSettings.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\AudioFileConverter.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\AudioSampleProcessor.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DataReader.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DataWriter.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DiskSamplePlayer.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DiskSampleRecorder.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\mcha.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\mchaRecordPlayer.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MemorySamplePlayer.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MemorySampleRecorder.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\settings.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\stdafx.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\targetver.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\mchaWavAudioFormat.h">
+      <Filter>mcha\Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
