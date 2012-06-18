@@ -1,53 +1,58 @@
-#define DLLIMP extern "C" __declspec(dllimport)
+#if (defined (_WIN32) || defined (_WIN64))
+	#define MCHAIMPORT extern "C" __declspec(MCHAIMPORTort)
+#else
+	#define MCHAIMPORT extern "C"
+#endif
 
-DLLIMP	bool initAudioDevice();
 
-DLLIMP	bool initAudioDeviceFile(const char* xmlSettingsFile);
+MCHAIMPORT	bool initAudioDevice();
 
-DLLIMP	const char* getLastError();
+MCHAIMPORT	bool initAudioDeviceFile(const char* xmlSettingsFile);
 
-DLLIMP	const char* getVersion();
+MCHAIMPORT	const char* getLastError();
 
-DLLIMP	bool addFilter(const char* settingsFileName, bool isInputFilter);
+MCHAIMPORT	const char* getVersion();
 
-DLLIMP	bool deleteFilter(bool isInputFilter);
+MCHAIMPORT	bool addFilter(const char* settingsFileName, bool isInputFilter);
 
-DLLIMP	bool playFiles (const char**	 audioFiles, const int filesNumber, const int *channels, const int channelCount);
+MCHAIMPORT	bool deleteFilter(bool isInputFilter);
 
-DLLIMP	bool playData (const float** audioData, const int chanNumber, const int samplesNumber, const int *channels, const int channelCount);
+MCHAIMPORT	bool playFiles (const char**	 audioFiles, const int filesNumber, const int *channels, const int channelCount);
 
-DLLIMP	bool recordFiles	( const char*	recordDir, const int inputChanNumber, const int *channels, const int channelCount, const float duration );
+MCHAIMPORT	bool playData (const float** audioData, const int chanNumber, const int samplesNumber, const int *channels, const int channelCount);
 
-DLLIMP	bool recordData	( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int channelCount);
+MCHAIMPORT	bool recordFiles	( const char*	recordDir, const int inputChanNumber, const int *channels, const int channelCount, const float duration );
 
-DLLIMP	bool playRecordDataMM( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+MCHAIMPORT	bool recordData	( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int channelCount);
+
+MCHAIMPORT	bool playRecordDataMM( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 							 const float** outputData, const int outputChanNumber, const __int64 outputSamplesNumber, const int* outChannels, const int outChannelsCount );
 
-DLLIMP	bool playRecordDataMD (   const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
+MCHAIMPORT	bool playRecordDataMD (   const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
 								const float** outputData, const int outputChanNumber, const __int64 outputSamplesNumber, const int* outChannels, const int outChannelsCount);
 
-DLLIMP	bool playRecordDataDM ( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+MCHAIMPORT	bool playRecordDataDM ( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 						const char**  audioFiles, const int filesNumber, const int* channels, const int outChannelsCount );
 
-DLLIMP	bool playRecordDataDD ( const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
+MCHAIMPORT	bool playRecordDataDD ( const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
 						const char**  audioFiles, const int filesNumber, const int* channels, const int outChannelsCount );
 
-DLLIMP 	bool setGain (int *channels, int channelsCount, float *gains);
+MCHAIMPORT 	bool setGain (int *channels, int channelsCount, float *gains);
 
-DLLIMP	bool stopAudio();
+MCHAIMPORT	bool stopAudio();
 
-DLLIMP	bool isRunning();
+MCHAIMPORT	bool isRunning();
 
-DLLIMP  double getCurrentPosition(); 
+MCHAIMPORT  double getCurrentPosition(); 
 
-DLLIMP  bool setPosition(double timeInSeconds);
+MCHAIMPORT  bool setPosition(double timeInSeconds);
 
-DLLIMP	bool getDeviceSettings( double& samplingRate, int& bufSize, int& bDepth, int& inChannels, int& outChannels);
+MCHAIMPORT	bool getDeviceSettings( double& samplingRate, int& bufSize, int& bDepth, int& inChannels, int& outChannels);
 
-DLLIMP	void getFilterSettings( bool isInputFilter, int& inputsCount, int& outputsCount );
+MCHAIMPORT	void getFilterSettings( bool isInputFilter, int& inputsCount, int& outputsCount );
 
-DLLIMP  void logMessage(const char* msg);
+MCHAIMPORT  void logMessage(const char* msg);
 
-DLLIMP  void logDouble(const char* infoStr, const double value);
+MCHAIMPORT  void logDouble(const char* infoStr, const double value);
 
-DLLIMP  void logAddress(const char* infoStr, const __int64 addr);
+MCHAIMPORT  void logAddress(const char* infoStr, const __int64 addr);

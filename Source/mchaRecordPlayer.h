@@ -113,6 +113,8 @@ private:
 
 	bool	updateChannels(  const int* deviceChannels, const int deviceChannelsCount, bool isPlaybackDevice );
 
+	void	printSystemInfo();
+
 	ScopedPointer<AudioDeviceManager>	audioDeviceManager;
 	ScopedPointer<AudioDeviceSettings>	audioDeviceSettings;	
 

@@ -1,13 +1,8 @@
 #ifndef MCHA_SETTINGS_H
 #define MCHA_SETTINGS_H
 
-// Comment it out if no log required
-#define MCHA_DEBUG
-
 // Version number
 #define MCHA_VERSION_NUMBER	"0.0.2"
-
-#define DLLEXP extern "C" __declspec(dllexport) 
 
 #define XML_SETTINGS_FILE	"defaultsettings.xml"
 

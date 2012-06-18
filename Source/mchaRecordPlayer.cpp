@@ -72,14 +72,24 @@ MchaRecordPlayer::MchaRecordPlayer():
 
 	audioDeviceManager = new AudioDeviceManager();
 
+	printSystemInfo();
 }
 
 // ============================================================================================
 MchaRecordPlayer::~MchaRecordPlayer()
 {
+	dbgOut( "Deleting mchaRecordPlayer" );
 	if (processIsRunning)
 	{
-		stop();
+		dbgOut( "\tmchaRecordPlayer is running a task: trying to stop..." );
+		if ( stop() )
+		{
+			dbgOut( "\tmchaRecordPlayer: task terminated successfully" );
+		}
+		else
+		{
+			dbgOut( "\tmchaRecordPlayer: failed to terminate task." );
+		}
 	}
 
 	/* release playback and record buffers */
@@ -1457,6 +1467,33 @@ void	MchaRecordPlayer::debugBuffer(fftwf_complex* buf, size_t bufferSize, String
 
 }
 
+//==================================================================================
+void MchaRecordPlayer::printSystemInfo()
+{
+		dbgOut(  SystemStats::getJUCEVersion() );
+
+		String systemInfo;
+		systemInfo << "Operating system:\t" << SystemStats::getOperatingSystemName();
+		if ( SystemStats::isOperatingSystem64Bit() )
+			systemInfo << " 64 bit";
+		else
+			systemInfo << " 32 bit";
+		dbgOut( systemInfo ); systemInfo = String::empty;
+
+		dbgOut( "CPU vendor:\t\t" + SystemStats::getCpuVendor() );
+		dbgOut( "CPU speed:\t\t" + String(SystemStats::getCpuSpeedInMegaherz()) + " MHz" ); 
+
+		systemInfo<< "Number of CPUs:\t\t" << SystemStats::getNumCpus();
+		dbgOut( systemInfo ); systemInfo = String::empty;
+
+		systemInfo<< "Memory size:\t\t" << SystemStats::getMemorySizeInMegabytes() << " Mb";
+		dbgOut( systemInfo ); systemInfo = String::empty;
+
+		systemInfo<< "mcha version:\t" + String(MCHA_VERSION_NUMBER);
+		dbgOut( systemInfo ); 
+
+		dbgOut( String::empty );
+}
 
 //==================================================================================
 // Now we need to tell the compiler what blends of playRecord it needs to generate
