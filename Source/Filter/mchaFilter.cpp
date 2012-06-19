@@ -17,7 +17,7 @@
 
 */
 
-#include "..\mchaRecordPlayer.h"
+#include "../mchaRecordPlayer.h"
 #include "mchaFilter.h"
 
 namespace mcha

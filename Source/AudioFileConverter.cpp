@@ -110,8 +110,8 @@ void AudioFileConverter::run()
 			else if (audioFormatName == "flac")
 				someAudioFormats.add( new FlacAudioFormat() );
 
-			else if (audioFormatName == "ogg")
-				someAudioFormats.add( new OggVorbisAudioFormat() );
+//			else if (audioFormatName == "ogg")
+//				someAudioFormats.add( new OggVorbisAudioFormat() );
 
 			else
 				someAudioFormats.add( new WavAudioFormat() );	

@@ -5,8 +5,22 @@
 #include "settings.h"
 #include "limits.h"
 
+	#ifndef _I64_MAX
+		#ifdef LLONG_MAX
+			#define _I64_MAX LLONG_MAX
+		#elif defined LONG_LONG_MAX
+			#define _I64_MAX LONG_LONG_MAX
+		#else
+			#define _I64_MAX LONGLONG_MAX
+		#endif
+	#endif
+
 namespace mcha
 {
+
+
+
+
 
 class DataReader:	public Thread
 					/*public ChangeBroadcaster,
@@ -37,7 +51,7 @@ public:
 
 private:
 
-	void DataReader::dataDump(String s1, float* ptr, int num);
+	void dataDump(String s1, float* ptr, int num);
 
 	CriticalSection dataCriticalSection;
 

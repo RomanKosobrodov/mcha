@@ -17,9 +17,10 @@
 
 */
 
-#include "..\mchaRecordPlayer.h"
+#include "fftw3.h"
 #include "mchaFilter.h"
-#include "mchaWavAudioFormat.h"
+#include "../mchaRecordPlayer.h"
+#include "../mchaWavAudioFormat.h"
 
 #include <limits>
 

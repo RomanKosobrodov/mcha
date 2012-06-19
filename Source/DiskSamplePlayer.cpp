@@ -83,7 +83,7 @@ DiskSamplePlayer::DiskSamplePlayer( const char**  audioFiles, const int filesNum
 	// Register audio formats (the objects passed to registerFormat will be deleted by the class)
 	audioFormatManager.registerFormat(new AiffAudioFormat(),	 false); 	
 	audioFormatManager.registerFormat(new FlacAudioFormat(),	 false); 	
-	audioFormatManager.registerFormat(new OggVorbisAudioFormat(),false); 	
+//	audioFormatManager.registerFormat(new OggVorbisAudioFormat(),false); 	
 	audioFormatManager.registerFormat(new WavAudioFormat(),		 true);
 
 	// Create InputFileStreams and AudioFormatReaders for each data file

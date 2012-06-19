@@ -20,9 +20,9 @@
 #ifndef MCHA_FILTERBASE
 #define  MCHA_FILTERBASE
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "..\mchaRecordPlayer.h"
 #include "fftw3.h"
+#include "../JuceLibraryCode/JuceHeader.h"
+#include "../mchaRecordPlayer.h"
 #include "mchaIIRClass.h"
 
 

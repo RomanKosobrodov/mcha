@@ -16,7 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#include "stdafx.h"
+#if JUCE_WINDOWS
+   #include "stdafx.h"
+#endif
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "settings.h"
 #include "mchaRecordPlayer.h"

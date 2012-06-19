@@ -25,7 +25,7 @@ public:
 	void saveNext();
 	
 	// The number of bytes saved in the temporary data file
-	int64 DataWriter::getBytesSaved();
+	int64 getBytesSaved();
 	
 	juce_UseDebuggingNewOperator
 

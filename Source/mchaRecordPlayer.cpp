@@ -498,7 +498,7 @@ bool MchaRecordPlayer::setPosition(double timeInSeconds)
 		newPosition = size_t(timeInSeconds*sampleRate);
 		bool res = setPosition(newPosition);
 		if (res)
-			dbgOut( "\tnew position,s:\t" + String(newPosition) );
+			dbgOut( "\tnew position,s:\t" + String( static_cast<uint64>(newPosition) ) );
 		else
 			logError( "\tsetPosition failed." );
 		return res;
@@ -691,7 +691,7 @@ bool MchaRecordPlayer::start()
 			float duration = static_cast <float> (audioSamplePlayer->getDataLength() / device->getCurrentSampleRate());			
 					
 			int		debugChanCount =  audioSamplePlayer->getOutputsNumber();
-			ScopedPointer<int> debugChannels = new int [debugChanCount];
+			ScopedPointer<int> debugChannels ( new int [debugChanCount] );
 			
 			for (int k=0; k<debugChanCount; ++k)
 				debugChannels[k] = k;
@@ -900,7 +900,7 @@ bool MchaRecordPlayer::init()
 	AudioDeviceManager::AudioDeviceSetup	audioDeviceSetup;
 	audioDeviceManager->getAudioDeviceSetup(audioDeviceSetup);
 
-	ScopedPointer<XmlElement> audioDeviceState = audioDeviceManager->createStateXml();
+	ScopedPointer<XmlElement> audioDeviceState ( audioDeviceManager->createStateXml() );
 
 	/* if the settings have not been returned by createStateXml create them using audioDeviceManager */
 	if (audioDeviceState == NULL)
@@ -1424,7 +1424,7 @@ void	MchaRecordPlayer::debugBuffer(float** buf, size_t bufferCount, size_t singl
 		s = String::empty;
 		for (size_t ind =0; ind < singleBufferSize; ind++)
 			s = s+ String::formatted( "%4.3e\t", *(buf[ch] + ind) );
-		dbgOut(  bufferVariableName + "(:," + String(ch+1) +  ") = [" + s + "];" );
+		dbgOut(  bufferVariableName + "(:," + String( static_cast<uint64>(ch+1) ) +  ") = [" + s + "];" );
 	}
 }
 
