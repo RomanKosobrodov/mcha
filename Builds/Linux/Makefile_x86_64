@@ -1,0 +1,183 @@
+# Automatically generated makefile, created by the Jucer
+# Don't edit this file! Your changes will be overwritten when you re-save the Jucer project!
+
+ifndef CONFIG
+  CONFIG=Debug
+endif
+
+ifeq ($(TARGET_ARCH),)
+  TARGET_ARCH := -march=native
+endif
+
+# (this disables dependency generation if multiple architectures are set)
+DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
+
+ifeq ($(CONFIG),Debug)
+  BINDIR := build
+  LIBDIR := build
+  OBJDIR := build/intermediate/Debug
+  OUTDIR := ../../Bin/Linux-x86_64/Debug
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I "/usr/include" -I "/usr/include/freetype2"
+  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0 -std=c++0x 
+  CXXFLAGS += $(CFLAGS) 
+  LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -L"/usr/X11R6/lib/" -L"../../../juce/bin" -lfreetype -lpthread -lrt -lX11 -lGL -lGLU -lXinerama -lasound 
+  LDDEPS :=
+  RESFLAGS :=  -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I "/usr/include" -I "/usr/include/freetype2"
+  TARGET := mcha
+  BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
+endif
+
+ifeq ($(CONFIG),Release)
+  BINDIR := build
+  LIBDIR := build
+  OBJDIR := build/intermediate/Release
+  OUTDIR := ../../Bin/Linux-x86_64/Release
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I "/usr/include" -I "/usr/local/include" -I "/usr/include/freetype2" -I"../../Source/Filter" -I "../../JuceLibraryCode"
+  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -Os -std=c++0x -fPIC
+  CXXFLAGS += $(CFLAGS) 
+  LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -L"/usr/X11R6/lib/" -L"../../../juce/bin" -lfreetype -lpthread -lrt -lX11 -lGL -lGLU -lXinerama -lasound -lfftw3f -lm 
+  LDDEPS :=
+  RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I "/usr/include" -I "/usr/include/freetype2"
+  TARGET := libmcha.so.1
+  BLDCMD = $(CXX) -shared -Wl -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
+endif
+
+OBJECTS := \
+  $(OBJDIR)/mchaWavAudioFormat_e6219939.o \
+  $(OBJDIR)/mchaFilter_3be1f2bf.o \
+  $(OBJDIR)/mchaFIRFilter_fc5ebdca.o \
+  $(OBJDIR)/mchaIIRClass_df801d0d.o \
+  $(OBJDIR)/mchaIIRFilter_c7e7d14d.o \
+  $(OBJDIR)/AudioDeviceSettings_42b510f0.o \
+  $(OBJDIR)/AudioFileConverter_408849d7.o \
+  $(OBJDIR)/AudioSampleProcessor_31720edb.o \
+  $(OBJDIR)/DataReader_af8c9416.o \
+  $(OBJDIR)/DataWriter_89e287c6.o \
+  $(OBJDIR)/DiskSamplePlayer_51aca5f1.o \
+  $(OBJDIR)/DiskSampleRecorder_748bb28e.o \
+  $(OBJDIR)/mcha_f471cdf8.o \
+  $(OBJDIR)/mchaRecordPlayer_5da65f2a.o \
+  $(OBJDIR)/MemorySamplePlayer_72dd6855.o \
+  $(OBJDIR)/MemorySampleRecorder_c956bf2.o \
+  $(OBJDIR)/JuceLibraryCode1_682c927f.o \
+  $(OBJDIR)/JuceLibraryCode2_683aaa00.o \
+  $(OBJDIR)/JuceLibraryCode3_6848c181.o \
+  $(OBJDIR)/JuceLibraryCode4_6856d902.o \
+
+.PHONY: clean
+
+$(OUTDIR)/$(TARGET): $(OBJECTS) $(LDDEPS) $(RESOURCES)
+	@echo Linking mcha
+	-@mkdir -p $(BINDIR)
+	-@mkdir -p $(LIBDIR)
+	-@mkdir -p $(OUTDIR)
+	@$(BLDCMD)
+	-@ln -sf $(OUTDIR)/$(TARGET) $(OUTDIR)/libmcha.so
+
+clean:
+	@echo Cleaning mcha
+	-@rm -f $(OUTDIR)/$(TARGET)
+	-@rm -rf $(OBJDIR)/*
+	-@rm -rf $(OBJDIR)
+
+$(OBJDIR)/mchaWavAudioFormat_e6219939.o: ../../Source/mchaWavAudioFormat.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mchaWavAudioFormat.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/mchaFilter_3be1f2bf.o: ../../Source/Filter/mchaFilter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mchaFilter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/mchaFIRFilter_fc5ebdca.o: ../../Source/Filter/mchaFIRFilter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mchaFIRFilter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/mchaIIRClass_df801d0d.o: ../../Source/Filter/mchaIIRClass.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mchaIIRClass.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/mchaIIRFilter_c7e7d14d.o: ../../Source/Filter/mchaIIRFilter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mchaIIRFilter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AudioDeviceSettings_42b510f0.o: ../../Source/AudioDeviceSettings.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling AudioDeviceSettings.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AudioFileConverter_408849d7.o: ../../Source/AudioFileConverter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling AudioFileConverter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AudioSampleProcessor_31720edb.o: ../../Source/AudioSampleProcessor.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling AudioSampleProcessor.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DataReader_af8c9416.o: ../../Source/DataReader.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DataReader.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DataWriter_89e287c6.o: ../../Source/DataWriter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DataWriter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DiskSamplePlayer_51aca5f1.o: ../../Source/DiskSamplePlayer.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DiskSamplePlayer.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DiskSampleRecorder_748bb28e.o: ../../Source/DiskSampleRecorder.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DiskSampleRecorder.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/mcha_f471cdf8.o: ../../Source/mcha.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mcha.cpp"
+	@$(CXX) $(CXXFLAGS) -fPIC -o "$@" -c "$<"
+
+$(OBJDIR)/mchaRecordPlayer_5da65f2a.o: ../../Source/mchaRecordPlayer.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling mchaRecordPlayer.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/MemorySamplePlayer_72dd6855.o: ../../Source/MemorySamplePlayer.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling MemorySamplePlayer.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/MemorySampleRecorder_c956bf2.o: ../../Source/MemorySampleRecorder.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling MemorySampleRecorder.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/JuceLibraryCode1_682c927f.o: ../../JuceLibraryCode/JuceLibraryCode1.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling JuceLibraryCode1.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/JuceLibraryCode2_683aaa00.o: ../../JuceLibraryCode/JuceLibraryCode2.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling JuceLibraryCode2.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/JuceLibraryCode3_6848c181.o: ../../JuceLibraryCode/JuceLibraryCode3.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling JuceLibraryCode3.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/JuceLibraryCode4_6856d902.o: ../../JuceLibraryCode/JuceLibraryCode4.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling JuceLibraryCode4.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+-include $(OBJECTS:%.o=%.d)
