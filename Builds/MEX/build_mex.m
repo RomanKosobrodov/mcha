@@ -2,7 +2,6 @@ function build_mex(varargin)
 % build64 builds all MEX files in the MEX directory
 clc;
 
-srcFolder = '..\..\Source\MEX\';
 fileList = { 'playRecord.cpp' 
              'init.cpp'
              'getVersion.cpp'
@@ -29,27 +28,49 @@ else
     end
 end
 
-if strcmp(mexext, 'mexw64')
+if strcmp(extStr, 'mexw64')
     platformStr = 'x64';
 else
-    if strcmp(mexext, 'mexw32')
+    if strcmp(extStr, 'mexw32')
         platformStr = 'Win32';
     else
-        error('Unsupported platform');
+        if strcmp(extStr, 'mexa64')
+            platformStr = 'Linux-x86_64';
+        else
+            if strcmp(extStr, 'mexa32')
+                platformStr = 'Linux-i386';
+            else
+                error('Unsupported platform');
+            end
+        end
     end
 end
-    
+
+disp('========================================================')
+disp(['        Compiling ' platformStr ' ' confStr ' version                   '])
+disp('========================================================')      
+
+%% Compile Windows versions
 if (strcmp(platformStr, 'x64')|| strcmp(platformStr, 'Win32'))
-    disp('========================================================')
-    disp(['        Compiling ' platformStr ' ' confStr ' version                   '])
-    disp('========================================================')           
-
+	srcFolder = '..\..\Source\MEX\';
     outPath = ['..\..\Bin\' platformStr '\' confStr '\'];
+    copyfile('..\..\Source\m\*.m', outPath );     
     copyfile(['..\..\Lib\' platformStr '\libfftw3f-3.dll'], outPath );
-    copyfile('..\..\Source\m\*.m', outPath );    
-
     for k=1:length(fileList)
         cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ' ' outPath 'mCha-' platformStr '.lib'];
+        fn = fileList{k};
+        disp([fn(1:(end-3)) extStr]);
+        eval(cmdStr); 
+    end
+end
+
+%% Compile Linux versions
+if (strcmp(platformStr, 'Linux-x86_64')|| strcmp(platformStr, 'Linux-i386'))
+    srcFolder = '../../Source/MEX/';
+    outPath = ['../../Bin/' platformStr '/' confStr '/'];
+    copyfile('../../Source/m/*.m', outPath );       
+    for k=1:length(fileList)
+        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ' -L' outPath ' -lmcha'];
         fn = fileList{k};
         disp([fn(1:(end-3)) extStr]);
         eval(cmdStr); 
