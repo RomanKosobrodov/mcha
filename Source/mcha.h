@@ -2,6 +2,7 @@
 	#define MCHAIMPORT extern "C" __declspec(dllimport)
 #else
 	#define MCHAIMPORT extern "C"
+	#define __int64	long long
 #endif
 
 

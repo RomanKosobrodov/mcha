@@ -229,15 +229,17 @@ MCHAEXPORT void logAddress(const char* infoStr, const int64 addr)
 
 
 /* ------------------------------------------------------------------------------ */
-void onMchaLoad()
+void onMchaLoad(void)
 {
+	DBG("loading mcha library ..");
 	initialiseJuce_GUI();
-	MchaRecordPlayer::getInstance();
+	DBG("done");
 }
 
 /* ------------------------------------------------------------------------------ */
-void onMchaUnload()
+void onMchaUnload(void)
 {
+	DBG("unloading mcha library ..");	
 	MchaRecordPlayer* mchaRecordPlayer = MchaRecordPlayer::getInstanceWithoutCreating();
 	if ( mchaRecordPlayer != nullptr )
 	{	
@@ -250,8 +252,8 @@ void onMchaUnload()
 		conv->waitForThreadToExit(-1); // wait forever
 		conv->deleteInstance();
 	}
-
 	shutdownJuce_GUI();
+	DBG("done");
 }
 
 /* ------------------------------------------------------------------------------ */

@@ -55,9 +55,11 @@ MchaRecordPlayer::MchaRecordPlayer():
 										memModeString(L"safe")
 {
 	/* Generate full path to default XML settings file */
-	curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
-
-	fileLogger = FileLogger::createDefaultAppLogger( "mCha", "mcha.log.txt", String::empty, 0 );	
+	curDirStr = File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + File::separatorString+ L"mcha" + File::separatorString;
+	
+	fileLogger = FileLogger::createDefaultAppLogger( "mcha", "mcha.log.txt", String::empty, 0 );	
+	
+	printSystemInfo();
 	
 	audioDeviceSettings = new AudioDeviceSettings();
 
@@ -72,7 +74,7 @@ MchaRecordPlayer::MchaRecordPlayer():
 
 	audioDeviceManager = new AudioDeviceManager();
 
-	printSystemInfo();
+
 }
 
 // ============================================================================================
@@ -1470,7 +1472,6 @@ void	MchaRecordPlayer::debugBuffer(fftwf_complex* buf, size_t bufferSize, String
 //==================================================================================
 void MchaRecordPlayer::printSystemInfo()
 {
-		dbgOut(  SystemStats::getJUCEVersion() );
 
 		String systemInfo;
 		systemInfo << "Operating system:\t" << SystemStats::getOperatingSystemName();
@@ -1492,6 +1493,7 @@ void MchaRecordPlayer::printSystemInfo()
 		systemInfo<< "mcha version:\t" + String(MCHA_VERSION_NUMBER);
 		dbgOut( systemInfo ); 
 
+		dbgOut( "JUCE version:\t" + SystemStats::getJUCEVersion() );
 		dbgOut( String::empty );
 }
 
