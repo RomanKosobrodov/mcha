@@ -39,8 +39,6 @@ disp("m_init.oct")
 mkoctfile -L../../Bin/Win32/Debug -lmcha-Win32 -o ../../Bin/Octave/Win32/m_init.oct  ../../Source/octave/init.cc 
 
 copyfile( "../../Source/octave/m_wait.m",  "../../Bin/Octave/Win32/m_wait.m", "f");
-
-%delete( "../../Source/octave/*.o" );
 copyfile( "../../Bin/Win32/Debug/mcha-Win32.dll",  "../../Bin/Octave/Win32/mcha-Win32.dll", "f");
 
 endfunction

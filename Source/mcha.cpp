@@ -25,82 +25,83 @@
 #include "mchaRecordPlayer.h"
 #include "AudioFileConverter.h"
 
-#if JUCE_WINDOWS
-	#define MCHAEXPORT extern "C" __declspec(dllexport) 
-#else
-	#define MCHAEXPORT extern "C" 
-#endif
-
 using namespace mcha;
 
-// -----------------------------------------------------------------
+#if JUCE_WINDOWS
+	extern "C" __declspec(dllexport) 
+#else
+	extern "C" 
+#endif
 
-MCHAEXPORT bool initAudioDevice()
+{ // beginning of extern "C" section
+
+bool initAudioDevice()
 {
 	return MchaRecordPlayer::getInstance()->init();
 }
 
-MCHAEXPORT bool initAudioDeviceFile(const char* xmlSettingsFile)
+bool initAudioDeviceFile(const char* xmlSettingsFile)
 {
 	return MchaRecordPlayer::getInstance()->init(xmlSettingsFile);
 }
 
-MCHAEXPORT	bool setDebugMode(const char* dmStr)
+bool setDebugMode(const char* dmStr)
 {
 	return MchaRecordPlayer::getInstance()->setDebugMode(dmStr);
 }
 
-MCHAEXPORT	bool setMemoryMode(const char* mMode)
+bool setMemoryMode(const char* mMode)
 {
 	return MchaRecordPlayer::getInstance()->setMemoryMode(mMode);
 }
 
-MCHAEXPORT const char* getLastError()
+const char* getLastError()
 {
 	return MchaRecordPlayer::getInstance()->getLastError();
 }
 
-MCHAEXPORT const char* getVersion()
+const char* getVersion()
 {
+	DBG( String::toHexString( (int64) MchaRecordPlayer::getInstance() ) );	
 	return MCHA_VERSION_NUMBER;
 }
 
-MCHAEXPORT bool addFilter(const char* settingsFileName, bool isRecordFilter)
+bool addFilter(const char* settingsFileName, bool isRecordFilter)
 {
 	return MchaRecordPlayer::getInstance()->addFilter(settingsFileName, isRecordFilter);
 }
 
-MCHAEXPORT bool playFiles (const char**	 audioFiles, const int filesNumber, const int *channels, const int channelCount)
+bool playFiles (const char**	 audioFiles, const int filesNumber, const int *channels, const int channelCount)
 {
 	return MchaRecordPlayer::getInstance()->playRecord((const char **) NULL, 0, 0.0f, NULL, 0,  audioFiles, filesNumber, 0, channels, channelCount);
 }
 
 
-MCHAEXPORT bool playData_s (const float** audioData, const int chanNumber, const size_t samplesNumber, const int *channels, const int channelCount)
+bool playData_s (const float** audioData, const int chanNumber, const size_t samplesNumber, const int *channels, const int channelCount)
 {
 	return MchaRecordPlayer::getInstance()->playRecord((const char **) NULL, 0, 0.0f, NULL, 0, audioData, chanNumber, samplesNumber, channels, channelCount);
 }
 
 
-MCHAEXPORT bool playData_d (const double** audioData, const int chanNumber, const size_t samplesNumber, const int *channels, const int channelCount)
+bool playData_d (const double** audioData, const int chanNumber, const size_t samplesNumber, const int *channels, const int channelCount)
 {
 	return MchaRecordPlayer::getInstance()->playRecord((const char **) NULL, 0, 0.0f, NULL, 0, audioData, chanNumber, samplesNumber, channels, channelCount);
 }
 
 
-MCHAEXPORT bool recordFiles	( const char*	recordDir, const int inputChanNumber, const float duration, const int *channels, const int channelCount )
+bool recordFiles	( const char*	recordDir, const int inputChanNumber, const float duration, const int *channels, const int channelCount )
 {
 	return MchaRecordPlayer::getInstance()->playRecord(&recordDir, inputChanNumber, duration, channels, channelCount,(const float**) NULL, 0, 0, NULL, 0);
 }
 
 
-MCHAEXPORT bool recordData	( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int channelCount)
+bool recordData	( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int channelCount)
 {
 	return MchaRecordPlayer::getInstance()->playRecord(inputData,	inputChanNumber,	(const float) inputSamplesNumber,	 inChannels, channelCount, (const float**)NULL, 0, 0, NULL, 0);
 }
 
 /* memory -> memory */
-MCHAEXPORT	bool playRecordDataMM_s( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+bool playRecordDataMM_s( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 							 const float** outputData, const int outputChanNumber, const size_t outputSamplesNumber, const int* outChannels, const int outChannelsCount )
 {
 	return MchaRecordPlayer::getInstance()->playRecord(	inputData,	inputChanNumber,	(const float) inputSamplesNumber,	 inChannels, inChannelsCount,
@@ -109,7 +110,7 @@ MCHAEXPORT	bool playRecordDataMM_s( float** inputData, const int inputChanNumber
 }
 
 /* memory double -> memory  */
-MCHAEXPORT	bool playRecordDataMM_d( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+bool playRecordDataMM_d( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 							 const double** outputData, const int outputChanNumber, const size_t outputSamplesNumber, const int* outChannels, const int outChannelsCount )
 {
 	return MchaRecordPlayer::getInstance()->playRecord(	inputData,	inputChanNumber,	(const float) inputSamplesNumber,	 inChannels, inChannelsCount,
@@ -117,7 +118,7 @@ MCHAEXPORT	bool playRecordDataMM_d( float** inputData, const int inputChanNumber
 
 }
 /* memory -> disk	*/
-MCHAEXPORT	bool playRecordDataMD_s (   const char* recordDir, const int inputChanNumber, const float duration, const int* inChannels, const int inChannelsCount, 
+bool playRecordDataMD_s (   const char* recordDir, const int inputChanNumber, const float duration, const int* inChannels, const int inChannelsCount, 
 								const float** outputData, const int outputChanNumber, const size_t outputSamplesNumber, const int* outChannels, const int outChannelsCount)
 {
 	return 	MchaRecordPlayer::getInstance()->playRecord(  &recordDir, inputChanNumber, duration, inChannels, inChannelsCount, 
@@ -125,7 +126,7 @@ MCHAEXPORT	bool playRecordDataMD_s (   const char* recordDir, const int inputCha
 }
 
 /* memory double -> disk	*/
-MCHAEXPORT	bool playRecordDataMD_d (   const char* recordDir, const int inputChanNumber, const float duration, const int* inChannels, const int inChannelsCount, 
+bool playRecordDataMD_d (   const char* recordDir, const int inputChanNumber, const float duration, const int* inChannels, const int inChannelsCount, 
 								const double** outputData, const int outputChanNumber, const size_t outputSamplesNumber, const int* outChannels, const int outChannelsCount)
 {
 	return 	MchaRecordPlayer::getInstance()->playRecord(  &recordDir, inputChanNumber, duration, inChannels, inChannelsCount, 
@@ -133,7 +134,7 @@ MCHAEXPORT	bool playRecordDataMD_d (   const char* recordDir, const int inputCha
 }
 
 /* disk -> memory */
-MCHAEXPORT	bool playRecordDataDM ( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+bool playRecordDataDM ( float** inputData, const int inputChanNumber, const size_t inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 						const char**  audioFiles, const int filesNumber, const int* channels, const int outChannelsCount )
 {
 	return 	MchaRecordPlayer::getInstance()->playRecord (	inputData, inputChanNumber, (const float) inputSamplesNumber, inChannels, inChannelsCount,
@@ -141,7 +142,7 @@ MCHAEXPORT	bool playRecordDataDM ( float** inputData, const int inputChanNumber,
 }
 
 /* disk -> disk */
-MCHAEXPORT	bool playRecordDataDD ( const char* recordDir, const int inputChanNumber, const float duration, const int* inChannels, const int inChannelsCount, 
+bool playRecordDataDD ( const char* recordDir, const int inputChanNumber, const float duration, const int* inChannels, const int inChannelsCount, 
 						const char**  audioFiles, const int filesNumber, const int* channels, const int outChannelsCount )
 {
 	return	MchaRecordPlayer::getInstance()->playRecord ( &recordDir, inputChanNumber, duration, inChannels, inChannelsCount, 
@@ -149,83 +150,86 @@ MCHAEXPORT	bool playRecordDataDD ( const char* recordDir, const int inputChanNum
 }
 
 
-MCHAEXPORT	int		getRecordedChannelsNum() 
+int getRecordedChannelsNum() 
 {	
 	return 	MchaRecordPlayer::getInstance()->getRecordedChannelsNum(); 
 };
 
 
-MCHAEXPORT size_t	getRecordedSamplesNum()  
+size_t	getRecordedSamplesNum()  
 {	
 	return MchaRecordPlayer::getInstance()->getRecordedSamplesNum(); 
 };
 
 
-MCHAEXPORT bool	getData_s(float**	dat,  const int* channels = NULL, const int channelsNumber = 0, size_t startSample = 0, size_t endSample = 0) 
+bool	getData_s(float**	dat,  const int* channels = NULL, const int channelsNumber = 0, size_t startSample = 0, size_t endSample = 0) 
 {
 	return	MchaRecordPlayer::getInstance()->getData(dat, channels, channelsNumber, startSample, endSample);
 }
 
-MCHAEXPORT bool	getData_d(double**	dat,  const int* channels = NULL, const int channelsNumber = 0, size_t startSample = 0, size_t endSample = 0) 
+bool	getData_d(double**	dat,  const int* channels = NULL, const int channelsNumber = 0, size_t startSample = 0, size_t endSample = 0) 
 {
 	return	MchaRecordPlayer::getInstance()->getData(dat, channels, channelsNumber, startSample, endSample);
 }
 
 
-MCHAEXPORT 	bool setGain (int *channels, int channelsCount, float *gains)
+	bool setGain (int *channels, int channelsCount, float *gains)
 {
 	return MchaRecordPlayer::getInstance()->setGain (channels, channelsCount, gains);
 }
 
-MCHAEXPORT bool stopAudio()
+bool stopAudio()
 {
 	return MchaRecordPlayer::getInstance()->stop();
 }
 
-MCHAEXPORT bool isRunning()
+bool isRunning()
 {
 	return MchaRecordPlayer::getInstance()->isRunning();
 }
 
-MCHAEXPORT double getCurrentPosition()
+double getCurrentPosition()
 { 
 	return MchaRecordPlayer::getInstance()->getCurrentPosition();
 }
 
-MCHAEXPORT bool setPosition(double timeInSeconds)
+bool setPosition(double timeInSeconds)
 { 
 	return MchaRecordPlayer::getInstance()->setPosition(timeInSeconds);
 }
 
-MCHAEXPORT bool getDeviceSettings(double& samplingRate, int& bufSize, int& bDepth, int& inChannels, int& outChannels)
+bool getDeviceSettings(double& samplingRate, int& bufSize, int& bDepth, int& inChannels, int& outChannels)
 {
 	return MchaRecordPlayer::getInstance()->getDeviceSettings().getSettings( samplingRate, bufSize, bDepth, inChannels, outChannels );
 }
 
-MCHAEXPORT void getFilterSettings(bool isInputFilter, int& inputsCount, int& outputsCount)
+void getFilterSettings(bool isInputFilter, int& inputsCount, int& outputsCount)
 {
 	MchaRecordPlayer::getInstance()->getFilterSettings(isInputFilter, inputsCount, outputsCount);
 }
 
-MCHAEXPORT void logMessage(const char* msg)
+void logMessage(const char* msg)
 {
 	MchaRecordPlayer::getInstance()->dbgOut(String(msg));
 }
 
-MCHAEXPORT void	logError(const char* msg)
+void	logError(const char* msg)
 {
 	MchaRecordPlayer::getInstance()->logError(String(msg));
 }
 
-MCHAEXPORT void logDouble(const char* infoStr, const double value)
+void logDouble(const char* infoStr, const double value)
 {
 	MchaRecordPlayer::getInstance()->dbgOut(String(infoStr) + String(value));
 }
 
-MCHAEXPORT void logAddress(const char* infoStr, const int64 addr)
+void logAddress(const char* infoStr, const int64 addr)
 {
 	MchaRecordPlayer::getInstance()->dbgOut(String(infoStr) + String::toHexString(addr));
 }
+
+
+} // end of extern "C" section
 
 
 /* ------------------------------------------------------------------------------ */
