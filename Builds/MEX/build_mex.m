@@ -53,7 +53,7 @@ disp('========================================================')
 %% Compile Windows versions
 if (strcmp(platformStr, 'x64')|| strcmp(platformStr, 'Win32'))
 	srcFolder = '..\..\Source\MEX\';
-    outPath = ['..\..\Bin\' platformStr '\' confStr '\'];
+    outPath = ['..\..\Bin\MCHA-' confStr '-' platformStr '\'];
     copyfile('..\..\Source\m\*.m', outPath );     
     copyfile(['..\..\Lib\' platformStr '\libfftw3f-3.dll'], outPath );
     for k=1:length(fileList)
@@ -67,7 +67,7 @@ end
 %% Compile Linux versions
 if (strcmp(platformStr, 'Linux-x86_64')|| strcmp(platformStr, 'Linux-i386'))
     srcFolder = '../../Source/MEX/';
-    outPath = ['../../Bin/' platformStr '/' confStr '/'];
+    outPath = ['..\..\Bin\MCHA-' confStr '-' platformStr '\'];
     copyfile('../../Source/m/*.m', outPath );       
     for k=1:length(fileList)
         cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ' -L' outPath ' -lmcha'];
@@ -76,3 +76,5 @@ if (strcmp(platformStr, 'Linux-x86_64')|| strcmp(platformStr, 'Linux-i386'))
         eval(cmdStr); 
     end
 end
+
+exit;

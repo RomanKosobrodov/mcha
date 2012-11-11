@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="v4Jv0K" name="mcha" projectType="guiapp" version="0.1.1"
+              bundleIdentifier="com.kosobrodov.mcha" jucerVersion="3.0.0" companyName="OpenBioelectronics">
+  <MAINGROUP id="KP0Hex" name="mcha">
+    <GROUP id="{BECFD76D-E650-EE35-9CD0-5018F95E2EA9}" name="Source">
+      <GROUP id="{10659668-7ECF-A6DF-C8BA-A7C96455B6EB}" name="mchaFilter">
+        <FILE id="D42vU4" name="mchaFilter.cpp" compile="1" resource="0" file="Source/Filter/mchaFilter.cpp"/>
+        <FILE id="KqMmTD" name="mchaFilter.h" compile="0" resource="0" file="Source/Filter/mchaFilter.h"/>
+        <FILE id="A6XFVL" name="mchaFIRFilter.cpp" compile="1" resource="0"
+              file="Source/Filter/mchaFIRFilter.cpp"/>
+        <FILE id="GVDZ6w" name="mchaIIRClass.cpp" compile="1" resource="0"
+              file="Source/Filter/mchaIIRClass.cpp"/>
+        <FILE id="yeFgqh" name="mchaIIRClass.h" compile="0" resource="0" file="Source/Filter/mchaIIRClass.h"/>
+        <FILE id="wMKCCF" name="mchaIIRFilter.cpp" compile="1" resource="0"
+              file="Source/Filter/mchaIIRFilter.cpp"/>
+      </GROUP>
+      <FILE id="awRvVo" name="AudioDeviceSettings.cpp" compile="1" resource="0"
+            file="Source/AudioDeviceSettings.cpp"/>
+      <FILE id="z7orHD" name="AudioDeviceSettings.h" compile="0" resource="0"
+            file="Source/AudioDeviceSettings.h"/>
+      <FILE id="BnVsKc" name="AudioFileConverter.cpp" compile="1" resource="0"
+            file="Source/AudioFileConverter.cpp"/>
+      <FILE id="DjfYII" name="AudioFileConverter.h" compile="0" resource="0"
+            file="Source/AudioFileConverter.h"/>
+      <FILE id="RBnuy9" name="AudioSampleProcessor.cpp" compile="1" resource="0"
+            file="Source/AudioSampleProcessor.cpp"/>
+      <FILE id="wxOgnP" name="AudioSampleProcessor.h" compile="0" resource="0"
+            file="Source/AudioSampleProcessor.h"/>
+      <FILE id="lFrxJq" name="DataReader.cpp" compile="1" resource="0" file="Source/DataReader.cpp"/>
+      <FILE id="SWfg8H" name="DataReader.h" compile="0" resource="0" file="Source/DataReader.h"/>
+      <FILE id="H5it84" name="DataWriter.cpp" compile="1" resource="0" file="Source/DataWriter.cpp"/>
+      <FILE id="cjIATE" name="DataWriter.h" compile="0" resource="0" file="Source/DataWriter.h"/>
+      <FILE id="U63Att" name="DiskSamplePlayer.cpp" compile="1" resource="0"
+            file="Source/DiskSamplePlayer.cpp"/>
+      <FILE id="YFXKXd" name="DiskSamplePlayer.h" compile="0" resource="0"
+            file="Source/DiskSamplePlayer.h"/>
+      <FILE id="PakfF1" name="DiskSampleRecorder.cpp" compile="1" resource="0"
+            file="Source/DiskSampleRecorder.cpp"/>
+      <FILE id="Grxmmj" name="DiskSampleRecorder.h" compile="0" resource="0"
+            file="Source/DiskSampleRecorder.h"/>
+      <FILE id="FvKGUN" name="Main.cpp" compile="0" resource="0" file="Source/Main.cpp"/>
+      <FILE id="LbOBH8" name="mcha.cpp" compile="1" resource="0" file="Source/mcha.cpp"/>
+      <FILE id="fsUSVn" name="mcha.h" compile="0" resource="0" file="Source/mcha.h"/>
+      <FILE id="qop4E6" name="mchaRecordPlayer.cpp" compile="1" resource="0"
+            file="Source/mchaRecordPlayer.cpp"/>
+      <FILE id="D3RJfX" name="mchaRecordPlayer.h" compile="0" resource="0"
+            file="Source/mchaRecordPlayer.h"/>
+      <FILE id="KOtfdO" name="mchaWavAudioFormat.cpp" compile="1" resource="0"
+            file="Source/mchaWavAudioFormat.cpp"/>
+      <FILE id="Om9VUt" name="mchaWavAudioFormat.h" compile="0" resource="0"
+            file="Source/mchaWavAudioFormat.h"/>
+      <FILE id="EcZC80" name="MemorySamplePlayer.cpp" compile="1" resource="0"
+            file="Source/MemorySamplePlayer.cpp"/>
+      <FILE id="y9KBXS" name="MemorySamplePlayer.h" compile="0" resource="0"
+            file="Source/MemorySamplePlayer.h"/>
+      <FILE id="qNfSCe" name="MemorySampleRecorder.cpp" compile="1" resource="0"
+            file="Source/MemorySampleRecorder.cpp"/>
+      <FILE id="mPe2lo" name="MemorySampleRecorder.h" compile="0" resource="0"
+            file="Source/MemorySampleRecorder.h"/>
+      <FILE id="rDeqm6" name="settings.h" compile="0" resource="0" file="Source/settings.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_audio" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <EXPORTFORMATS>
+    <VS2010 targetFolder="Builds/VisualStudio2010" libraryType="1" juceFolder="..\juce\modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="MCHA-Debug-Win32" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="32-bit" isDebug="1" optimisation="1" targetName="$(ProjectName)-$(Platform)"
+                       headerPath="../../../fftw-3.3&#10;../../../ASIOSDK2/common&#10;../../Source&#10;../../Source/Filter"
+                       libraryPath="..\..\Lib\$(Platform)" useRuntimeLibDLL="0" binaryPath="Bin\$(Platform)\$(Configuration)\"/>
+        <CONFIGURATION name="MCHA-Release-Win32" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="32-bit" isDebug="0" optimisation="3" targetName="$(ProjectName)-$(Platform)"
+                       headerPath="../../../fftw-3.3&#10;../../../ASIOSDK2/common&#10;../../Source&#10;../../Source/Filter"
+                       libraryPath="..\..\Lib\$(Platform)" useRuntimeLibDLL="0" binaryPath=".\..\..\Bin\$(Platform)\$(Configuration)\"/>
+        <CONFIGURATION name="MCHA-Debug-x64" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="x64" isDebug="1" optimisation="1" targetName="$(ProjectName)-$(Platform)"
+                       headerPath="../../../fftw-3.3&#10;../../../ASIOSDK2/common&#10;../../Source&#10;../../Source/Filter"
+                       libraryPath="..\..\Lib\$(Platform)" useRuntimeLibDLL="0" binaryPath=".\..\..\Bin\$(Platform)\$(Configuration)\"/>
+        <CONFIGURATION name="MCHA-Release-x64" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="x64" isDebug="0" optimisation="3" targetName="$(ProjectName)-$(Platform)"
+                       headerPath="../../../fftw-3.3&#10;../../../ASIOSDK2/common&#10;../../Source&#10;../../Source/Filter"
+                       libraryPath="..\..\Lib\$(Platform)" useRuntimeLibDLL="0" binaryPath=".\..\..\Bin\$(Platform)\$(Configuration)\"/>
+      </CONFIGURATIONS>
+    </VS2010>
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="..\juce\modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="mcha"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="mcha"/>
+      </CONFIGURATIONS>
+    </LINUX_MAKE>
+    <XCODE_MAC targetFolder="Builds/MacOSX" juceFolder="..\juce\modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="mcha"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="0" optimisation="2" targetName="mcha"/>
+      </CONFIGURATIONS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <JUCEOPTIONS JUCE_ASIO="enabled" JUCE_WASAPI="enabled" JUCE_DIRECTSOUND="enabled"
+               JUCE_ALSA="enabled" JUCE_JACK="enabled" JUCE_USE_ANDROID_OPENSLES="enabled"
+               JUCE_USE_FLAC="enabled" JUCE_USE_OGGVORBIS="enabled" JUCE_USE_MP3AUDIOFORMAT="disabled"
+               JUCE_USE_WINDOWS_MEDIA_FORMAT="enabled" JUCE_CHECK_MEMORY_LEAKS="enabled"
+               JUCE_WEB_BROWSER="disabled" JUCE_PLUGINHOST_VST="disabled"/>
+</JUCERPROJECT>

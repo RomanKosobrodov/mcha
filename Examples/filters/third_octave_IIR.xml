@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<IIRFILTERSETTINGS filterName="1/3-octave IIR filter bank" filterType ="IIR" cascades = "1" inputs="1" outputs="30" oneByOne="0"
+                   fileName="third_octave.csv"/>

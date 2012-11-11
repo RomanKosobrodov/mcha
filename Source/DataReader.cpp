@@ -42,13 +42,13 @@ DataReader::DataReader( OwnedArray<AudioFormatReader>	&formatReaders,
 	for ( int ch = 0; ch < numberOfFiles; ch++ )	
 	{
 		channelBuffer.add( new AudioSampleBuffer(1, numberOfSamples * bufferLength) );
-		channelBuffer[ch]->readFromAudioReader(		audioFormatReaders[ch],			//  AudioFormatReader *   	 reader
-													0,								//	const int  	startSample,
-													numberOfSamples * bufferLength,	//	const int  	numSamples,
-													readOffset,						//	const int  	readerStartSample,
-													true,							//	const bool  useReaderLeftChan,
-													false							//	const bool  useReaderRightChan
-												);
+		audioFormatReaders[ch]->read(	channelBuffer[ch],
+										0,								//	const int  	startSample,
+										numberOfSamples * bufferLength,	//	const int  	numSamples,
+										readOffset,						//	const int  	readerStartSample,
+										true,							//	const bool  useReaderLeftChan,
+										false							//	const bool  useReaderRightChan
+									); 
 	}
 	readOffset += numberOfSamples * bufferLength;	
 	
@@ -104,13 +104,14 @@ bool DataReader::jumpToPosition(int64 newPosition)
 		readOffset = (int) newPosition; 
 		for ( int ch = 0; ch < numberOfFiles; ch++ )	
 		{
-			channelBuffer[ch]->readFromAudioReader(		audioFormatReaders[ch],			//  AudioFormatReader *   	 reader
-														0,								//	const int  	startSample,
-														numberOfSamples * bufferLength,	//	const int  	numSamples (If this is greater than the number of samples that the file or stream contains. the result will be padded with zeros)
-														readOffset,						//	const int  	readerStartSample,
-														true,							//	const bool  useReaderLeftChan,
-														false							//	const bool  useReaderRightChan
-													);
+			audioFormatReaders[ch]->read(  channelBuffer[ch],			//  AudioFormatReader *   	 reader
+										    0,								//	const int  	startSample,
+											numberOfSamples * bufferLength,	//	const int  	numSamples (If this is greater than the number of samples that the file or stream contains. the result will be padded with zeros)
+											readOffset,						//	const int  	readerStartSample,
+											true,							//	const bool  useReaderLeftChan,
+											false							//	const bool  useReaderRightChan
+										 );
+
 		}
 		readOffset += numberOfSamples * bufferLength;
 		MchaRecordPlayer::getInstance()->dbgOut( "DataReader::jumpToPosition");
@@ -173,13 +174,13 @@ void DataReader::run()
 			  // Load all available blocks
 			  for ( int ch = 0; ch < numberOfFiles; ch++ )
 			  {
-				channelBuffer[ch]->readFromAudioReader(		audioFormatReaders[ch],			//  AudioFormatReader *   	 reader
-															firstBlock*numberOfSamples,		//	const int  	startSample,
-															availableBlocks*numberOfSamples,//	const int  	numSamples,
-															readOffset,						//	const int  	readerStartSample,
-															true,							//	const bool  useReaderLeftChan,
-															false							//	const bool  useReaderRightChan
-														);
+				audioFormatReaders[ch]->read (	channelBuffer[ch]	,			//  AudioFormatReader *   	 reader
+												firstBlock*numberOfSamples,		//	const int  	startSample,
+												availableBlocks*numberOfSamples,//	const int  	numSamples,
+												readOffset,						//	const int  	readerStartSample,
+												true,							//	const bool  useReaderLeftChan,
+												false							//	const bool  useReaderRightChan
+											 );
 			  }
 				
 			  readOffset += availableBlocks*numberOfSamples;

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<IIRFILTERSETTINGS filterName="sample IIR filter" filterType ="IIR" cascades = "5" inputs="2" outputs="2" oneByOne="1"
+                   fileName="iir_filter.csv"/>

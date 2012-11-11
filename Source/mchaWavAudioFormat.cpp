@@ -734,13 +734,13 @@ MchaWavAudioFormat::~MchaWavAudioFormat()
 {
 }
 
-const Array <int> MchaWavAudioFormat::getPossibleSampleRates()
+Array <int> MchaWavAudioFormat::getPossibleSampleRates()
 {
     const int rates[] = { 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000, 0 };
     return Array <int> (rates);
 }
 
-const Array <int> MchaWavAudioFormat::getPossibleBitDepths()
+Array <int> MchaWavAudioFormat::getPossibleBitDepths()
 {
     const int depths[] = { 8, 16, 24, 32, 0 };
     return Array <int> (depths);

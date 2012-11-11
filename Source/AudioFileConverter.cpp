@@ -11,7 +11,7 @@ AudioFileConverter::AudioFileConverter()
 		fileLogger(NULL)
 {
 	String	loggerName = File::getSpecialLocation(File::userApplicationDataDirectory).getFullPathName() +
-							File::separatorString + L"mCha\\mcha.log.txt";
+							File::separatorString + L"mcha\\mcha.log.txt";
 	File	logger(loggerName);
 
 	if (logger.existsAsFile())
@@ -222,10 +222,9 @@ void AudioFileConverter::run()
 										numSamples			//	int  	numSamples	 
 									);
 
-				tempBuffer.writeToAudioWriter  (	audioFormatWriters[ch],	//AudioFormatWriter *  writer,  
-													0,						//const int  startSample,  
-													numSamples				//const int  numSamples   
-												 );
+				audioFormatWriters[ch]->write(	(const int**)(tempBuffer.getArrayOfChannels()),	//AudioFormatWriter *  writer,  
+												numSamples				//const int  numSamples   
+											  );
 			}
 		}
 

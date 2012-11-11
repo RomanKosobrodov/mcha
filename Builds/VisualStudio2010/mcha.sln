@@ -1,23 +1,23 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mcha", "mcha.vcxproj", "{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}"
+Project("{EB0E40EB-13C2-1747-0D62-2849109B7707}") = "mcha", "mcha.vcxproj", "{630CD4BF-1E30-322E-0013-196616024277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Debug|x64 = Debug|x64
-		Release|Win32 = Release|Win32
-		Release|x64 = Release|x64
+		MCHA-Debug-Win32|Win32 = MCHA-Debug-Win32|Win32
+		MCHA-Release-Win32|Win32 = MCHA-Release-Win32|Win32
+		MCHA-Debug-x64|x64 = MCHA-Debug-x64|x64
+		MCHA-Release-x64|x64 = MCHA-Release-x64|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Debug|Win32.Build.0 = Debug|Win32
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Debug|x64.ActiveCfg = Debug|x64
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Debug|x64.Build.0 = Debug|x64
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Release|Win32.ActiveCfg = Release|Win32
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Release|Win32.Build.0 = Release|Win32
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Release|x64.ActiveCfg = Release|x64
-		{1755BEE0-827E-DD1B-31F2-6DD4CD0E87EB}.Release|x64.Build.0 = Release|x64
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Debug-Win32|Win32.ActiveCfg = MCHA-Debug-Win32|Win32
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Debug-Win32|Win32.Build.0 = MCHA-Debug-Win32|Win32
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Release-Win32|Win32.ActiveCfg = MCHA-Release-Win32|Win32
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Release-Win32|Win32.Build.0 = MCHA-Release-Win32|Win32
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Debug-x64|x64.ActiveCfg = MCHA-Debug-x64|x64
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Debug-x64|x64.Build.0 = MCHA-Debug-x64|x64
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Release-x64|x64.ActiveCfg = MCHA-Release-x64|x64
+		{630CD4BF-1E30-322E-0013-196616024277}.MCHA-Release-x64|x64.Build.0 = MCHA-Release-x64|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

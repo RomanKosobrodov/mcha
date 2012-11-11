@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<IIRFILTERSETTINGS filterName="A-weighting filter" filterType ="IIR" cascades = "1" inputs="1" outputs="1" oneByOne="1"
+                   fileName="a-weighting.csv"/>

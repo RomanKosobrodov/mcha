@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<IIRFILTERSETTINGS filterName="FIR notch filter" filterType ="FIR" inputs="2" outputs="2" oneByOne="1"
+ 			samplingFrequency = "48000"  filterLength = "255" fileName="notch_fir.csv"/>

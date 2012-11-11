@@ -1,75 +1,110 @@
-REM "C:\Program Files (x86)\NSIS\makensis" %1\..\installer\InstallBuild\mcha_Win32.nsi
-REM "C:\Program Files (x86)\NSIS\makensis" %1\..\installer\InstallBuild\mcha_x64.nsi
+mkdir .\install\mcha
 
-mkdir %1..\install\mcha
+REM =============================
+REM               COMPILATION
+REM =============================
+"C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-Win32
+REM "C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-x64
+
+REM =============================
+REM               MEX FILES
+REM =============================
+
+cd ..\Builds\MEX
+matlab -nosplash -nodesktop -wait -r build_mex
+cd ..\..\Install
+
+REM =============================
+REM               INSTALLERS
+REM =============================
+
+"C:\Program Files\NSIS\makensis" mcha_Win32.nsi
+
+REM "C:\Program Files (x86)\NSIS\makensis" mcha_Win32.nsi
+REM "C:\Program Files (x86)\NSIS\makensis" mcha_x64.nsi
+
+
+REM =============================
+REM               SOURCE ARCHIVE
+REM =============================
+
+REM ------- Binaries -------------
+mkdir .\install\mcha\Bin
 
 REM ------- source files ----------
-mkdir %1..\install\mcha\src
-mkdir %1..\install\mcha\src\Filter
-mkdir %1..\install\mcha\src\MEX
-mkdir %1..\install\mcha\src\mFiles
-mkdir %1..\install\mcha\src\wavFiles
+mkdir .\install\mcha\Source
+mkdir .\install\mcha\Source\Filter
+mkdir .\install\mcha\Source\MEX
+mkdir .\install\mcha\Source\m
+mkdir .\install\mcha\Source\octave
 
-copy  %1..\src\*.*	%1..\install\mcha\src
-copy  %1..\src\Filter	%1..\install\mcha\src\Filter
-copy  %1..\src\MEX	%1..\install\mcha\src\MEX
-copy  %1..\src\mFiles	%1..\install\mcha\src\mFiles
-copy  %1..\src\wavFiles %1..\install\mcha\src\wavFiles
+copy  ..\Source\*.*	.\install\mcha\Source
+copy  ..\Source\Filter	.\install\mcha\Source\Filter
+copy  ..\Source\MEX	.\install\mcha\Source\MEX
+copy  ..\Source\m	.\install\mcha\Source\m
+copy  ..\Source\octave .\install\mcha\Source\octave 
 
 
 REM ---------- lib files -----------
-mkdir %1..\install\mcha\lib
+mkdir .\install\mcha\Lib
 
-xcopy /s %1..\lib %1..\install\mcha\lib
-
-
-REM --------- build files -----------
-mkdir %1..\install\mcha\build
-mkdir %1..\install\mcha\build\win
-mkdir %1..\install\mcha\build\win\mCha
-mkdir %1..\install\mcha\build\MEX
-
-copy  %1win\mCha\*.sln		%1..\install\mcha\build\win\mCha
-copy  %1win\mCha\*.suo		%1..\install\mcha\build\win\mCha
-copy  %1win\mCha\*.vcxproj.filters	%1..\install\mcha\build\win\mCha
-copy  %1win\mCha\*.vcxproj	%1..\install\mcha\build\win\mCha
-
-copy  %1..\build\MEX %1..\install\mcha\build\MEX
+xcopy /s ..\Lib .\install\mcha\Lib
 
 
-REM ----------  doc files --------------
-mkdir %1..\install\mcha\doc
-copy  %1..\doc\*.pdf 		%1..\install\mcha\doc
-copy  %1..\doc\License.txt 	%1..\install\mcha\doc\License.txt
+REM --------- Builds files -----------
+mkdir .\install\mcha\Builds
+mkdir .\install\mcha\Builds\Linux
+mkdir .\install\mcha\Builds\MEX
+mkdir .\install\mcha\Builds\Octave
+mkdir .\install\mcha\Builds\VisualStudio2010
+
+xcopy /s ..\Builds\Linux .\install\mcha\Builds\Linux
+xcopy /s ..\Builds\MEX .\install\mcha\Builds\MEX
+xcopy /s ..\Builds\Octave .\install\mcha\Builds\Octave
 
 
-REM ---------- examples files -----------
-mkdir %1..\install\mcha\examples
-mkdir %1..\install\mcha\examples\filters
-mkdir %1..\install\mcha\examples\matlab
-mkdir %1..\install\mcha\examples\sound
-mkdir %1..\install\mcha\examples\sound\recorded
-mkdir %1..\install\mcha\examples\sound\samples
+copy  ..\Builds\VisualStudio2010\*.sln		.\install\mcha\Builds\VisualStudio2010
+copy ..\Builds\VisualStudio2010\*.suo		.\install\mcha\Builds\VisualStudio2010
+copy ..\Builds\VisualStudio2010\*.vcxproj.filters	.\install\mcha\Builds\VisualStudio2010
+copy  ..\Builds\VisualStudio2010\*.vcxproj	.\install\mcha\Builds\VisualStudio2010
 
-xcopy /s %1..\examples\sound\samples  %1..\install\mcha\examples\sound\samples
+REM --------- Installer files -----------
+mkdir .\install\mcha\Install
 
-copy %1..\examples\matlab\mcha_test.m  		%1..\install\mcha\examples\matlab\mcha_test.m
-copy %1..\examples\matlab\mcha_test_filters.m  	%1..\install\mcha\examples\matlab\mcha_test_filters.m
+copy  ..\Install\*.nsi		.\install\mcha\Install
+copy  ..\Install\*.bat		.\install\mcha\Install
+
+REM ----------  Documentation files --------------
+mkdir .\install\mcha\Documentation
+copy  ..\Documentation\*.pdf 		.\install\mcha\Documentation
+copy  ..\Documentation\License.txt 	.\install\mcha\Documentation\License.txt
 
 
+REM ---------- Examples files -----------
+mkdir .\install\mcha\Examples
+mkdir .\install\mcha\Examples\filters
+mkdir .\install\mcha\Examples\matlab
+mkdir .\install\mcha\Examples\sound
+mkdir .\install\mcha\Examples\sound\recorded
+mkdir .\install\mcha\Examples\sound\samples
 
-copy %1..\examples\filters\a-weighting.csv 	%1..\install\mcha\examples\filters\a-weighting.csv 
-copy %1..\examples\filters\a-weighting_IIR.xml  %1..\install\mcha\examples\filters\a-weighting_IIR.xml
-copy %1..\examples\filters\notchfilters.csv 	%1..\install\mcha\examples\filters\notchfilters.csv
-copy %1..\examples\filters\notch_fir.xml 	%1..\install\mcha\examples\filters\notch_fir.xml
-copy %1..\examples\filters\third_octave.csv 	%1..\install\mcha\examples\filters\third_octave.csv
-copy %1..\examples\filters\third_octave_IIR.xml %1..\install\mcha\examples\filters\third_octave_IIR.xml
+xcopy /s ..\Examples\sound\samples  .\install\mcha\Examples\sound\samples
+
+copy ..\Examples\matlab\mcha_test.m  		.\install\mcha\Examples\matlab\mcha_test.m
+copy ..\Examples\matlab\mcha_test_filters.m  	.\install\mcha\Examples\matlab\mcha_test_filters.m
+
+copy ..\Examples\filters\a-weighting.csv 	.\install\mcha\Examples\filters\a-weighting.csv 
+copy ..\Examples\filters\a-weighting_IIR.xml  .\install\mcha\Examples\filters\a-weighting_IIR.xml
+copy ..\Examples\filters\notch_fir.csv 	.\install\mcha\Examples\filters\notch_fir.csv
+copy ..\Examples\filters\notch_fir.xml 	.\install\mcha\Examples\filters\notch_fir.xml
+copy ..\Examples\filters\third_octave.csv 	.\install\mcha\Examples\filters\third_octave.csv
+copy ..\Examples\filters\third_octave_IIR.xml .\install\mcha\Examples\filters\third_octave_IIR.xml
 
 
 REM ----------- compress to ZIP ----------------
-"C:\Program Files\7-Zip\7z.exe" a -tzip %1\..\install\mcha_Source.zip %1\..\install\mcha
+"C:\Program Files\7-Zip\7z.exe" a -tzip %.\install\mcha_Source.zip .\install\mcha
 
 
 REM --------------- remove folder ---------------
-rmdir /Q /S %1\..\install\mcha
+rmdir /Q /S .\install\mcha
 

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<IIRFILTERSETTINGS filterName="ERB filter bank" filterType ="IIR" cascades = "4" inputs="1" outputs="64" oneByOne="0"
+                   fileName="erbfilterbank.csv"/>

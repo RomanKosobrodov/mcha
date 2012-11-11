@@ -17,7 +17,7 @@
 
 */
 #if (defined (_WIN32) || defined (_WIN64))
-	#define MCHAIMPORT extern "C" __declspec(MCHAIMPORTort)
+	#define MCHAIMPORT extern "C" __declspec(dllimport)
 #else
 	#define MCHAIMPORT extern "C"
 #endif

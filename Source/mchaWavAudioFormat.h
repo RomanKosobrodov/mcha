@@ -95,8 +95,8 @@ public:
                                                      const String& codingHistory);
 
     //==============================================================================
-    const Array <int> getPossibleSampleRates();
-    const Array <int> getPossibleBitDepths();
+    Array <int> getPossibleSampleRates();
+    Array <int> getPossibleBitDepths();
     bool canDoStereo();
     bool canDoMono();
 

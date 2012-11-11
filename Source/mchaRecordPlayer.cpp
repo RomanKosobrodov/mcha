@@ -55,11 +55,11 @@ MchaRecordPlayer::MchaRecordPlayer():
 										memModeString(L"safe")
 {
 	/* Generate full path to default XML settings file */
-	curDirStr = File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + File::separatorString+ L"mcha" + File::separatorString;
+	curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
 	
 	fileLogger = FileLogger::createDefaultAppLogger( "mcha", "mcha.log.txt", String::empty, 0 );	
 	
-	printSystemInfo();
+	printSystemInfo(); 
 	
 	audioDeviceSettings = new AudioDeviceSettings();
 

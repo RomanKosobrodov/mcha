@@ -16,10 +16,26 @@ Function .onInit
   StrCpy $1 $0 4 19;
   DetailPrint "Matlab version: $1"
 
-  ReadRegStr $2 HKLM "SOFTWARE\MathWorks\MATLAB\$1" "MATLABROOT"
-  DetailPrint "Matlab root directory: $2"
+  ;ReadRegStr $2 HKLM "SOFTWARE\MathWorks\MATLAB\$1" "MATLABROOT"
+ ; DetailPrint "Matlab root directory: $2"
 
-  StrCpy $INSTDIR "$2\toolbox\mcha"
+  ReadRegStr $2 HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "PERSONAL"
+  DetailPrint "Matlab files directory: $2"
+  StrCpy $INSTDIR "$2\MATLAB\mcha"
+
+
+  ReadRegDword $3 HKLM "SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x64" "Installed"
+  
+  IntCmp $3 1 VCredistInstalled VCDisplayWarning
+  VCDisplayWarning:
+	MessageBox MB_YESNO "audioMEX toolbox requires Visual C++ 2010 Redistributable Package (x64) to be installed. Do you want to quit set up and install the package now?" IDYES true IDNO false
+	true:
+  		Abort 
+	false:
+		Goto done
+  VCredistInstalled:
+  	DetailPrint "Visual C++ 2010 Redistributable Package (x64) is installed"
+  done:
 FunctionEnd
 
 
@@ -28,17 +44,17 @@ FunctionEnd
 ;General
 
   ;Name and file
-  Name "MCHA toolbox"
-  OutFile "..\mcha_install_x64.exe"
+  Name "MCHA"
+  OutFile "..\install\mcha_install_x64.exe"
 
   ;Default installation folder
   ;InstallDir "$2\toolbox\mcha"
   
   ;Get installation folder from registry if available
-  ;InstallDirRegKey HKCU "Software\mcha" ""
+  ;InstallDirRegKey HKCU "Software\MCHA" ""
 
   ;Request application privileges for Windows Vista
-  RequestExecutionLevel admin
+  RequestExecutionLevel highest
 
 ;--------------------------------
 ;Interface Configuration
@@ -50,7 +66,7 @@ FunctionEnd
 ;--------------------------------
 ;Pages
 
-  !insertmacro MUI_PAGE_LICENSE "..\..\doc\License.txt"
+  !insertmacro MUI_PAGE_LICENSE "..\Documentation\License.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -74,31 +90,28 @@ InstType "full"
 InstType "minimal"
 
 
-Section "MCHA Toolbox" binaries
+Section "MCHA toolbox" binaries
 SectionIn RO
-
 
   SetOutPath "$INSTDIR"
 
   CreateDirectory $INSTDIR\mex
   SetOutPath "$INSTDIR\mex" 
-  File	..\..\bin\mCha\x64\Release\*.dll
-  File	..\..\bin\mCha\x64\Release\*.lib
-  File	..\..\bin\mCha\x64\Release\*.exp
-  File	..\..\lib\x64\*.dll
+  File	..\Bin\MCHA-Release-x64\mcha-x64.dll
+  File	..\Lib\x64\*.dll
 
-  File	..\..\bin\mCha\x64\Release\*.mexw64
-  File	..\..\bin\mCha\x64\Release\*.m
+  File	..\Bin\MCHA-Release-x64\*.mexw64
+  File	..\Bin\MCHA-Release-x64\*.m
  
  
   CreateDirectory $INSTDIR\doc
   SetOutPath "$INSTDIR\doc" 
 
-  ;File  ..\..\doc\*.pdf
-  File  ..\..\doc\License.txt
+  File  ..\Documentation\*.pdf
+  File  ..\Documentation\License.txt
   
   ;Store installation folder
-  WriteRegStr HKCU "Software\mcha" "" $INSTDIR
+  WriteRegStr HKCU "Software\MCHA" "" $INSTDIR
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -111,35 +124,30 @@ SectionIn 1
 
   SetOutPath "$INSTDIR"
 
-  CreateDirectory $INSTDIR\examples
-  SetOutPath "$INSTDIR\examples"   
-  File /r ..\..\examples\samples
+  CreateDirectory $INSTDIR\Examples
+  SetOutPath "$INSTDIR\Examples"   
+  File /r ..\Examples\Samples
 
-  CreateDirectory $INSTDIR\examples\sound\recorded
-
-
-  CreateDirectory $INSTDIR\examples\matlab
-  SetOutPath "$INSTDIR\examples\matlab" 
-  File ..\..\examples\matlab\mcha_test.m
-  File ..\..\examples\matlab\mcha_test_filters.m  
+  CreateDirectory $INSTDIR\Examples\Sound\Recorded
 
 
-  CreateDirectory $INSTDIR\examples\filters
-  SetOutPath "$INSTDIR\examples\filters" 
-  File ..\..\examples\filters\a-weighting.csv
-  File ..\..\examples\filters\a-weighting_IIR.xml  
-  File ..\..\examples\filters\notchfilters.csv
-  File ..\..\examples\filters\notch_fir.xml  
-  File ..\..\examples\filters\third_octave.csv
-  File ..\..\examples\filters\third_octave_IIR.xml  
+  CreateDirectory $INSTDIR\Examples\Matlab
+  SetOutPath "$INSTDIR\Examples\Matlab" 
+  File ..\Examples\Matlab\mcha_test.m
+  File ..\Examples\Matlab\mcha_test_filters.m  
+
+
+  CreateDirectory $INSTDIR\Examples\Filters
+  SetOutPath "$INSTDIR\Examples\Filters" 
+  File ..\Examples\Filters\a-weighting.csv
+  File ..\Examples\Filters\a-weighting_IIR.xml  
+  File ..\Examples\Filters\notch_fir.csv
+  File ..\Examples\Filters\notch_fir.xml  
+  File ..\Examples\Filters\third_octave.csv
+  File ..\Examples\Filters\third_octave_IIR.xml  
 
  
 SectionEnd
-
-
-
-
-
 
 ;--------------------------------
 ;Descriptions
@@ -164,6 +172,6 @@ Section "Uninstall"
 
   RMDir /r "$INSTDIR"
 
-  DeleteRegKey /ifempty HKCU "Software\mcha"
+  DeleteRegKey /ifempty HKCU "Software\MCHA"
 
 SectionEnd

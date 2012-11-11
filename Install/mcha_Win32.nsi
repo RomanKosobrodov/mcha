@@ -8,20 +8,52 @@
   !include "MUI2.nsh"
 
 ;--------------------------------
+Function .onInit
+
+  SetRegView 64
+
+  ReadRegStr $0 HKCR "Matlab.Application\CurVer" ""
+  StrCpy $1 $0 4 19;
+  DetailPrint "Matlab version: $1"
+
+;  ReadRegStr $2 HKLM "SOFTWARE\MathWorks\MATLAB\$1" "MATLABROOT"
+;  DetailPrint "Matlab root directory: $2"
+
+  ReadRegStr $2 HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "PERSONAL"
+  DetailPrint "Matlab files directory: $2"
+  StrCpy $INSTDIR "$2\MATLAB\mcha"
+
+
+  ReadRegDword $3 HKLM "SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x86" "Installed"
+  
+  IntCmp $3 1 VCredistInstalled VCDisplayWarning
+  VCDisplayWarning:
+	MessageBox MB_YESNO "MCHA toolbox requires Visual C++ 2010 Redistributable Package (x86) to be installed. Do you want to quit set up and install the package now?" IDYES true IDNO false
+	true:
+  		Abort 
+	false:
+		Goto done
+  VCredistInstalled:
+  	DetailPrint "Visual C++ 2010 Redistributable Package (x86) is installed"
+  done:
+FunctionEnd
+
+
+;--------------------------------
 ;General
 
   ;Name and file
-  Name "MUSHRA Test"
-  OutFile "..\mcha_install_win32.exe"
+  Name "MCHA"
+  OutFile ".\install\mcha_install_win32.exe"
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\MATLAB\R2011b\toolbox\mcha"
+  ;InstallDir "$2\toolbox\mcha"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\mcha" ""
+  InstallDirRegKey HKCU "Software\MCHA" ""
 
   ;Request application privileges for Windows Vista
-  RequestExecutionLevel admin
+  RequestExecutionLevel highest
 
 
 ;--------------------------------
@@ -34,7 +66,7 @@
 ;--------------------------------
 ;Pages
 
-  !insertmacro MUI_PAGE_LICENSE "..\..\doc\License.txt"
+  !insertmacro MUI_PAGE_LICENSE "..\Documentation\License.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -58,30 +90,28 @@ InstType "full"
 InstType "minimal"
 
 
-Section "Mushra Test Software" binaries
+Section "MCHA toolbox" binaries
 SectionIn RO
 
   SetOutPath "$INSTDIR"
 
   CreateDirectory $INSTDIR\mex
   SetOutPath "$INSTDIR\mex" 
-  File	..\..\bin\mCha\Win32\Release\*.dll
-  File	..\..\bin\mCha\Win32\Release\*.lib
-  File	..\..\bin\mCha\Win32\Release\*.exp
-  File	..\..\lib\Win32\*.dll
+  File	..\Bin\MCHA-Release-Win32\mcha-Win32.dll
+  File	..\Lib\Win32\*.dll
 
-  File	..\..\bin\mCha\Win32\Release\*.mexw32
-  File	..\..\bin\mCha\Win32\Release\*.m
+  File	..\Bin\MCHA-Release-Win32\*.mexw32
+  File	..\Bin\MCHA-Release-Win32\*.m
  
  
   CreateDirectory $INSTDIR\doc
   SetOutPath "$INSTDIR\doc" 
 
-  File  ..\..\doc\*.pdf
-  File  ..\..\doc\License.txt
+  File  ..\Documentation\*.pdf
+  File  ..\Documentation\License.txt
   
   ;Store installation folder
-  WriteRegStr HKCU "Software\mcha" "" $INSTDIR
+  WriteRegStr HKCU "Software\MCHA" "" $INSTDIR
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -91,17 +121,33 @@ SectionEnd
 
 Section "Examples" examples
 SectionIn 1
+
   SetOutPath "$INSTDIR"
 
-  File /r ..\..\examples
-  
+  CreateDirectory $INSTDIR\Examples
+  SetOutPath "$INSTDIR\Examples"   
+  File /r ..\Examples\Samples
+
+  CreateDirectory $INSTDIR\Examples\Sound\Recorded
+
+
+  CreateDirectory $INSTDIR\Examples\Matlab
+  SetOutPath "$INSTDIR\Examples\Matlab" 
+  File ..\Examples\Matlab\mcha_test.m
+  File ..\Examples\Matlab\mcha_test_filters.m  
+
+
+  CreateDirectory $INSTDIR\Examples\Filters
+  SetOutPath "$INSTDIR\Examples\Filters" 
+  File ..\Examples\Filters\a-weighting.csv
+  File ..\Examples\Filters\a-weighting_IIR.xml  
+  File ..\Examples\Filters\notch_fir.csv
+  File ..\Examples\Filters\notch_fir.xml  
+  File ..\Examples\Filters\third_octave.csv
+  File ..\Examples\Filters\third_octave_IIR.xml  
+
  
 SectionEnd
-
-
-
-
-
 
 ;--------------------------------
 ;Descriptions
@@ -126,6 +172,6 @@ Section "Uninstall"
 
   RMDir /r "$INSTDIR"
 
-  DeleteRegKey /ifempty HKCU "Software\mcha"
+  DeleteRegKey /ifempty HKCU "Software\MCHA"
 
 SectionEnd

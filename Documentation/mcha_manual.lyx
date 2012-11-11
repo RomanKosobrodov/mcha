@@ -1,0 +1,2342 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen true
+\pdf_bookmarksopenlevel 2
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\pdf_quoted_options "linkcolor=black, citecolor=black, urlcolor=blue, filecolor=blue, pdfpagelayout=OneColumn, pdfnewwindow=true, pdfstartview=XYZ, plainpages=false"
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+CARLab audioMEX
+\end_layout
+
+\begin_layout Author
+User's Guide
+\end_layout
+
+\begin_layout Date
+10 April 2012
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+CARLab audioMEX is a Matlab toolbox for multichannel audio playback, recording
+ and processing.
+ There is no limitation on the maximum number of input and output channels
+ that the toolbox can support.
+ The toolbox interacts with the audio hardware using ASIO, Windows Audio
+ or DirectSound interfaces.
+ 
+\end_layout
+
+\begin_layout Standard
+The software is written using JUCE
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Jules' Utility Class Extensions, an open-source C++ class library available
+ under GNU public license.
+ Project's web page: 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://www.rawmaterialsoftware.com/juce.php"
+target "http://www.rawmaterialsoftware.com/juce.php"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ library and Intel IPP
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Intel Intergrated Performance Primitives 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://software.intel.com/en-us/articles/intel-ipp/"
+target "http://software.intel.com/en-us/articles/intel-ipp/"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+License
+\end_layout
+
+\begin_layout Standard
+The software is released under GNU General Public License Version 3.
+\end_layout
+
+\begin_layout Section
+Installation
+\end_layout
+
+\begin_layout Standard
+audioMEX can be downloaded from the CARLab website:
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "http://www.ee.usyd.edu.au/carlab/downloads.htm"
+target "http://www.ee.usyd.edu.au/carlab/downloads.htm"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The installers are provided for 32- and 64 bit Windows targets.
+ Installation is simple: choose the platform, download the file, start the
+ installer and follow the instructions.
+ You should have administrators priveligies to install the program.
+ 
+\end_layout
+
+\begin_layout Section
+Matlab Configuration
+\end_layout
+
+\begin_layout Standard
+Before you start using the toolbox you should add the audioMEX directory
+ to the Matlab path.
+ By default, the toolbox is installed in
+\end_layout
+
+\begin_layout Standard
+<MATLAB>
+\backslash
+<MatlabVersion>
+\backslash
+toolbox
+\backslash
+audioMEX
+\backslash
+bin
+\end_layout
+
+\begin_layout Standard
+\noindent
+where <MATLAB> and <MatlabVersion> is the installation directory and version
+ number of Matlab.
+\end_layout
+
+\begin_layout Section
+Audio Device Configuration
+\end_layout
+
+\begin_layout Standard
+The toolbox should be configured before the first use.
+ To do this execute:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+carlabInit
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A dialog will appear that would allow you to select the audio interface,
+ device and input/output channels.
+ Normally, you would select all available channels.
+ Some ASIO device drivers do not allow the buffer size to be changed programmati
+cally.
+ If this is the case with your device, please click the 
+\begin_inset Quotes eld
+\end_inset
+
+show this device's control panel
+\begin_inset Quotes erd
+\end_inset
+
+ button and make sure that the buffer size is set correctly.
+ Once configured the settings are stored in the defaultsettings.xml file.
+ 
+\end_layout
+
+\begin_layout Standard
+If you plan to use several devices or settings you can save a copy of your
+ settings file.
+ You can do this from Matlab by calling
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+copyfile('defaultsettings.xml', 'saved_settings.xml')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can apply different settings in your script by calling carlabInit with
+ the .xml file as a parameter.
+ For example:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+carlabInit('saved_settings.xml')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+would activate the configuration you defined previously.
+ 
+\end_layout
+
+\begin_layout Standard
+For best performance it is recommended to use ASIO audio interface (if supported
+ by your hardware) and set the buffer size to at least 512 samples.
+\end_layout
+
+\begin_layout Section
+Examples and Test Scripts
+\end_layout
+
+\begin_layout Standard
+Two example scripts, 
+\family sans
+audioMEX_test 
+\family default
+and 
+\family sans
+audioMEX_test_filters
+\family default
+, could be found in the 
+\family sans
+\shape italic
+examples
+\family default
+\shape default
+ subfolder of the toolbox directory.
+ The first script illustrate how to use playback and recording functions
+ while 
+\family sans
+audioMEX_test_filters
+\family default
+ contains some examples of using FIR and IIR filter.
+\end_layout
+
+\begin_layout Section
+audioMEX functions
+\end_layout
+
+\begin_layout Subsection*
+carlabGetError
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabGetError()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Returns the string describing the error if one occured during the execution
+ of an audioMEX function.
+ The error message is not cleared after the call to the function, so it
+ can be used several times in your code.
+\end_layout
+
+\begin_layout Subsection*
+carlabGetPosition
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+timeInSeconds = carlabGetPosition()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Returns the position in seconds from the beginning of the current recording
+ or playback.
+\end_layout
+
+\begin_layout Subsection*
+carlabGetVersion
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+versionNumber = carlabGetVersion()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Returns the version number of audioMEX toolbox.
+\end_layout
+
+\begin_layout Subsection*
+carlabInit
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabInit()
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabInit(settingsFile)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Initialises the audio device.
+ When called without parameters the function displays a dialog that allows
+ the user to configure any audio device available to the system.
+ Normally all input and output channels should be activated in the dialog.
+ The settings are saved in defaultsettings.xml file.
+ 
+\end_layout
+
+\begin_layout Standard
+If a settings file is specified as a parameter, the function attempts to
+ apply the settings from that file.
+\end_layout
+
+\begin_layout Standard
+The function returns empty string on success and a string describing an
+ error if it fails.
+\end_layout
+
+\begin_layout Subsection*
+carlabPlay
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabPlay(audiofiles, channels) 
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlay(audiofiles, channels, filtersettings) 
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlay(samplesmatrix, channels)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlay(samplesmatrix, channels, filtersettings)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Plays multichannel audio from audio files or memory buffer optionally applying
+ playback filters to the audio data.
+\end_layout
+
+\begin_layout Standard
+\noindent
+Parameters:
+\end_layout
+
+\begin_layout Description
+audiofiles is a cell array containing full paths to audio files to be played.
+ The supported formats include .wav, .ogg, .aif (.aiff) and .flac.
+ Files of different formats could be combined in one function call.
+\end_layout
+
+\begin_layout Description
+samplesmatrix is a single precision Matlab matrix each row of which contains
+ audio data for the corresponding channel.
+ The function does not make an internal copy of the matrix (for memory efficienc
+y) so it is the caller's responsibility to make sure that the matrix is
+ not destroyed while the function is still running.
+ See Memory Management section for more details.
+\end_layout
+
+\begin_layout Description
+channels is a vector containing output channels.
+\end_layout
+
+\begin_layout Description
+filtersettings is a string containing the name of the xml file that specifies
+ the parameters of the playback filters.
+ See Using Filters for more details.
+\end_layout
+
+\begin_layout Standard
+The function returns an error string which is empty of success.
+\end_layout
+
+\begin_layout Subsection*
+carlabPlayRecord 
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, playbackData,
+ playbackChannels) 
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, recFilters,
+ playbackData, playbackChannels) 
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, playbackData,
+ playbackChannels, playbackFilters) 
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, rectDuration, recFilters,
+ playbackData, playbackChannels, playbackFilters)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, playbackData,
+ playbackChannels)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, recFilters,
+ playbackData, playbackChannels)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, playbackData,
+ playbackChannels, playbackFilters)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, recFilters,
+ playbackData, playbackChannels, playbackFilters)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, playbackFiles,
+ playbackChannels)
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, recFilters,
+ playbackFiles, playbackChannels)
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, playbackFiles,
+ playbackChannels, playbackFilters)
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabPlayRecord(recChannels, recDuration, recFilters,
+ playbackFiles, playbackChannels, playbackFilters)
+\end_layout
+
+\begin_layout LyX-Code
+\noindent
+
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, playbackFiles,
+ playbackChannels)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, recFilters,
+ playbackFiles, playbackChannels)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, playbackFiles,
+ playbackChannels, playbackFilters)
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabPlayRecord(recordDir, recChannels, recDuration, recFilters,
+ playbackFiles, playbackChannels, playbackFilters)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Plays and simultaneously records audio from/to memory or disk optionally
+ applying playback and/or recording filters to the audio data.
+\end_layout
+
+\begin_layout Standard
+\noindent
+Arguments:
+\end_layout
+
+\begin_layout Description
+recData is a Matlab matrix containing the recorded audio data.
+ No internal copy of this matrix is held so make sure that this is a global
+ variable in Matlab and is not deleted on the exit of your m-function.
+ Audio data are saved in single-precision format.
+ See Memory Management section for details.
+\end_layout
+
+\begin_layout Description
+recordDir is a string specifying the directory where the files will be saved.
+ If the directory does not exist it will be created.
+ Each channel is saved in a separate WAV file in this folder.
+ The function reserves the required amount of disk space on the hard drive.
+ Be carefull when saving to the system hard drive as the operating system
+ might complain.
+\end_layout
+
+\begin_layout Description
+recChannels ia a Matlab vector containing recording device channels.
+\end_layout
+
+\begin_layout Description
+recDuration is the duration of recording in seconds.
+ It need not be the same as the playback duration which is calculated automatica
+lly from the arguments provided.
+\end_layout
+
+\begin_layout Description
+recFilters (optional) is the string containing the xml settings file for
+ the recording filters.
+\end_layout
+
+\begin_layout Description
+playbackData is a single-precision Matlab matrix each row of which contains
+ audio data corresponding to a playback channel.
+ Same limitation of the life time of the matrix apply.
+\end_layout
+
+\begin_layout Description
+playbackFiles is a cell array containing full paths to audio files to be
+ played.
+ The supported formats include .wav, .ogg, .aif (.aiff) and .flac.
+ Files of different formats could be combined in one function call.
+\end_layout
+
+\begin_layout Description
+playbackChannels is a vector containing device output channels.
+\end_layout
+
+\begin_layout Description
+playbackFilters (optional) is the string containing the xml settings file
+ for the playback filters.
+\end_layout
+
+\begin_layout Standard
+The function returns an error string as the first (mandatory) parameter
+ which is empty of success.
+\end_layout
+
+\begin_layout Subsection*
+carlabRecord
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabRecord( recordDir, recChannels, recDuration )
+\end_layout
+
+\begin_layout LyX-Code
+
+err = carlabRecord( recordDir, recChannels, recDuration, recordFilter )
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabRecord( recChannels, recDuration )
+\end_layout
+
+\begin_layout LyX-Code
+
+[err, recData] = carlabRecord( recChannels, recDuration, recordFilter)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Records audio data in memory or on disk applying optional filters to the
+ input audio data.
+\end_layout
+
+\begin_layout Standard
+\noindent
+Arguments:
+\end_layout
+
+\begin_layout Description
+recData is a Matlab matrix containing the recorded audio data.
+ No internal copy of this matrix is held so make sure that this is a global
+ variable in Matlab and is not deleted on the exit of your m-function.
+ Audio data are saved in single-precision format.
+ See Memory Management section for details.
+\end_layout
+
+\begin_layout Description
+recordDir is a string specifying the directory where the files will be saved.
+ If the directory does not exist it will be created.
+ Each channel is saved in a separate WAV file in this folder.
+ The function reserves the required amount of disk space on the hard drive.
+ Be carefull when saving to the system hard drive as the operating system
+ might complain.
+\end_layout
+
+\begin_layout Description
+recChannels ia a Matlab vector containing recording device channels.
+\end_layout
+
+\begin_layout Description
+recDuration is the duration of recording in seconds.
+ It need not be the same as the playback duration which is calculated automatica
+lly from the arguments provided.
+\end_layout
+
+\begin_layout Description
+recFilters (optional) is the string containing the xml settings file for
+ the recording filters.
+\end_layout
+
+\begin_layout Standard
+The function returns an error string as the first (mandatory) parameter
+ which is empty of success.
+\end_layout
+
+\begin_layout Subsection*
+carlabRunning
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+isRunning = carlabRunning()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Returns logical 1 (true) if a playback/recording process is currently running
+ and logical 0 otherwise.
+\end_layout
+
+\begin_layout Subsection*
+carlabSetGain
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabSetGain(playbackChannels, gains)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Sets the gain of individual playback channels.
+\end_layout
+
+\begin_layout Standard
+\noindent
+Parameters:
+\end_layout
+
+\begin_layout Description
+playbackChannels is a Matlab vector containing device output channels for
+ which the new gain values are to be set.
+\end_layout
+
+\begin_layout Description
+gains is a Matlab vector containg the gains in linear scale from 0 (muted)
+ to 1.
+ The vector should be the same length as playbackChannels.
+\end_layout
+
+\begin_layout Standard
+The function returns an error string which is empty of success.
+\end_layout
+
+\begin_layout Subsection*
+carlabSetPosition
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabSetPosition(newPosition)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Set the new position of the current playback.
+ 
+\end_layout
+
+\begin_layout Standard
+\noindent
+Parameters:
+\end_layout
+
+\begin_layout Description
+newPosition is the new position in seconds from the beginning of file/audio
+ data.
+\end_layout
+
+\begin_layout Standard
+The function returns an error string which is empty of success.
+\end_layout
+
+\begin_layout Subsection*
+carlabStop
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+err = carlabStop()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Terminates the currently running playback/recording process.
+ The data recorded so far will be saved with the rest of the file/data set
+ to zeros.
+ 
+\end_layout
+
+\begin_layout Standard
+The function returns an error string which is empty of success.
+\end_layout
+
+\begin_layout Subsection*
+carlabWait
+\end_layout
+
+\begin_layout Standard
+Usage:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+inline false
+status open
+
+\begin_layout LyX-Code
+
+[processStopped, timeElapsed] = carlabWait(timeInSec)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Description:
+\end_layout
+
+\begin_layout Standard
+Waits for the process to terminate and returns the status.
+\end_layout
+
+\begin_layout Standard
+\noindent
+Arguments:
+\end_layout
+
+\begin_layout Description
+timeInSec is the timeout in seconds.
+ The function returns as soon as the process terminates or when the timeout
+ expires whichever happens first.
+ The time resolution is 0.1 seconds.
+\end_layout
+
+\begin_layout Description
+processStoped is boolean 1 (true) if the process terminated or 0 if the
+ timeout expired.
+\end_layout
+
+\begin_layout Description
+timeElapsed is the time elapsed from the the moment the function was called.
+\end_layout
+
+\begin_layout Section
+Memory Management
+\end_layout
+
+\begin_layout Standard
+Memory management in audioMEX is implemented differently from the usual
+ Matlab style when multiple copies of the same objects are created.
+ Instead, the matrices containing playback and recorded samples are created
+ once and then used to store recorded data and playback samples.
+ This reduces memory consumption and increases performance, but requires
+ certain care from the programmer.
+ It is important to understand the life time of your objects (Matlab matrices)
+ and ensure that these are not being released by Matlab while audioMEX code
+ is still using them.
+ Below are a few examples of the code which is quaranteed to crash.
+\end_layout
+
+\begin_layout Subsubsection*
+Example one.
+ Temporary matrices:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+carlabPlay( single(rand(48000,2)), [0 1] ) % Wrong: attempting to play data
+ from a temporary matrix
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The command line above results in a temporary matrix created by function
+ 
+\family sans
+\series bold
+rand
+\family default
+\series default
+ that is converted to single precision and copied into another temporary
+ matrix.
+ The latter is then passed as a parameter to 
+\family sans
+\series bold
+carlabPlay
+\family default
+\series default
+.
+ This function does not retain a local copy of the data, but assumes that
+ they will be available until the playback finishes.
+ This is not the case as the temporary matrix get released as soon as 
+\family sans
+\series bold
+carlabPlay
+\family default
+\series default
+ returns.
+ The correct code looks like this:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+dat = single(rand(48000,2)); % create a matrix in the global space
+\end_layout
+
+\begin_layout LyX-Code
+
+carlabPlay(dat, [0 1]); % run the code
+\end_layout
+
+\begin_layout LyX-Code
+
+% ..
+ do something here
+\end_layout
+
+\begin_layout LyX-Code
+
+if (~carlabRunning) % check that the process is finished
+\end_layout
+
+\begin_layout LyX-Code
+
+   clear(dat); % it is now save to release (clear) the matrix
+\end_layout
+
+\begin_layout LyX-Code
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Example two.
+ Local variables
+\end_layout
+
+\begin_layout Standard
+Suppose you want to create a function that plays a sweep through a loudspeaker
+ and simultaneously records the response from two microphones in the room.
+ Here is a wrong way of doing this:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+function micData = recSweep(fs, sweepDuration)
+\end_layout
+
+\begin_layout LyX-Code
+
+   dt = 1/fs;
+\end_layout
+
+\begin_layout LyX-Code
+
+   t= 0:dt:sweepDuration;
+\end_layout
+
+\begin_layout LyX-Code
+
+   f0=20; 		% lower frequency 20 Hz
+\end_layout
+
+\begin_layout LyX-Code
+
+   f1=16000; 	 % upper frequency 16 kHz
+\end_layout
+
+\begin_layout LyX-Code
+
+   stim = chirp(t, f0, sweepDuration, f1,'logarithmic'); % logarithmic sweep
+\end_layout
+
+\begin_layout LyX-Code
+
+   stim = single(stim); 	% convert to single precision
+\end_layout
+
+\begin_layout LyX-Code
+
+   [err, micData] = carlabPlayRecord([0 1], sweepDuration, stim, [0]); %
+ wrong: 
+\end_layout
+
+\begin_layout LyX-Code
+
+   % attemp to play and record from/to local variables
+\end_layout
+
+\begin_layout LyX-Code
+
+end % micData and stim get released here!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When you than call the function from you Matlab command line (or another
+ function):
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+micResponse = recSweep(48000, 5);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The code crashes.
+ This happens because the stim matrix is a local variable to the function
+ 
+\family sans
+\series bold
+recSweep
+\family default
+\series default
+ and it gets deleted upon leaving it, while 
+\family sans
+\series bold
+carlabPlayRecord
+\family default
+\series default
+ is still using the data.
+ Also, there is no guarantee that micData will be created in the global
+ space either, as Matlab can decide to copy the data in a new matrix before
+ exiting the function.
+\end_layout
+
+\begin_layout Standard
+Here is the correct way of implementing 
+\family sans
+\series bold
+recSweep
+\family default
+\series default
+:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+function recSweep(fs, sweepDuration)
+\end_layout
+
+\begin_layout LyX-Code
+
+   global stim;
+\end_layout
+
+\begin_layout LyX-Code
+
+   global micData;
+\end_layout
+
+\begin_layout LyX-Code
+
+   dt = 1/fs;
+\end_layout
+
+\begin_layout LyX-Code
+
+   t= 0:dt:sweepDuration;
+\end_layout
+
+\begin_layout LyX-Code
+
+   f0=20; 
+\end_layout
+
+\begin_layout LyX-Code
+
+   f1=16000;
+\end_layout
+
+\begin_layout LyX-Code
+
+   stim = chirp(t, f0, sweepDuration, f1,'logarithmic'); 
+\end_layout
+
+\begin_layout LyX-Code
+
+   stim = single(stim);
+\end_layout
+
+\begin_layout LyX-Code
+
+   [err, micData] = carlabPlayRecord([0 1], sweepDuration, stim, [0]); 
+\end_layout
+
+\begin_layout LyX-Code
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now call the function:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true,language=Matlab"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+global stim; 
+\end_layout
+
+\begin_layout LyX-Code
+
+global micData; 
+\end_layout
+
+\begin_layout LyX-Code
+
+recSweep(48000, 5);
+\end_layout
+
+\begin_layout LyX-Code
+
+wait(5);
+\end_layout
+
+\begin_layout LyX-Code
+
+while carlabRunning
+\end_layout
+
+\begin_layout LyX-Code
+
+   wait(0.1); % wait for the function to release audio device
+\end_layout
+
+\begin_layout LyX-Code
+
+end
+\end_layout
+
+\begin_layout LyX-Code
+
+clear (stim); % now its safe to release the stim matrix
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alternatively, you can make the 
+\family sans
+\series bold
+recSweep
+\family default
+\series default
+ function 'blocking' by adding 
+\shape italic
+wait
+\shape default
+ after the call to 
+\family sans
+\series bold
+carlabPlayRecord
+\family default
+\series default
+ and then return from 
+\family sans
+\series bold
+recSweep
+\family default
+\series default
+.
+\end_layout
+
+\begin_layout Section
+Using filters
+\end_layout
+
+\begin_layout Standard
+audioMEX toolbox has built-in FIR and IIR filters that can be applied to
+ playback and/or recording audio streams.
+ In order to define a filter you need to specify an xml settings file and
+ provide the impulse responses or filter coefficients as a separate data
+ file.
+ For FIR filters the impulse responses could be stored in a multichannel
+ WAV file or in a text file having the CSV format.
+ IIR filter coefficients should be saved as a CSV file.
+ Two filter settings files are given below as an example.
+\end_layout
+
+\begin_layout Subsubsection*
+FIR filter settings file
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+<?xml version="1.0" encoding="UTF-8"?>
+\end_layout
+
+\begin_layout LyX-Code
+
+<FIRFILTERSETTINGS filterName="FIR notch filter" filterType ="FIR" inputs="2"
+ outputs="2" oneByOne="1" samplingFrequency = "48000" filterLength = "255"
+ fileName="notchfilters.csv"/>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+IIR filter settings
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+lstparams "basicstyle={\normalsize\sffamily},breaklines=true"
+inline false
+status open
+
+\begin_layout LyX-Code
+
+<?xml version="1.0" encoding="UTF-8"?>
+\end_layout
+
+\begin_layout LyX-Code
+
+<IIRFILTERSETTINGS filterName="1/3-octave IIR filter bank" filterType ="IIR"
+ cascades = "1" inputs="1" outputs="30" oneByOne="0" fileName="third_octave.csv"/
+>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Individual settings are summarised in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Format-of-XML"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Format of XML filter settings file
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Format-of-XML"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="12" columns="3">
+<features tabularvalignment="middle" tabularwidth="100text%">
+<column alignment="center" valignment="top" width="2cm">
+<column alignment="left" valignment="middle" width="2.5cm">
+<column alignment="center" valignment="top" width="6cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+field
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+accepted values
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none" width="10cm">
+\begin_inset Text
+
+\begin_layout Plain Layout
+description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\shape italic
+header
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+<?xml version="1.0" encoding="UTF-8"?>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+standard xml header.Do not modify
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\shape italic
+main element
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{0pt}
+\end_layout
+
+\end_inset
+
+FIRFILTERSETTINGS or IIRFILTERSETTINGS
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+the name of the main XML element.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+filterName
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+any string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a string describing the filter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+filterType
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FIR or IIR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+the type of filter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cascades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+positive integer number
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+IIR filters only: the number of filter cascades
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+inputs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+positive integer number
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+the number of filter input channels
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+outputs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+positive integer number
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+the number of filter output channels.For FIR filters this could be different
+ from inputs if oneByOne is set to 0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+oneByOne
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical 0 or 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FIR filters only.
+ When oneByOne is set to 0 the full convolution matrixcontaining 
+\begin_inset Formula $inputs\times outputs$
+\end_inset
+
+ inpulse responsed should be provided.
+ When oneByOne is 1 the number of inputs, outputs and the filters provided
+ should be equal.
+ In this case Each FIR or IIR filter is applied to the corresponding channel
+ and the result is passed to the output.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{0pt}
+\end_layout
+
+\end_inset
+
+samplingFrequency
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sample frequency supported by audio device
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Specifies the sampling frequency for which the impulse responses were provided.
+ If different from the audio device settings an error is generated and the
+ function terminates
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+filterLength
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+positive integer number
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FIR filters only.
+ The length of the impulse response in samples.
+ If different from the number of samples in the IR file and error is generated
+ and the function terminates
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fileName
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+valid .csv or .wav file name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none" width="8cm">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The name of the file containing impulse response samples of FIR filter or
+ coefficients of the IIR filter.
+ See below for details
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Impulse responses of FIR filters
+\end_layout
+
+\begin_layout Standard
+Impulse responses for FIR filters can be provided either as a multichannel
+ WAV file or a text file in CSV format.
+ The diagram in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Multichannel-FIR-filters"
+
+\end_inset
+
+ shows the convention for defining the filters.
+ In the example below the WAV file should have 
+\begin_inset Formula $N$
+\end_inset
+
+ channels each containing 
+\begin_inset Formula $K\times M$
+\end_inset
+
+ samples.
+ Similarly, a CSV file should have 
+\begin_inset Formula $N$
+\end_inset
+
+ columns and 
+\begin_inset Formula $K\times M$
+\end_inset
+
+ rows.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Multichannel FIR filters
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Multichannel-FIR-filters"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename filtersFormat.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Coefficients of IIR filters
+\end_layout
+
+\begin_layout Standard
+IIR filter coefficients should be provided as a CSV file in the following
+ format:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\begin{array}{cccccccc}
+b_{0\, j\, k} & b_{1\, j\, k} & \ldots & b_{N\, j\, k} & a_{0\, j\, k} & a_{1\, j\, k} & \ldots & a_{N\, j\, k}\end{array}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+where N is the order of filter, 
+\begin_inset Formula $j=1..M_{in}$
+\end_inset
+
+is the number of the input channel and 
+\begin_inset Formula $k=1..M_{cas}$
+\end_inset
+
+is the number of cascade.
+ Below is the example of a two-channel IIR filter of order 2 that has 5
+ cascades:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+inline false
+status open
+
+\begin_layout LyX-Code
+
+# 1 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.36534 0.73067 0.36534 1 -0.271 0.73234 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.22017 -0.44034 0.22017 1 0.88069 0.76138 
+\end_layout
+
+\begin_layout LyX-Code
+
+# 2 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.29121 0.58241 0.29121 1 -0.21601 0.38083 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.17945 -0.35889 0.17945 1 0.71779 0.43558 
+\end_layout
+
+\begin_layout LyX-Code
+
+#3 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.24834 0.49668 0.24834 1 -0.18421 0.17758 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.15505 -0.3101 0.15505 1 0.6202 0.24041 
+\end_layout
+
+\begin_layout LyX-Code
+
+#4 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.22435 0.4487 0.22435 1 -0.16642 0.063809 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.14111 -0.28223 0.14111 1 0.56445 0.1289 
+\end_layout
+
+\begin_layout LyX-Code
+
+#5 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.2135 0.42701 0.2135 1 -0.15837 0.012387 
+\end_layout
+
+\begin_layout LyX-Code
+
+0.13474 -0.26949 0.13474 1 0.53898 0.077956 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Compiling from the source code
+\end_layout
+
+\begin_layout Standard
+The source code and Visual Studio 2010 project files are available for download
+ from CARLab website.
+ The code depends on open-source JUCE library that can be downloaded from
+\begin_inset CommandInset href
+LatexCommand href
+name " http://www.rawmaterialsoftware.com"
+target " http://www.rawmaterialsoftware.com"
+
+\end_inset
+
+
+\family typewriter
+.
+ 
+\family default
+The library should be placed in the same parent folder as audioMEX.
+ 
+\end_layout
+
+\begin_layout Standard
+Intel IPP is a commercial product.
+ Visit Intel's web site at
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+linebreak
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://software.intel.com/en-us/articles/intel-ipp/"
+target "http://software.intel.com/en-us/articles/intel-ipp/"
+
+\end_inset
+
+ for more information.
+\end_layout
+
+\begin_layout Standard
+In order to use ASIO audio device interface JUCE requires ASIO SDK to be
+ installed.
+ This SDK can be obtained from
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+linebreak
+\end_layout
+
+\end_inset
+
+ 
+\family typewriter
+
+\begin_inset CommandInset href
+LatexCommand href
+name "http://www.steinberg.net/en/company/developer.html"
+target "http://www.steinberg.net/en/company/developer.html"
+
+\end_inset
+
+
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Depending on your computer configuration DirectX SDK might also be required.
+ This could be obtained from Microsoft at
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+linebreak
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://msdn.microsoft.com/en-us/directx/aa937788"
+target "http://msdn.microsoft.com/en-us/directx/aa937788"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Bug reports and user feedback
+\end_layout
+
+\begin_layout Standard
+If you found a bug or have problems compiling the code please contact the
+ author using the form on CARLAB website.
+ Please make sure that you save the log file created by audioMEX.
+ The log can be found in the user-specific Application Data Directory.
+ On Windows 7 the full path is:
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\family typewriter
+C:
+\backslash
+Users
+\backslash
+<current-user>
+\backslash
+AppData
+\backslash
+Roaming
+\backslash
+audioMEX
+\backslash
+audioMEX.log.txt
+\end_layout
+
+\end_body
+\end_document
