@@ -17,13 +17,13 @@
 
 */
 
+#include "fftw3.h"
 #include "mchaRecordPlayer.h"
 #include "MemorySamplePlayer.h"
 #include "MemorySampleRecorder.h"
 #include "DiskSampleRecorder.h"
 #include "DiskSamplePlayer.h"
 #include "AudioDeviceSettings.h"
-#include "fftw3.h"
 
 namespace mcha
 {

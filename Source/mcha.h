@@ -1,62 +1,78 @@
+/*  
+	MCHA - Multichannel Audio Playback and Recording Library
+    Copyright (C) 2011  Roman Kosobrodov
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 #if (defined (_WIN32) || defined (_WIN64))
-	extern "C" __declspec(dllimport)
+	#define MCHAIMPORT extern "C" __declspec(dllimport)
 #else
+	#define MCHAIMPORT extern "C"
 	#define __int64	long long
-	extern "C"
 #endif
 
-{
 
-bool initAudioDevice();
+MCHAIMPORT	bool initAudioDevice();
 
-bool initAudioDeviceFile(const char* xmlSettingsFile);
+MCHAIMPORT	bool initAudioDeviceFile(const char* xmlSettingsFile);
 
-const char* getLastError();
+MCHAIMPORT	const char* getLastError();
 
-const char* getVersion();
+MCHAIMPORT	const char* getVersion();
 
-bool addFilter(const char* settingsFileName, bool isInputFilter);
+MCHAIMPORT	bool addFilter(const char* settingsFileName, bool isInputFilter);
 
-bool deleteFilter(bool isInputFilter);
+MCHAIMPORT	bool deleteFilter(bool isInputFilter);
 
-bool playFiles (const char**	 audioFiles, const int filesNumber, const int *channels, const int channelCount);
+MCHAIMPORT	bool playFiles (const char**	 audioFiles, const int filesNumber, const int *channels, const int channelCount);
 
-bool playData (const float** audioData, const int chanNumber, const int samplesNumber, const int *channels, const int channelCount);
+MCHAIMPORT	bool playData (const float** audioData, const int chanNumber, const int samplesNumber, const int *channels, const int channelCount);
 
-bool recordFiles	( const char*	recordDir, const int inputChanNumber, const int *channels, const int channelCount, const float duration );
+MCHAIMPORT	bool recordFiles	( const char*	recordDir, const int inputChanNumber, const int *channels, const int channelCount, const float duration );
 
-bool recordData	( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int channelCount);
+MCHAIMPORT	bool recordData	( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int channelCount);
 
-bool playRecordDataMM( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+MCHAIMPORT	bool playRecordDataMM( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 							 const float** outputData, const int outputChanNumber, const __int64 outputSamplesNumber, const int* outChannels, const int outChannelsCount );
 
-bool playRecordDataMD (   const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
+MCHAIMPORT	bool playRecordDataMD (   const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
 								const float** outputData, const int outputChanNumber, const __int64 outputSamplesNumber, const int* outChannels, const int outChannelsCount);
 
-bool playRecordDataDM ( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
+MCHAIMPORT	bool playRecordDataDM ( float** inputData, const int inputChanNumber, const __int64 inputSamplesNumber, const int *inChannels, const int inChannelsCount,
 						const char**  audioFiles, const int filesNumber, const int* channels, const int outChannelsCount );
 
-bool playRecordDataDD ( const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
+MCHAIMPORT	bool playRecordDataDD ( const char* recordDir, const int inputChanNumber, const int* inChannels, const int inChannelsCount, float duration,
 						const char**  audioFiles, const int filesNumber, const int* channels, const int outChannelsCount );
 
-bool setGain (int *channels, int channelsCount, float *gains);
+MCHAIMPORT 	bool setGain (int *channels, int channelsCount, float *gains);
 
-bool stopAudio();
+MCHAIMPORT	bool stopAudio();
 
-bool isRunning();
+MCHAIMPORT	bool isRunning();
 
-double getCurrentPosition(); 
+MCHAIMPORT  double getCurrentPosition(); 
 
-bool setPosition(double timeInSeconds);
+MCHAIMPORT  bool setPosition(double timeInSeconds);
 
-bool getDeviceSettings( double& samplingRate, int& bufSize, int& bDepth, int& inChannels, int& outChannels);
+MCHAIMPORT	bool getDeviceSettings( double& samplingRate, int& bufSize, int& bDepth, int& inChannels, int& outChannels);
 
-void getFilterSettings( bool isInputFilter, int& inputsCount, int& outputsCount );
+MCHAIMPORT	void getFilterSettings( bool isInputFilter, int& inputsCount, int& outputsCount );
 
-void logMessage(const char* msg);
+MCHAIMPORT  void logMessage(const char* msg);
 
-void logDouble(const char* infoStr, const double value);
+MCHAIMPORT  void logDouble(const char* infoStr, const double value);
 
-void logAddress(const char* infoStr, const __int64 addr);
-
-}
+MCHAIMPORT  void logAddress(const char* infoStr, const __int64 addr);
