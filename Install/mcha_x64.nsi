@@ -45,7 +45,7 @@ FunctionEnd
 
   ;Name and file
   Name "MCHA"
-  OutFile "..\install\mcha_install_x64.exe"
+  OutFile ".\install\mcha_install_x64.exe"
 
   ;Default installation folder
   ;InstallDir "$2\toolbox\mcha"

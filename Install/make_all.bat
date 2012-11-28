@@ -1,5 +1,11 @@
 mkdir .\install\mcha
 
+:CheckOS
+IF EXIST "%PROGRAMFILES(X86)%" (GOTO 64BIT) ELSE (GOTO 32BIT)
+
+:32BIT
+echo 32-bit...
+
 REM =============================
 REM               COMPILATION
 REM =============================
@@ -17,11 +23,34 @@ cd ..\..\Install
 REM =============================
 REM               INSTALLERS
 REM =============================
-
 "C:\Program Files\NSIS\makensis" mcha_Win32.nsi
 
-REM "C:\Program Files (x86)\NSIS\makensis" mcha_Win32.nsi
-REM "C:\Program Files (x86)\NSIS\makensis" mcha_x64.nsi
+
+:64BIT
+echo 64-bit...
+
+REM =============================
+REM               COMPILATION
+REM =============================
+"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-Win32
+"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-x64
+
+REM =============================
+REM               MEX FILES
+REM =============================
+
+cd ..\Builds\MEX
+"C:\Program Files (x86)\MATLAB\R2011b\bin\matlab.exe" -nosplash -nodesktop -wait -r build_mex
+"C:\Program Files\MATLAB\R2011b\bin\matlab.exe" -nosplash -nodesktop -wait -r build_mex
+cd ..\..\Install
+
+REM =============================
+REM               INSTALLERS
+REM =============================
+"C:\Program Files (x86)\NSIS\makensis" mcha_Win32.nsi
+"C:\Program Files (x86)\NSIS\makensis" mcha_x64.nsi
+
+:END
 
 
 REM =============================
