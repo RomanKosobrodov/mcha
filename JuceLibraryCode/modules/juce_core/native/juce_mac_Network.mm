@@ -211,6 +211,10 @@ public:
         initialised = true;
     }
 
+    void didSendBodyData (int /*totalBytesWritten*/, int /*totalBytesExpected*/)
+    {
+    }
+
     void finishedLoading()
     {
         hasFinished = true;
@@ -249,6 +253,8 @@ private:
             addMethod (@selector (connection:didReceiveResponse:), didReceiveResponse,         "v@:@@");
             addMethod (@selector (connection:didFailWithError:),   didFailWithError,           "v@:@@");
             addMethod (@selector (connection:didReceiveData:),     didReceiveData,             "v@:@@");
+            addMethod (@selector (connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:totalBytesExpectedToWrite:),
+                                                                   connectionDidSendBodyData,  "v@:@iii");
             addMethod (@selector (connectionDidFinishLoading:),    connectionDidFinishLoading, "v@:@");
 
             registerClass();
@@ -273,13 +279,18 @@ private:
             getState (self)->didReceiveData (newData);
         }
 
+        static void connectionDidSendBodyData (id self, SEL, NSURLConnection*, NSInteger, NSInteger totalBytesWritten, NSInteger totalBytesExpected)
+        {
+            getState (self)->didSendBodyData (totalBytesWritten, totalBytesExpected);
+        }
+
         static void connectionDidFinishLoading (id self, SEL, NSURLConnection*)
         {
             getState (self)->finishedLoading();
         }
     };
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (URLConnectionState);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (URLConnectionState)
 };
 
 
@@ -397,7 +408,7 @@ private:
         }
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WebInputStream);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WebInputStream)
 };
 
 InputStream* URL::createNativeStream (const String& address, bool isPost, const MemoryBlock& postData,

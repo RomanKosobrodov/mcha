@@ -103,7 +103,7 @@ public:
 private:
     Item& operator= (const Item&);
 
-    JUCE_LEAK_DETECTOR (Item);
+    JUCE_LEAK_DETECTOR (Item)
 };
 
 
@@ -195,7 +195,7 @@ public:
 private:
     bool isHighlighted;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ItemComponent);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ItemComponent)
 };
 
 
@@ -1121,7 +1121,7 @@ private:
         return true;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Window);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Window)
 };
 
 
@@ -1227,16 +1227,6 @@ void PopupMenu::addColouredItem (const int itemResultID,
 }
 
 //==============================================================================
-void PopupMenu::addCustomItem (const int itemResultID, CustomComponent* const customComponent)
-{
-    jassert (itemResultID != 0);    // 0 is used as a return value to indicate that the user
-                                    // didn't pick anything, so you shouldn't use it as the id
-                                    // for an item..
-
-    items.add (new Item (itemResultID, String::empty, true, false, Image::null,
-                         Colours::black, false, customComponent, nullptr, nullptr));
-}
-
 class PopupMenu::NormalComponentWrapper : public PopupMenu::CustomComponent
 {
 public:
@@ -1263,17 +1253,30 @@ public:
 private:
     const int width, height;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NormalComponentWrapper);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NormalComponentWrapper)
 };
+
+void PopupMenu::addCustomItem (const int itemResultID, CustomComponent* const customComponent)
+{
+    jassert (itemResultID != 0);    // 0 is used as a return value to indicate that the user
+                                    // didn't pick anything, so you shouldn't use it as the id
+                                    // for an item..
+
+    items.add (new Item (itemResultID, String::empty, true, false, Image::null,
+                         Colours::black, false, customComponent, nullptr, nullptr));
+}
 
 void PopupMenu::addCustomItem (const int itemResultID,
                                Component* customComponent,
                                int idealWidth, int idealHeight,
-                               const bool triggerMenuItemAutomaticallyWhenClicked)
+                               const bool triggerMenuItemAutomaticallyWhenClicked,
+                               const PopupMenu* subMenu)
 {
-    addCustomItem (itemResultID,
-                   new NormalComponentWrapper (customComponent, idealWidth, idealHeight,
-                                               triggerMenuItemAutomaticallyWhenClicked));
+    items.add (new Item (itemResultID, String::empty, true, false, Image::null,
+                         Colours::black, false,
+                         new NormalComponentWrapper (customComponent, idealWidth, idealHeight,
+                                                     triggerMenuItemAutomaticallyWhenClicked),
+                         subMenu, nullptr));
 }
 
 //==============================================================================
@@ -1322,7 +1325,7 @@ public:
     }
 
 private:
-    JUCE_LEAK_DETECTOR (HeaderItemComponent);
+    JUCE_LEAK_DETECTOR (HeaderItemComponent)
 };
 
 void PopupMenu::addSectionHeader (const String& title)
@@ -1440,7 +1443,7 @@ public:
     WeakReference<Component> prevFocused, prevTopLevel;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE (PopupMenuCompletionCallback);
+    JUCE_DECLARE_NON_COPYABLE (PopupMenuCompletionCallback)
 };
 
 int PopupMenu::showWithOptionalCallback (const Options& options, ModalComponentManager::Callback* const userCallback,

@@ -64,6 +64,7 @@ public:
         LinearHorizontal,               /**< A traditional horizontal slider. */
         LinearVertical,                 /**< A traditional vertical slider. */
         LinearBar,                      /**< A horizontal bar slider with the text label drawn on top of it. */
+        LinearBarVertical,
         Rotary,                         /**< A rotary control that you move by dragging the mouse in a circular motion, like a knob.
                                              @see setRotaryParameters */
         RotaryHorizontalDrag,           /**< A rotary control that you move by dragging the mouse left-to-right.
@@ -803,7 +804,7 @@ protected:
 
 private:
     //==============================================================================
-    JUCE_PUBLIC_IN_DLL_BUILD (class Pimpl);
+    JUCE_PUBLIC_IN_DLL_BUILD (class Pimpl)
     friend class Pimpl;
     friend class ScopedPointer<Pimpl>;
     ScopedPointer<Pimpl> pimpl;
@@ -824,7 +825,7 @@ private:
     JUCE_DEPRECATED (void setMinAndMaxValues (double, double, bool));
    #endif
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Slider);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Slider)
 };
 
 /** This typedef is just for compatibility with old code - newer code should use the Slider::Listener class directly. */

@@ -23,8 +23,15 @@
   ==============================================================================
 */
 
+static ThreadLocalValue<AudioProcessor::WrapperType> wrapperTypeBeingCreated;
+
+void AudioProcessor::setTypeOfNextNewPlugin (AudioProcessor::WrapperType type)
+{
+    wrapperTypeBeingCreated = type;
+}
+
 AudioProcessor::AudioProcessor()
-    : wrapperType (wrapperType_Undefined),
+    : wrapperType (wrapperTypeBeingCreated.get()),
       playHead (nullptr),
       sampleRate (0),
       blockSize (0),
@@ -207,9 +214,8 @@ void AudioProcessor::suspendProcessing (const bool shouldBeSuspended)
     suspended = shouldBeSuspended;
 }
 
-void AudioProcessor::reset()
-{
-}
+void AudioProcessor::reset() {}
+void AudioProcessor::processBlockBypassed (AudioSampleBuffer&, MidiBuffer&) {}
 
 //==============================================================================
 void AudioProcessor::editorBeingDeleted (AudioProcessorEditor* const editor) noexcept

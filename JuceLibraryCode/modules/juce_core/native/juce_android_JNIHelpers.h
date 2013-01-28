@@ -196,7 +196,7 @@ private:
     void initialise (JNIEnv*);
     void release (JNIEnv*);
 
-    JUCE_DECLARE_NON_COPYABLE (JNIClassBase);
+    JUCE_DECLARE_NON_COPYABLE (JNIClassBase)
 };
 
 //==============================================================================
@@ -360,6 +360,7 @@ extern ThreadLocalJNIEnvHolder threadLocalJNIEnvHolder;
  METHOD (showOkCancelBox,        "showOkCancelBox",      "(Ljava/lang/String;Ljava/lang/String;J)V") \
  METHOD (showYesNoCancelBox,     "showYesNoCancelBox",   "(Ljava/lang/String;Ljava/lang/String;J)V") \
  STATICMETHOD (getLocaleValue,   "getLocaleValue",       "(Z)Ljava/lang/String;") \
+ METHOD (scanFile,               "scanFile",             "(Ljava/lang/String;)V")
 
 DECLARE_JNI_CLASS (JuceAppActivity, JUCE_ANDROID_ACTIVITY_CLASSPATH);
 #undef JNI_CLASS_MEMBERS

@@ -222,7 +222,9 @@ namespace XSHMHelpers
                 trappedErrorCode = 0;
                 XErrorHandler oldHandler = XSetErrorHandler (errorTrapHandler);
 
-                XShmSegmentInfo segmentInfo = { 0 };
+                XShmSegmentInfo segmentInfo;
+                zerostruct (segmentInfo);
+
                 XImage* xImage = XShmCreateImage (display, DefaultVisual (display, DefaultScreen (display)),
                                                   24, ZPixmap, 0, &segmentInfo, 50, 50);
 
@@ -719,7 +721,7 @@ private:
         return 0;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XBitmapImage);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XBitmapImage)
 };
 
 //==============================================================================
@@ -963,7 +965,7 @@ public:
         return screenPosition - getScreenPosition();
     }
 
-    void setAlpha (float newAlpha)
+    void setAlpha (float /* newAlpha */)
     {
         //xxx todo!
     }
@@ -1109,7 +1111,7 @@ public:
         return BorderSize<int>();
     }
 
-    bool setAlwaysOnTop (bool alwaysOnTop)
+    bool setAlwaysOnTop (bool /* alwaysOnTop */)
     {
         return false;
     }
@@ -1507,7 +1509,7 @@ public:
         }
 
         if (dragState.dragging)
-            handleExternalDragButtonReleaseEvent (buttonRelEvent);
+            handleExternalDragButtonReleaseEvent();
 
         handleMouseEvent (0, getMousePos (buttonRelEvent), currentModifiers, getEventTime (buttonRelEvent));
 
@@ -1881,10 +1883,8 @@ private:
 
                 if (peer->depth == 32)
                 {
-                    RectangleList::Iterator i (originalRepaintRegion);
-
-                    while (i.next())
-                        image.clear (*i.getRectangle() - totalArea.getPosition());
+                    for (const Rectangle<int>* i = originalRepaintRegion.begin(), * const e = originalRepaintRegion.end(); i != e; ++i)
+                        image.clear (*i - totalArea.getPosition());
                 }
 
                 {
@@ -1896,17 +1896,16 @@ private:
                 if (! peer->maskedRegion.isEmpty())
                     originalRepaintRegion.subtract (peer->maskedRegion);
 
-                for (RectangleList::Iterator i (originalRepaintRegion); i.next();)
+                for (const Rectangle<int>* i = originalRepaintRegion.begin(), * const e = originalRepaintRegion.end(); i != e; ++i)
                 {
                    #if JUCE_USE_XSHM
                     shmCompletedDrawing = false;
                    #endif
-                    const Rectangle<int>& r = *i.getRectangle();
 
                     static_cast<XBitmapImage*> (image.getPixelData())
                         ->blitToWindow (peer->windowH,
-                                        r.getX(), r.getY(), r.getWidth(), r.getHeight(),
-                                        r.getX() - totalArea.getX(), r.getY() - totalArea.getY());
+                                        i->getX(), i->getY(), i->getWidth(), i->getHeight(),
+                                        i->getX() - totalArea.getX(), i->getY() - totalArea.getY());
                 }
             }
 
@@ -1929,7 +1928,7 @@ private:
        #if JUCE_USE_XSHM
         bool useARGBImagesForRendering, shmCompletedDrawing;
        #endif
-        JUCE_DECLARE_NON_COPYABLE (LinuxRepaintManager);
+        JUCE_DECLARE_NON_COPYABLE (LinuxRepaintManager)
     };
 
     ScopedPointer <LinuxRepaintManager> repainter;
@@ -2057,7 +2056,9 @@ private:
 
         if (hints != None)
         {
-            MotifWmHints motifHints = { 0 };
+            MotifWmHints motifHints;
+            zerostruct (motifHints);
+
             motifHints.flags = 2; /* MWM_HINTS_DECORATIONS */
             motifHints.decorations = 0;
 
@@ -2093,7 +2094,9 @@ private:
 
         if (hints != None)
         {
-            MotifWmHints motifHints = { 0 };
+            MotifWmHints motifHints;
+            zerostruct (motifHints);
+
             motifHints.flags = 1 | 2; /* MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS */
             motifHints.decorations = 2 /* MWM_DECOR_BORDER */ | 8 /* MWM_DECOR_TITLE */ | 16; /* MWM_DECOR_MENU */
 
@@ -2431,7 +2434,9 @@ private:
 
     void sendExternalDragAndDropDrop (const Window targetWindow)
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndDrop;
         msg.data.l[2] = CurrentTime;
 
@@ -2440,15 +2445,15 @@ private:
 
     void sendExternalDragAndDropEnter (const Window targetWindow)
     {
-        XClientMessageEvent msg = { 0 };
-        msg.message_type = Atoms::get().XdndEnter;
+        XClientMessageEvent msg;
+        zerostruct (msg);
 
-        const Atoms& atoms = Atoms::get();
+        msg.message_type = Atoms::get().XdndEnter;
 
         const Atom* mimeTypes  = dragState.getMimeTypes();
         const int numMimeTypes = dragState.getNumMimeTypes();
 
-        msg.data.l[1] = dragState.xdndVersion << 24 | numMimeTypes > 3;
+        msg.data.l[1] = (dragState.xdndVersion << 24) | (numMimeTypes > 3);
         msg.data.l[2] = numMimeTypes > 0 ? mimeTypes[0] : 0;
         msg.data.l[3] = numMimeTypes > 1 ? mimeTypes[1] : 0;
         msg.data.l[4] = numMimeTypes > 2 ? mimeTypes[2] : 0;
@@ -2458,7 +2463,9 @@ private:
 
     void sendExternalDragAndDropPosition (const Window targetWindow)
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndPosition;
 
         const Point<int> mousePos (Desktop::getInstance().getMousePosition());
@@ -2476,7 +2483,9 @@ private:
 
     void sendDragAndDropStatus (const bool acceptDrop, Atom dropAction)
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndStatus;
         msg.data.l[1] = (acceptDrop ? 1 : 0) | 2; // 2 indicates that we want to receive position messages
         msg.data.l[4] = dropAction;
@@ -2486,14 +2495,18 @@ private:
 
     void sendExternalDragAndDropLeave (const Window targetWindow)
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndLeave;
         sendExternalDragAndDropMessage (msg, targetWindow);
     }
 
     void sendDragAndDropFinish()
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndFinished;
         sendDragAndDropMessage (msg);
     }
@@ -2539,8 +2552,8 @@ private:
             dragState.silentRect = Rectangle<int>();
 
             if ((clientMsg.data.l[1] & 1) != 0
-                 && (clientMsg.data.l[4] == Atoms::get().XdndActionCopy
-                      || clientMsg.data.l[4] == Atoms::get().XdndActionPrivate))
+                 && ((Atom) clientMsg.data.l[4] == Atoms::get().XdndActionCopy
+                      || (Atom) clientMsg.data.l[4] == Atoms::get().XdndActionPrivate))
             {
                 if ((clientMsg.data.l[1] & 2) == 0) // target requests silent rectangle
                     dragState.silentRect.setBounds (clientMsg.data.l[2] >> 16,
@@ -2553,7 +2566,7 @@ private:
         }
     }
 
-    void handleExternalDragButtonReleaseEvent (const XButtonReleasedEvent& buttonRelEvent)
+    void handleExternalDragButtonReleaseEvent()
     {
         if (dragState.dragging)
             XUngrabPointer (display, CurrentTime);
@@ -2908,7 +2921,7 @@ private:
         lastMousePos = Point<int> (0x100000, 0x100000);
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LinuxComponentPeer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LinuxComponentPeer)
 };
 
 ModifierKeys LinuxComponentPeer::currentModifiers;
@@ -2954,7 +2967,7 @@ ModifierKeys ModifierKeys::getCurrentModifiersRealtime() noexcept
 
 
 //==============================================================================
-void Desktop::setKioskComponent (Component* kioskModeComponent, bool enableOrDisable, bool allowMenusAndBars)
+void Desktop::setKioskComponent (Component* kioskModeComponent, bool enableOrDisable, bool /* allowMenusAndBars */)
 {
     if (enableOrDisable)
         kioskModeComponent->setBounds (Desktop::getInstance().getDisplays().getMainDisplay().totalArea);
@@ -3147,6 +3160,12 @@ bool Desktop::isScreenSaverEnabled()
 }
 
 //==============================================================================
+bool juce_areThereAnyAlwaysOnTopWindows()
+{
+    return false; // XXX should be implemented
+}
+
+//==============================================================================
 void* CustomMouseCursorInfo::create() const
 {
     ScopedXLock xlock;
@@ -3336,7 +3355,7 @@ void MouseCursor::showInAllWindows() const
 }
 
 //==============================================================================
-Image juce_createIconForFile (const File& file)
+Image juce_createIconForFile (const File& /* file */)
 {
     return Image::null;
 }
@@ -3382,16 +3401,16 @@ void LookAndFeel::playAlertSound()
 //==============================================================================
 void JUCE_CALLTYPE NativeMessageBox::showMessageBox (AlertWindow::AlertIconType iconType,
                                                      const String& title, const String& message,
-                                                     Component* associatedComponent)
+                                                     Component* /* associatedComponent */)
 {
-    AlertWindow::showMessageBox (AlertWindow::NoIcon, title, message);
+    AlertWindow::showMessageBox (iconType, title, message);
 }
 
 void JUCE_CALLTYPE NativeMessageBox::showMessageBoxAsync (AlertWindow::AlertIconType iconType,
                                                           const String& title, const String& message,
-                                                          Component* associatedComponent)
+                                                          Component* /* associatedComponent */)
 {
-    AlertWindow::showMessageBoxAsync (AlertWindow::NoIcon, title, message);
+    AlertWindow::showMessageBoxAsync (iconType, title, message);
 }
 
 bool JUCE_CALLTYPE NativeMessageBox::showOkCancelBox (AlertWindow::AlertIconType iconType,

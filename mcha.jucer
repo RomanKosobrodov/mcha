@@ -96,12 +96,15 @@
                        libraryPath="..\..\Lib\$(Platform)" useRuntimeLibDLL="0" binaryPath=".\..\..\Bin\$(Platform)\$(Configuration)\"/>
       </CONFIGURATIONS>
     </VS2010>
-    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="..\juce\modules">
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="./../../../juce/modules"
+                extraCompilerFlags="-std=c++0x -fPIC" extraLinkerFlags="-lfftw3f -lm">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="mcha"/>
-        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
-                       targetName="mcha"/>
+        <CONFIGURATION name="Debug-i386" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="mcha" headerPath="../../Source&#10;../../Source/Filter"
+                       binaryPath="./../../Bin/Linux-Debug-i386"/>
+        <CONFIGURATION name="Release-i386" libraryPath="/usr/X11R6/lib/" isDebug="0"
+                       optimisation="2" targetName="mcha" headerPath="../../Source&#10;../../Source/Filter"
+                       binaryPath="./../../Bin/Linux-Release-i386"/>
       </CONFIGURATIONS>
     </LINUX_MAKE>
     <XCODE_MAC targetFolder="Builds/MacOSX" juceFolder="..\juce\modules">

@@ -91,9 +91,6 @@ public:
 	/* Timer method */
 	void 	timerCallback();
 
-
-	juce_UseDebuggingNewOperator
-
 private:
 	
 	String	lastError;
@@ -151,6 +148,8 @@ private:
 	int						recChanCount;
 
 	volatile bool			processIsRunning;
+
+	JUCE_LEAK_DETECTOR(MchaRecordPlayer)
 
 public:
 	juce_DeclareSingleton (MchaRecordPlayer, true)

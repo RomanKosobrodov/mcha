@@ -297,11 +297,8 @@ public:
         {
             if (! maskedRegion.isEmpty())
             {
-                for (RectangleList::Iterator i (maskedRegion); i.next();)
-                {
-                    const Rectangle<int>& r = *i.getRectangle();
-                    ExcludeClipRect (hdc, r.getX(), r.getY(), r.getRight(), r.getBottom());
-                }
+                for (const Rectangle<int>* i = maskedRegion.begin(), * const e = maskedRegion.end(); i != e; ++i)
+                    ExcludeClipRect (hdc, i->getX(), i->getY(), i->getRight(), i->getBottom());
             }
 
             RECT windowBounds;
@@ -328,11 +325,8 @@ public:
             {
                 savedDC = SaveDC (dc);
 
-                for (RectangleList::Iterator i (maskedRegion); i.next();)
-                {
-                    const Rectangle<int>& r = *i.getRectangle();
-                    ExcludeClipRect (dc, r.getX(), r.getY(), r.getRight(), r.getBottom());
-                }
+                for (const Rectangle<int>* i = maskedRegion.begin(), * const e = maskedRegion.end(); i != e; ++i)
+                    ExcludeClipRect (dc, i->getX(), i->getY(), i->getRight(), i->getBottom());
             }
 
             StretchDIBits (dc,
@@ -363,7 +357,7 @@ private:
         return bitsPerPixel > 24;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WindowsBitmapImage);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WindowsBitmapImage)
 };
 
 //==============================================================================
@@ -796,10 +790,7 @@ public:
 
     void toBehind (ComponentPeer* other)
     {
-        HWNDComponentPeer* const otherPeer = dynamic_cast <HWNDComponentPeer*> (other);
-        jassert (otherPeer != nullptr); // wrong type of window?
-
-        if (otherPeer != nullptr)
+        if (HWNDComponentPeer* const otherPeer = dynamic_cast <HWNDComponentPeer*> (other))
         {
             setMinimised (false);
 
@@ -809,6 +800,10 @@ public:
                 SetWindowPos (hwnd, otherPeer->hwnd, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
             else if (otherPeer->getComponent().isAlwaysOnTop())
                 SetWindowPos (hwnd, HWND_TOP,        0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+        }
+        else
+        {
+            jassertfalse; // wrong type of window?
         }
     }
 
@@ -990,7 +985,7 @@ public:
             HWNDComponentPeer& owner;
             ComponentPeer::DragInfo dragInfo;
 
-            JUCE_DECLARE_NON_COPYABLE (OwnerInfo);
+            JUCE_DECLARE_NON_COPYABLE (OwnerInfo)
         };
 
         ScopedPointer<OwnerInfo> ownerInfo;
@@ -1060,7 +1055,7 @@ public:
             return S_OK;
         }
 
-        JUCE_DECLARE_NON_COPYABLE (JuceDropTarget);
+        JUCE_DECLARE_NON_COPYABLE (JuceDropTarget)
     };
 
 private:
@@ -1104,7 +1099,7 @@ private:
     private:
         Image image;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TemporaryImage);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TemporaryImage)
     };
 
     TemporaryImage offscreenImageGenerator;
@@ -1223,7 +1218,7 @@ private:
             return false;
         }
 
-        JUCE_DECLARE_NON_COPYABLE (WindowClassHolder);
+        JUCE_DECLARE_NON_COPYABLE (WindowClassHolder)
     };
 
     //==============================================================================
@@ -1497,10 +1492,8 @@ private:
 
                 if (transparent)
                 {
-                    RectangleList::Iterator i (contextClip);
-
-                    while (i.next())
-                        offscreenImage.clear (*i.getRectangle());
+                    for (const Rectangle<int>* i = contextClip.begin(), * const e = contextClip.end(); i != e; ++i)
+                        offscreenImage.clear (*i);
                 }
 
                 // if the component's not opaque, this won't draw properly unless the platform can support this
@@ -2673,9 +2666,7 @@ private:
 
         void moveCandidateWindowToLeftAlignWithSelection (HIMC hImc, ComponentPeer& peer, TextInputTarget* target) const
         {
-            Component* const targetComp = dynamic_cast <Component*> (target);
-
-            if (targetComp != nullptr)
+            if (Component* const targetComp = dynamic_cast <Component*> (target))
             {
                 const Rectangle<int> area (peer.getComponent().getLocalArea (targetComp, target->getCaretRectangle()));
 
@@ -2684,13 +2675,13 @@ private:
             }
         }
 
-        JUCE_DECLARE_NON_COPYABLE (IMEHandler);
+        JUCE_DECLARE_NON_COPYABLE (IMEHandler)
     };
 
     IMEHandler imeHandler;
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HWNDComponentPeer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HWNDComponentPeer)
 };
 
 ModifierKeys HWNDComponentPeer::currentModifiers;
@@ -2786,6 +2777,37 @@ bool Process::isForegroundProcess()
 void Process::makeForegroundProcess()
 {
     // is this possible in Windows?
+}
+
+//==============================================================================
+static BOOL CALLBACK enumAlwaysOnTopWindows (HWND hwnd, LPARAM lParam)
+{
+    if (IsWindowVisible (hwnd))
+    {
+        DWORD processID = 0;
+        GetWindowThreadProcessId (hwnd, &processID);
+
+        if (processID == GetCurrentProcessId())
+        {
+            WINDOWINFO info;
+
+            if (GetWindowInfo (hwnd, &info)
+                 && (info.dwExStyle & WS_EX_TOPMOST) != 0)
+            {
+                *reinterpret_cast <bool*> (lParam) = true;
+                return FALSE;
+            }
+        }
+    }
+
+    return TRUE;
+}
+
+bool juce_areThereAnyAlwaysOnTopWindows()
+{
+    bool anyAlwaysOnTopFound = false;
+    EnumWindows (&enumAlwaysOnTopWindows, (LPARAM) &anyAlwaysOnTopFound);
+    return anyAlwaysOnTopFound;
 }
 
 //==============================================================================

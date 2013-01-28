@@ -134,7 +134,7 @@ public:
     void setOrientation (Orientation newOrientation);
 
     /** Returns the keyboard's current direction. */
-    const Orientation getOrientation() const noexcept               { return orientation; }
+    Orientation getOrientation() const noexcept                     { return orientation; }
 
     /** Sets the range of midi notes that the keyboard will be limited to.
 
@@ -407,7 +407,7 @@ private:
     void setLowestVisibleKeyFloat (float noteNumber);
     Rectangle<int> getWhiteNotePos (int noteNumber) const;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiKeyboardComponent);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiKeyboardComponent)
 };
 
 

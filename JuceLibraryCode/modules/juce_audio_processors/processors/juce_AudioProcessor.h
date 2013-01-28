@@ -134,6 +134,17 @@ public:
     virtual void processBlock (AudioSampleBuffer& buffer,
                                MidiBuffer& midiMessages) = 0;
 
+    /** Renders the next block when the processor is being bypassed.
+        The default implementation of this method will pass-through any incoming audio, but
+        you may override this method e.g. to add latency compensation to the data to match
+        the processor's latency characteristics. This will avoid situations where bypassing
+        will shift the signal forward in time, possibly creating pre-echo effects and odd timings.
+        Another use for this method would be to cross-fade or morph between the wet (not bypassed)
+        and dry (bypassed) signals.
+    */
+    virtual void processBlockBypassed (AudioSampleBuffer& buffer,
+                                       MidiBuffer& midiMessages);
+
     //==============================================================================
     /** Returns the current AudioPlayHead object that should be used to find
         out the state and position of the playhead.
@@ -581,6 +592,9 @@ public:
     */
     WrapperType wrapperType;
 
+    /** @internal */
+    static void setTypeOfNextNewPlugin (WrapperType);
+
 protected:
     //==============================================================================
     /** Helper function that just converts an xml element into a binary blob.
@@ -620,7 +634,7 @@ private:
     BigInteger changingParams;
    #endif
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessor);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessor)
 };
 
 

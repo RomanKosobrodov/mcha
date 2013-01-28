@@ -231,9 +231,10 @@ MCHAEXPORT void logAddress(const char* infoStr, const int64 addr)
 /* ------------------------------------------------------------------------------ */
 void onMchaLoad()
 {
-	DBG("onMchaLoad()");	
+	DBG("onMchaLoad()");
 	initialiseJuce_GUI();
-	MchaRecordPlayer::getInstance();
+	
+	//MchaRecordPlayer::getInstance();
 }
 
 /* ------------------------------------------------------------------------------ */
@@ -254,7 +255,7 @@ void onMchaUnload()
 		conv->deleteInstance();
 	}
 
-	shutdownJuce_GUI();
+	//shutdownJuce_GUI();
 }
 
 /* ------------------------------------------------------------------------------ */

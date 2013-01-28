@@ -110,7 +110,7 @@ namespace
 {
     File juce_readlink (const String& file, const File& defaultFile)
     {
-        const int size = 8192;
+        const size_t size = 8192;
         HeapBlock<char> buffer;
         buffer.malloc (size + 4);
 
@@ -298,7 +298,7 @@ private:
     String parentDir, wildCard;
     DIR* dir;
 
-    JUCE_DECLARE_NON_COPYABLE (Pimpl);
+    JUCE_DECLARE_NON_COPYABLE (Pimpl)
 };
 
 DirectoryIterator::NativeIterator::NativeIterator (const File& directory, const String& wildCard)

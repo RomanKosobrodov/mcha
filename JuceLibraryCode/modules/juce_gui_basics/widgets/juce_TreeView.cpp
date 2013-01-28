@@ -363,9 +363,11 @@ private:
 
     static bool isMouseDraggingInChildCompOf (Component* const comp)
     {
-        for (int i = Desktop::getInstance().getNumMouseSources(); --i >= 0;)
+        Desktop& desktop = Desktop::getInstance();
+
+        for (int i = desktop.getNumMouseSources(); --i >= 0;)
         {
-            MouseInputSource* const source = Desktop::getInstance().getMouseSource(i);
+            MouseInputSource* const source = desktop.getMouseSource(i);
 
             if (source->isDragging())
                 if (Component* const underMouse = source->getComponentUnderMouse())
@@ -381,7 +383,7 @@ private:
         owner.recalculateIfNeeded();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ContentComponent);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ContentComponent)
 };
 
 //==============================================================================
@@ -426,7 +428,7 @@ public:
 private:
     int lastX;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeViewport);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeViewport)
 };
 
 
@@ -951,7 +953,7 @@ public:
     int lastIndex;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE (InsertPointHighlight);
+    JUCE_DECLARE_NON_COPYABLE (InsertPointHighlight)
 };
 
 //==============================================================================
@@ -978,7 +980,7 @@ public:
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE (TargetGroupHighlight);
+    JUCE_DECLARE_NON_COPYABLE (TargetGroupHighlight)
 };
 
 //==============================================================================

@@ -3,7 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "mchaRecordPlayer.h"
-#include "mchaFilter.h"
+#include "Filter/mchaFilter.h"
 
 
 namespace mcha

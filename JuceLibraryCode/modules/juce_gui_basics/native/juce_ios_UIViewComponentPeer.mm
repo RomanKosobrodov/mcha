@@ -251,7 +251,7 @@ public:
     MultiTouchMapper<UITouch*> currentTouches;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UIViewComponentPeer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UIViewComponentPeer)
 };
 
 //==============================================================================
@@ -808,7 +808,7 @@ void UIViewComponentPeer::handleTouches (UIEvent* event, const bool isDown, cons
 
         if (isCancel)
         {
-            currentTouches.clear();
+            currentTouches.clearTouch (touchIndex);
             modsToSend = currentModifiers = currentModifiers.withoutMouseButtons();
         }
 
@@ -877,9 +877,7 @@ void UIViewComponentPeer::updateHiddenTextContent (TextInputTarget* target)
 
 BOOL UIViewComponentPeer::textViewReplaceCharacters (const Range<int>& range, const String& text)
 {
-    TextInputTarget* const target = findCurrentTextInputTarget();
-
-    if (target != nullptr)
+    if (TextInputTarget* const target = findCurrentTextInputTarget())
     {
         const Range<int> currentSelection (target->getHighlightedRegion());
 
@@ -900,9 +898,7 @@ BOOL UIViewComponentPeer::textViewReplaceCharacters (const Range<int>& range, co
 
 void UIViewComponentPeer::globalFocusChanged (Component*)
 {
-    TextInputTarget* const target = findCurrentTextInputTarget();
-
-    if (target != nullptr)
+    if (TextInputTarget* const target = findCurrentTextInputTarget())
     {
         Component* comp = dynamic_cast<Component*> (target);
 

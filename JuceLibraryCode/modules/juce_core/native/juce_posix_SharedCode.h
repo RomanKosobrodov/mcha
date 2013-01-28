@@ -156,7 +156,7 @@ private:
     bool triggered;
     const bool manualReset;
 
-    JUCE_DECLARE_NON_COPYABLE (WaitableEventImpl);
+    JUCE_DECLARE_NON_COPYABLE (WaitableEventImpl)
 };
 
 WaitableEvent::WaitableEvent (const bool manualReset) noexcept
@@ -512,8 +512,19 @@ int FileOutputStream::writeInternal (const void* const data, const int numBytes)
 void FileOutputStream::flushInternal()
 {
     if (fileHandle != 0)
+    {
         if (fsync (getFD (fileHandle)) == -1)
             status = getResultForErrno();
+
+       #if JUCE_ANDROID
+        // This stuff tells the OS to asynchronously update the metadata
+        // that the OS has cached aboud the file - this metadata is used
+        // when the device is acting as a USB drive, and unless it's explicitly
+        // refreshed, it'll get out of step with the real file.
+        const LocalRef<jstring> t (javaString (file.getFullPathName()));
+        android.activity.callVoidMethod (JuceAppActivity.scanFile, t.get());
+       #endif
+    }
 }
 
 Result FileOutputStream::truncate()
@@ -627,7 +638,8 @@ String File::getVolumeLabel() const
         char            mountPointSpace [MAXPATHLEN];
     } attrBuf;
 
-    struct attrlist attrList = { 0 };
+    struct attrlist attrList;
+    zerostruct (attrList); // (can't use "= { 0 }" on this object because it's typedef'ed as a C struct)
     attrList.bitmapcount = ATTR_BIT_MAP_COUNT;
     attrList.volattr = ATTR_VOL_INFO | ATTR_VOL_NAME;
 
@@ -723,7 +735,9 @@ public:
 
         if (handle != 0)
         {
-            struct flock fl = { 0 };
+            struct flock fl;
+            zerostruct (fl);
+
             fl.l_whence = SEEK_SET;
             fl.l_type = F_WRLCK;
 
@@ -761,7 +775,9 @@ public:
        #if ! JUCE_IOS
         if (handle != 0)
         {
-            struct flock fl = { 0 };
+            struct flock fl;
+            zerostruct (fl);
+
             fl.l_whence = SEEK_SET;
             fl.l_type = F_UNLCK;
 
@@ -994,6 +1010,7 @@ public:
                 // we're the child process..
                 close (pipeHandles[0]);   // close the read handle
                 dup2 (pipeHandles[1], 1); // turns the pipe into stdout
+                dup2 (pipeHandles[1], 2); //  + stderr
                 close (pipeHandles[1]);
 
                 Array<char*> argv;
@@ -1041,6 +1058,10 @@ public:
     {
         jassert (dest != nullptr);
 
+        #ifdef fdopen
+         #error // the zlib headers define this function as NULL!
+        #endif
+
         if (readHandle == 0 && childPID != 0)
             readHandle = fdopen (pipeHandle, "r");
 
@@ -1061,7 +1082,7 @@ private:
     int pipeHandle;
     FILE* readHandle;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ActiveProcess);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ActiveProcess)
 };
 
 bool ChildProcess::start (const String& command)

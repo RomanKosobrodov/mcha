@@ -947,11 +947,11 @@ private:
     Result createDirectoryInternal (const String&) const;
     bool copyInternal (const File&) const;
     bool moveInternal (const File&) const;
-    bool setFileTimesInternal (int64 modificationTime, int64 accessTime, int64 creationTime) const;
-    void getFileTimesInternal (int64& modificationTime, int64& accessTime, int64& creationTime) const;
-    bool setFileReadOnlyInternal (bool shouldBeReadOnly) const;
+    bool setFileTimesInternal (int64 m, int64 a, int64 c) const;
+    void getFileTimesInternal (int64& m, int64& a, int64& c) const;
+    bool setFileReadOnlyInternal (bool) const;
 
-    JUCE_LEAK_DETECTOR (File);
+    JUCE_LEAK_DETECTOR (File)
 };
 
 #endif   // __JUCE_FILE_JUCEHEADER__

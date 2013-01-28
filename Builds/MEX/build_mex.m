@@ -1,5 +1,5 @@
 function build_mex(varargin)
-% build64 builds all MEX files in the MEX directory
+% builds all MEX files in the MEX directory
 clc;
 
 fileList = { 'playRecord.cpp' 
@@ -67,10 +67,10 @@ end
 %% Compile Linux versions
 if (strcmp(platformStr, 'Linux-x86_64')|| strcmp(platformStr, 'Linux-i386'))
     srcFolder = '../../Source/MEX/';
-    outPath = ['..\..\Bin\MCHA-' confStr '-' platformStr '\'];
+    outPath = ['../../Bin/MCHA-' confStr '-' platformStr '/'];
     copyfile('../../Source/m/*.m', outPath );       
     for k=1:length(fileList)
-        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ' -L' outPath ' -lmcha'];
+        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ];
         fn = fileList{k};
         disp([fn(1:(end-3)) extStr]);
         eval(cmdStr); 
