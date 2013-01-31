@@ -2,13 +2,13 @@ function build_mex(varargin)
 % builds all MEX files in the MEX directory
 clc;
 
-fileList = { 'playRecord.cpp' 
+fileList = { %'playRecord.cpp' 
              'init.cpp'
              'getVersion.cpp'
-             'setGain.cpp'  
-             'play.cpp'
-             'record.cpp'
-             'getData.cpp'
+             %'setGain.cpp'  
+             %'play.cpp'
+             %'record.cpp'
+             %'getData.cpp'
              'stop.cpp' 
              'running.cpp' 
              'getError.cpp'         
@@ -37,7 +37,7 @@ else
         if strcmp(extStr, 'mexa64')
             platformStr = 'Linux-x86_64';
         else
-            if strcmp(extStr, 'mexa32')
+            if strcmp(extStr, 'mexa32') || strcmp(extStr, 'mexglx')
                 platformStr = 'Linux-i386';
             else
                 error('Unsupported platform');
@@ -65,16 +65,16 @@ if (strcmp(platformStr, 'x64')|| strcmp(platformStr, 'Win32'))
 end
 
 %% Compile Linux versions
-if (strcmp(platformStr, 'Linux-x86_64')|| strcmp(platformStr, 'Linux-i386'))
+if (strcmp(platformStr, 'Linux-x86_64') || strcmp(platformStr, 'Linux-i386'))
     srcFolder = '../../Source/MEX/';
     outPath = ['../../Bin/MCHA-' confStr '-' platformStr '/'];
     copyfile('../../Source/m/*.m', outPath );       
     for k=1:length(fileList)
-        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ];
+        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ' -ldl'];
         fn = fileList{k};
         disp([fn(1:(end-3)) extStr]);
         eval(cmdStr); 
     end
 end
 
-exit;
+%exit;

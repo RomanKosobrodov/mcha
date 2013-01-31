@@ -18,21 +18,64 @@
 */
 
 #include "mex.h"
-#include "audioMEX.h"
-
-/* Input Arguments */
-#define	timeToWait		prhs[0]
 
 /* Output Arguments */
 #define	result	plhs[0]
 
-/* Entry point */
-void mexFunction(
-	int nlhs, 	mxArray *plhs[],
-	int nrhs, const mxArray *prhs[])
-{
-	if ( isRunning() )
-		result = mxCreateDoubleScalar(1.0);
-	else
-		result = mxCreateDoubleScalar(0.0);
-}
+#if ( defined (LINUX) || defined (__linux__) )
+
+	#include <dlfcn.h>
+
+	void mexFunction(
+		int nlhs, 	mxArray *plhs[],
+		int nrhs, const mxArray *prhs[])
+	{
+	   void *lib_handle;
+	   typedef bool (*fptr)();
+	   char *error;
+	   fptr isRunning;
+
+	// loading the library dynamically
+	   lib_handle = dlopen("/usr/lib/libmcha.so", RTLD_LAZY);
+	   if (!lib_handle) 
+	   {
+		  plhs[0] = mxCreateString( dlerror() );
+		  return;
+	   }
+
+	// resolving getVersion
+	   *(void **)(&isRunning) =  dlsym(lib_handle, "isRunning");
+	   if ((error = dlerror()) != NULL)  
+	   {
+		  plhs[0] = mxCreateString( error );
+		  return;
+	   }
+
+	   if ( isRunning() )
+		  result = mxCreateDoubleScalar(1.0);
+ 	   else
+		  result = mxCreateDoubleScalar(0.0);
+	
+	// release the handle
+	dlclose(lib_handle);
+
+	}
+#endif
+
+
+#if (defined (_WIN32) || defined (_WIN64))
+
+	#include "audioMEX.h"
+
+	/* Entry point */
+	void mexFunction(
+		int nlhs, 	mxArray *plhs[],
+		int nrhs, const mxArray *prhs[])
+	{
+		if ( isRunning() )
+			result = mxCreateDoubleScalar(1.0);
+		else
+			result = mxCreateDoubleScalar(0.0);
+	}
+
+#endif

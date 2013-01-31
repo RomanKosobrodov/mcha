@@ -17,15 +17,60 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "mex.h"
-#include "audioMEX.h"
 
-void mexFunction(
-	int nlhs, 	mxArray *plhs[],
-	int nrhs, const mxArray *prhs[])
-{
-	plhs[0] = mxCreateString( getLastError() );
-}
+
+#if ( defined (LINUX) || defined (__linux__) )
+
+	#include <dlfcn.h>
+
+	void mexFunction(
+		int nlhs, 	mxArray *plhs[],
+		int nrhs, const mxArray *prhs[])
+	{
+	   void *lib_handle;
+	   typedef const char* (*fptr)();
+	   char *error;
+	   fptr getLastError;
+
+	// loading the library dynamically
+	   lib_handle = dlopen("/usr/lib/libmcha.so", RTLD_LAZY);
+	   if (!lib_handle) 
+	   {
+		  plhs[0] = mxCreateString( dlerror() );
+		  return;
+	   }
+
+	// resolving getLastError
+	   *(void **)(&getLastError) =  dlsym(lib_handle, "getLastError");
+	   if ((error = dlerror()) != NULL)  
+	   {
+   		  plhs[0] = mxCreateString( error );
+		  return;
+	   }
+		else
+		{
+			plhs[0] = mxCreateString( getLastError() );
+		}
+	
+	// release the handle
+	  dlclose(lib_handle);
+  
+	}
+#endif
+
+
+#if (defined (_WIN32) || defined (_WIN64))
+
+	#include "audioMEX.h"
+
+	/* Entry point */
+	void mexFunction(
+		int nlhs, 	mxArray *plhs[],
+		int nrhs, const mxArray *prhs[])
+	{
+		plhs[0] = mxCreateString( getLastError() );
+	}
+
+#endif
 
