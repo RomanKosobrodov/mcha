@@ -17,7 +17,6 @@
 
 */
 
-#include <math.h>
 #include "mex.h"
 #include "audioMEX.h"
 

@@ -2,7 +2,7 @@ function build_mex(varargin)
 % builds all MEX files in the MEX directory
 clc;
 
-fileList = { %'playRecord.cpp' 
+fileList = { 'playRecord.cpp' 
              'init.cpp'
              'getVersion.cpp'
              'setGain.cpp'  
