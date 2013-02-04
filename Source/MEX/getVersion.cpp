@@ -18,45 +18,27 @@
 */
 
 #include "mex.h"
-
+#include "audioMEX.h"
 
 #if ( defined (LINUX) || defined (__linux__) )
 
-	#include <dlfcn.h>
 
 	void mexFunction(
 		int nlhs, 	mxArray *plhs[],
 		int nrhs, const mxArray *prhs[])
 	{
-	   void *lib_handle;
-	   typedef const char* (*fptr)();
-	   char *error;
-	   fptr getVersion;
+		Mcha	mcha;
 
-	// loading the library dynamically
-	   lib_handle = dlopen("/usr/lib/libmcha.so", RTLD_LAZY);
-	   if (!lib_handle) 
-	   {
-		  plhs[0] = mxCreateString( dlerror() );
-		  return;
-	   }
-
-	// resolving getVersion
-	   *(void **)(&getVersion) =  dlsym(lib_handle, "getVersion");
-	   if ((error = dlerror()) != NULL)  
-	   {
-				plhs[0] = mxCreateString( error );
-		  return;
-	   }
+		if ( mcha.noError() )  
+		{
+			plhs[0] = mxCreateString( mcha.getVersion() );
+		}
 		else
 		{
-			plhs[0] = mxCreateString( getVersion() );
+			plhs[0] = mxCreateString( mcha.getErrorStr() );
 		}
-	
-	// release the handle
-	  dlclose(lib_handle);
-  
 	}
+
 #endif
 
 

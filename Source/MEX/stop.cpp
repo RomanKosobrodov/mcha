@@ -24,73 +24,22 @@
 #define	errorMsg	plhs[0]
 
 
-#if ( defined (LINUX) || defined (__linux__) )
-
-	#include <dlfcn.h>
-
 	void mexFunction(
 		int nlhs, 	mxArray *plhs[],
 		int nrhs, const mxArray *prhs[])
 	{
-	   void *lib_handle;
-	   typedef const char* (*fptr)();
-	   char *error;
-	   fptr getLastError;
-
-	   typedef bool (*fptr1)();
-	   fptr1 stopAudio;
-
-	// loading the library dynamically
-	   lib_handle = dlopen("/usr/lib/libmcha.so", RTLD_LAZY);
-	   if (!lib_handle) 
-	   {
-		  errorMsg = mxCreateString( dlerror() );
-		  return;
-	   }
-
-	// resolving getLastError
-	   *(void **)(&getLastError) =  dlsym(lib_handle, "getLastError");
-	   if ((error = dlerror()) != NULL)  
-	   {
-   		  errorMsg = mxCreateString( error );
-		  return;
-	   }
-
-	// resolving stopAudio
-	   *(void **)(&stopAudio) =  dlsym(lib_handle, "stopAudio");
-	   {
-   		  errorMsg = mxCreateString( error );
-		  return;
-	   }
-
-		if (!stopAudio())
-			errorMsg = mxCreateString( getLastError() );
+		/* Load MCHA library */
+		Mcha	mcha;
+		if ( !mcha.noError() )
+		{	
+			mexErrMsgTxt( mcha.getErrorStr() );	
+			return;
+		}
+		
+		if ( !mcha.stopAudio() )
+			errorMsg = mxCreateString( mcha.getLastError() );
 		else
 			errorMsg = mxCreateString("");
 
-	
-	// release the handle
-	  dlclose(lib_handle);
-  
 	}
-#endif
-
-
-#if (defined (_WIN32) || defined (_WIN64))
-
-	#include "audioMEX.h"
-
-	/* Entry point */
-	void mexFunction(
-		int nlhs, 	mxArray *plhs[],
-		int nrhs, const mxArray *prhs[])
-	{
-		if (!stopAudio())
-			errorMsg = mxCreateString( getLastError() );
-		else
-			errorMsg = mxCreateString("");
-	}
-
-#endif
-
 

@@ -1,6 +1,6 @@
 /*  
 	MCHA - Multichannel Audio Playback and Recording Library
-    Copyright (C) 2011  Roman Kosobrodov
+    Copyright (C) 2011-2013  Roman Kosobrodov
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,13 +20,8 @@
 #include <math.h>
 #include "mex.h"
 #include "audioMEX.h"
-#include "audioMEX.cpp"
 
 #define	errorOutput			plhs[0]
-
-/* helper functions */
-bool recordDisk  ( const mxArray *recFolder, const mxArray *inputChannels, const mxArray *recDuration,  const mxArray *filterSettings );
-bool recordMemory( const mxArray *inputChannels,  const mxArray *recDuration,  const mxArray *filterSettings );
 
 
 /* Entry point */
@@ -34,8 +29,17 @@ void mexFunction(	int nlhs, 	mxArray *plhs[],
 					int nrhs,	const mxArray *prhs[] )
 {
 
+	/* Load MCHA library */
+	Mcha	mcha;
+	if ( !mcha.noError() )
+	{	
+		mexErrMsgTxt( mcha.getErrorStr() );	
+		return;
+	}
+
+
 	/* check if another process is running */ 
-	if (isRunning())
+	if ( mcha.isRunning() )
 	{
 		mexErrMsgTxt("Function failed. Another process is running.");	
 		return;
@@ -64,10 +68,10 @@ void mexFunction(	int nlhs, 	mxArray *plhs[],
 		const mxArray*	mxFilterSettings = (useFilters) ? prhs[3] : NULL;
 
 		/* Start recording */
-		bool res = recordDisk( mxRecFolder, mxRecChannels, mxRecDuration, mxFilterSettings );
+		bool res = mcha.recordDisk( mxRecFolder, mxRecChannels, mxRecDuration, mxFilterSettings );
 		if ( !res )
 		{	
-			mexErrMsgTxt( getLastError() );
+			mexErrMsgTxt( mcha.getLastError() );
 			return;
 		}
 		
@@ -94,155 +98,17 @@ void mexFunction(	int nlhs, 	mxArray *plhs[],
 		const mxArray*	mxFilterSettings  = (useFilters) ? prhs[2] : NULL ;	
 			
 		/* Start recording */
-		bool res = recordMemory( mxRecChannels, mxRecDuration, mxFilterSettings );
+		bool res = mcha.recordMemory( mxRecChannels, mxRecDuration, mxFilterSettings );
 		if ( !res )
 		{	
-			mexErrMsgTxt( getLastError() );
+			mexErrMsgTxt( mcha.getLastError() );
 			return;
 		}
 	}
 	
 	/* assign all output arguments */
 	for (int k=0; k<nlhs; ++k)
-		plhs[k] = mxCreateString( getLastError() );
-}
-
-/* ------------------------------------------------------------------------------------------------------------------------- */
-bool recordMemory( const mxArray *inputChannels,  const mxArray *recDuration,  const mxArray *filterSettings )
-{
-	
-	float**		inputData = NULL;
-	int			inputChanNumber = 0; 
-	size_t		inputSamplesNumber = 0;
-	int*		inChannels = NULL;
-	int			inChannelsCount = 0;
-	mxArray*	memDestination = NULL;
-	bool		res;
-	bool		isInputFilter = true;
-	int			filterOutputs = -1;
-
-	/* Check input duration */
-	if (!mxIsNumeric (recDuration))
-	{
-		logError("MEX record error: Record duration should be a positive number.");
-		return false;
-	}
-
-	/* Check input channels */
-	if (!mxIsNumeric (inputChannels))
-	{
-		logError("MEX record error: Input channels should be an array of integer values.");
-		return false;
-	}
-
-	/* Get audio device parameters */
-	double		sampleRate = -1;
-	int			bufSize = -1;
-	int			bitDepth = -1;
-	int			inChan = -1;
-	int			outChan = -1;
-
-	if ( !getDeviceSettings(sampleRate, bufSize, bitDepth, inChan, outChan) )
-		return false;
-	
-	/* get duration and calculate the number of samples */
-	float	duration = getDuration(recDuration);
-	
-	if (duration <= 0)
-	{	
-		logError("MEX record error: Record duration should be a positive number.");
-		return false;
-	}
-	else
-		inputSamplesNumber = static_cast <const size_t> ( ceil( duration*sampleRate ) );
-
-	/* Prepare recording channels */
-	prepareChannels( inputChannels, inChannels, inChannelsCount );
-	inputChanNumber = inChannelsCount;
-
-	/* Prepare filters */
-	res = prepareFilter( filterSettings, isInputFilter, filterOutputs);
-	if (!res)
-	{
-		delete [] inChannels;
-		return false;
-	}
-	
-	if (filterOutputs != -1)
-		inputChanNumber = filterOutputs;
-
-	/* Call record the function */
-	res = recordData ( (float **)NULL, (const int) inputChanNumber, inputSamplesNumber, inChannels, inChannelsCount);
-	
-	/* release memory */
-	delete [] inChannels;
-
-	return res;
-}
-
-/* ------------------------------------------------------------------------------------------------------------------------- */
-bool recordDisk(const mxArray *recFolder, const mxArray *inputChannels, const mxArray *recDuration,  const mxArray *filterSettings )
-{
-	char*		recordDir = NULL;
-	int			inputChanNumber = 0;
-	int*		inChannels = NULL;
-	int			inChannelsCount = 0; 
-	float		duration = 0;
-	bool		res;
-	bool		isInputFilter = true;
-	int			filterOutputs = -1;
-
-
-	/* Check output folder */
-	if (!mxIsChar(recFolder))
-	{
-		logError("MEX record error: The first argument should be a string containing output directory.");
-		return false; 			
-	}
-
-	/* Check input duration */
-	if (!mxIsNumeric (recDuration))
-	{
-		logError("MEX record error: Record duration should be a positive number.");
-		return false; 
-	}
-
-	/* Check input channels */
-	if (!mxIsNumeric (inputChannels))
-	{
-		logError("MEX record error: Input channels should be an array of integer values.");
-		return false; 
-	}
-
-	/* get duration */
-	duration = getDuration(recDuration);
-
-	/* Prepare recording channels */
-	prepareChannels( inputChannels, inChannels, inChannelsCount );
-	inputChanNumber = inChannelsCount;
-
-	/* Prepare filters */
-	res = prepareFilter( filterSettings, isInputFilter, filterOutputs);
-	if (!res)
-	{
-		delete [] inChannels;
-		return false;
-	}
-	
-	if (filterOutputs != -1)
-		inputChanNumber = filterOutputs;
-
-	/* Create char string with the disk folder */
-	recordDir = mxArrayToString(recFolder);
-
-	/* Call the function */
-	res = recordFiles(  (const char*) recordDir, (const int) inputChanNumber, (const float)duration, (const int*) inChannels, (const int) inChannelsCount );
-	
-	/* release memory */
-	mxFree(recordDir);
-	delete [] inChannels;
-
-	return res;
+		plhs[k] = mxCreateString( mcha.getLastError() );
 }
 
 

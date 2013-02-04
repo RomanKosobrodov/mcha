@@ -27,113 +27,35 @@
 /* Output Arguments */
 #define	errorMsg	plhs[0]
 
-
-#if ( defined (LINUX) || defined (__linux__) )
-
-	#include <dlfcn.h>
-
 	void mexFunction(
 		int nlhs, 	mxArray *plhs[],
 		int nrhs, const mxArray *prhs[])
 	{
-	   void *lib_handle;
-	   typedef bool (*fptr)(double);
-	   char *error;
-	   fptr setPosition;
+		/* Load MCHA library */
+		Mcha	mcha;
+		if ( !mcha.noError() )
+		{	
+			mexErrMsgTxt( mcha.getErrorStr() );	
+			return;
+		}
 
-	   typedef const char* (*fptr1)();
-	   fptr1 getLastError;
+		double* delay = mxGetPr( delayArray );
 
-	// loading the library dynamically
-	   lib_handle = dlopen("/usr/lib/libmcha.so", RTLD_LAZY);
-	   if (!lib_handle) 
-	   {
-		  plhs[0] = mxCreateString( dlerror() );
-		  return;
-	   }
-
-	// resolving setPosition
-	   *(void **)(&setPosition) =  dlsym(lib_handle, "setPosition");
-	   if ((error = dlerror()) != NULL)  
-	   {
-		  plhs[0] = mxCreateString( error );
-		  return;
-	   }
-
-	// resolving getLastError
-	   *(void **)(&getLastError) =  dlsym(lib_handle, "getLastError");
-	   if ((error = dlerror()) != NULL)  
-	   {
-		  plhs[0] = mxCreateString( error );
-		  return;
-	   }
-
-	double* delay = mxGetPr(delayArray);
-
-	/* Check the number of input/output arguments */
-	if ((nrhs != 1) || (nlhs>1)) 
-	{
-		errorMsg = mxCreateString("Wrong call to function.");
-		return;
-	}    
+		/* Check the number of input/output arguments */
+		if ((nrhs != 1) || (nlhs>1)) 
+		{
+			errorMsg = mxCreateString("Wrong call to function.");
+			return;
+		}    
     
-    if (!setPosition(*delay))
-    {
-        errorMsg = mxCreateString( getLastError() );
-    }
-    else
-    {
-       errorMsg = mxCreateString("");	
-    }
-
-	
-	// release the handle
-	  dlclose(lib_handle);
+		if ( !mcha.setPosition(*delay) )
+		{
+		    errorMsg = mxCreateString( mcha.getLastError() );
+		}
+		else
+		{
+		   errorMsg = mxCreateString("");	
+		}
 
 	}
-#endif
-
-
-#if (defined (_WIN32) || defined (_WIN64))
-
-	#include "audioMEX.h"
-
-	/* Entry point */
-	void mexFunction(
-		int nlhs, 	mxArray *plhs[],
-		int nrhs, const mxArray *prhs[])
-	{
-
-	double* delay = mxGetPr(delayArray);
-
-	/* Check the number of input/output arguments */
-	if ((nrhs != 1) || (nlhs>1)) 
-	{
-		errorMsg = mxCreateString("Wrong call to function.");
-		return;
-	}    
-    
-	// call setPosition    
-	if (!setPosition(*delay))
-    {
-        errorMsg = mxCreateString( getLastError() );
-    }
-    else
-    {
-       errorMsg = mxCreateString("");
-    }
-
-}
-
-#endif
-
-
-
-
-
-
-
-
-
-
 

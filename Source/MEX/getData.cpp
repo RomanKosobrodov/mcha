@@ -20,15 +20,22 @@
 #include <math.h>
 #include "mex.h"
 #include "audioMEX.h"
-#include "audioMEX.cpp"
 
 /* Entry point */
 void mexFunction(	int nlhs, 	mxArray *plhs[],
 					int nrhs,	const mxArray *prhs[] )
 {
 
+	/* Load MCHA library */
+	Mcha	mcha;
+	if ( !mcha.noError() )
+	{	
+		mexErrMsgTxt( mcha.getErrorStr() );	
+		return;
+	}
+	
 	/* check if the process is running */ 
-	if (isRunning())
+	if ( mcha.isRunning() )
 	{
 		mexErrMsgTxt("Function failed. The process is still running.");	
 		return;
@@ -40,8 +47,8 @@ void mexFunction(	int nlhs, 	mxArray *plhs[],
 		return;		
 	}
 	
-	int channelCount = getRecordedChannelsNum();
-	size_t samplesCount = getRecordedSamplesNum();
+	int channelCount = mcha.getRecordedChannelsNum();
+	size_t samplesCount = mcha.getRecordedSamplesNum();
 
 	mxArray* mem = mxCreateNumericMatrix( samplesCount, channelCount, mxSINGLE_CLASS, mxREAL );
 	
@@ -58,7 +65,7 @@ void mexFunction(	int nlhs, 	mxArray *plhs[],
 		memData[i] = dataOrigin + i*samplesCount;
 	}
 	
-	if ( !getData_s(memData) )
+	if ( !mcha.getData_s(memData, NULL, 0, 0, 0) )
 	{
 		delete [] memData;
 		mexErrMsgTxt("Unable to retrieve data from memory. Call getError() for details.");

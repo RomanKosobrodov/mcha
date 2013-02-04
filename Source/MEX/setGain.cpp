@@ -36,6 +36,14 @@ void mexFunction(
 	int		channelsNumber;
 	float*	gains;
 	int		gainsNumber;
+
+	/* Load MCHA library */
+	Mcha	mcha;
+	if ( !mcha.noError() )
+	{	
+		mexErrMsgTxt( mcha.getErrorStr() );	
+		return;
+	}
     
 	errorMsg = mxCreateString("");
 
@@ -78,9 +86,9 @@ void mexFunction(
 		}
 		
 		/* Call the function */
-		if (!setGain (channels, channelsNumber, gains))
+		if ( !mcha.setGain (channels, channelsNumber, gains) )
 		{
-			errorMsg = mxCreateString(getLastError());	
+			errorMsg = mxCreateString( mcha.getLastError() );	
 		}
 	}
 
