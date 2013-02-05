@@ -725,8 +725,9 @@ bool MchaRecordPlayer::start()
 // ============================================================================================
 void MchaRecordPlayer::timerCallback ()
 {
-	if (stopProcessing)
-	{
+	if ( stopProcessing )
+	{		
+		dbgOut("timerCallback is calling stop.");		
 		stopTimer();
 		stopProcessing = false;
 		this->stop();
@@ -825,11 +826,7 @@ bool MchaRecordPlayer::init()
 	clearError();
 
 	/* check if the settings file exists or could be created */
-	String fileNameStr( curDirStr + File::createLegalFileName(XML_SETTINGS_FILE) );/Linux $ make CONFIG=Debug-i386
-Compiling mchaFilter.cpp
-Compiling mchaFIRFilter.cpp
-Compiling mchaIIRFilter.cpp
-
+	String fileNameStr( curDirStr + File::createLegalFileName(XML_SETTINGS_FILE) );
 
 	File settingsFile( fileNameStr );
 	

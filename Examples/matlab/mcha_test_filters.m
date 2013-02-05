@@ -34,14 +34,14 @@ end
 disp('==================================')
 disp('Playback Filters')
 
-folder = '..\sound\samples\';
+folder = '../sound/samples/';
 snd = { [folder 'tone_1kHz.wav'] ,  [folder 'tone_2kHz.wav'] };
 
 for ch = 1:length(snd)
     disp(['   channel' num2str(ch-1, '%02d') ': ' snd{ch}])
 end
 
-filterfile = '..\filters\notch_fir.xml';
+filterfile = '../filters/notch_fir.xml';
 disp(['   filter: ' filterfile]); 
 disp('');
 
@@ -82,8 +82,8 @@ end
 disp('==================================')
 disp('Recording Filters')
 
-folder = '..\sound\recorded\';
-filterRec = '..\filters\third_octave_IIR.xml';
+folder = '../sound/recorded/';
+filterRec = '../filters/third_octave_IIR.xml';
 
 disp(['   folder: ' folder])
 disp(['   filter: ' filterRec]); 
@@ -121,12 +121,12 @@ disp('==================================')
 disp('Playback and Recording Test')
 disp(' ')
 
-folderPlay = '..\sound\samples\';
-folderRec = '..\sound\recorded\';
+folderPlay = '../sound/samples/';
+folderRec = '../sound/recorded/';
 snd = { [folderPlay 'noise01.wav'] };
 
-filterPlayback = '..\filters\a-weighting_IIR.xml';
-filterRecord = '..\filters\third_octave_IIR.xml';
+filterPlayback = '../filters/a-weighting_IIR.xml';
+filterRecord = '../filters/third_octave_IIR.xml';
 
 err = playRecord(folderRec, 0, 3, filterRecord, snd, 0, filterPlayback);
 if (~isempty(err))

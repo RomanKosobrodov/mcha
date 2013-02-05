@@ -129,9 +129,7 @@ void DataReader::run()
 	Time now(Time::getCurrentTime());
 
 	MchaRecordPlayer::getInstance()->dbgOut("DataReader thread started "  + now.toString(false, true, true, true) + ":" + String(now.getMilliseconds()) );
-
-	const ScopedLock dataScopedLock (dataCriticalSection);  // this locks dataCriticalSection
-	  
+ 
 	  while ( !threadShouldExit() )
 	  {
 		  // Check if the end of audio record has been reached
@@ -154,8 +152,6 @@ void DataReader::run()
 				  }
 			  }
 
-			  //mchaRecordPlayer::getInstance()->dbgOut( "\tData Reader firstBlock = " + String(firstBlock) + "\treadoffset = " + String(readOffset));
-
 			  // If no blocks found - skip the rest
 			  if (firstBlock == -1)
 			  {
@@ -171,7 +167,10 @@ void DataReader::run()
 					  availableBlocks++;
 			  }
 
-			  // Load all available blocks
+			  // Load all available blocks. Lock write access to data
+			{
+			const ScopedWriteLock myScopedLock (writeLock);
+
 			  for ( int ch = 0; ch < numberOfFiles; ch++ )
 			  {
 				audioFormatReaders[ch]->read (	channelBuffer[ch]	,			//  AudioFormatReader *   	 reader
@@ -188,7 +187,10 @@ void DataReader::run()
 			  // Mark blocks as available for playback
 			  for (int i=0; i<availableBlocks; i++)
 				  dataValid[firstBlock + i] = true;
+			
+			} // lock is released here
 
+			
 		 } // else
 	  } // while
 

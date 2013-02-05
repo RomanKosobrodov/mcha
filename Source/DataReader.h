@@ -53,7 +53,7 @@ private:
 
 	void dataDump(String s1, float* ptr, int num);
 
-	CriticalSection dataCriticalSection;
+	ReadWriteLock 	writeLock; // protect critical section by this lock
 
 	volatile bool*	dataValid;			// Data-up-to-date flags
 

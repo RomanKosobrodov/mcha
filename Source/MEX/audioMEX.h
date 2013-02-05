@@ -19,14 +19,17 @@
 #ifndef MCHA_AUDIOMEX_H
 #define MCHA_AUDIOMEX_H
 
+#if ( defined (LINUX) || defined (__linux__) )
+	#include <dlfcn.h>
+#endif
+
+#if  (defined (_WIN32) || defined (_WIN64))
+	#include <windows.h>
+#endif
+
 #include "mex.h"
 #include <math.h> // for ceil
-
-
-#if ( defined (LINUX) || defined (__linux__) )
-
 #include <sstream>
-#include <dlfcn.h>
 
 class Mcha
 {
@@ -45,8 +48,15 @@ public:
 
 	~Mcha()
 	{
-		if (lib_handle)
-			dlclose(lib_handle); // release the handle
+		#if ( defined (LINUX) || defined (__linux__) )
+			if (lib_handle)
+				dlclose( lib_handle ); // release the handle
+		#endif
+
+		#if (defined (_WIN32) || defined (_WIN64))
+			if (lib_handle)
+				FreeLibrary( lib_handle ); // release the handle			
+		#endif
 	}
 
 	const char* getErrorStr() const	{ return error.str().c_str(); };
@@ -888,28 +898,59 @@ private:
 
 		if ( libPathString.empty() )
 		{
-			libPathString = "/usr/lib/libmcha.so";
-		}
+			#if ( defined (LINUX) || defined (__linux__) )
+				libPathString = "libmcha.so";
+			#endif
 
-		// loading the library dynamically (default location)
-		lib_handle = dlopen( libPathString.c_str(), RTLD_LAZY );
-		if (!lib_handle) 
-		{
-			error << dlerror();
+			#if ( defined (_WIN32) )
+				libPathString = "mcha-Win32.dll";		
+			#endif
+
+			#if ( defined (_WIN64))
+				libPathString = "mcha-x64.dll";		
+			#endif
 		}
-		else // resolve functions
-		{
-			resolveAll();
-		}
+			
+		// loading the library dynamically 
+		#if ( defined (LINUX) || defined (__linux__) )
+			lib_handle = dlopen( libPathString.c_str(), RTLD_LAZY );
+			if (!lib_handle) 
+			{
+				error << dlerror();
+			}
+			else // resolve functions
+			{
+				resolveAll();
+			}
+		#endif
+
+		#if ( defined (_WIN32) || defined (_WIN64) )
+			lib_handle = LoadLibrary( TEXT( libPathString.c_str() ) );
+			if (!lib_handle) 
+			{
+				error << GetLastError();
+			}
+			else // resolve functions
+			{
+				resolveAll();
+			}
+		#endif
 	}
 
 	template <typename T> bool resolveFunction(T* f, const char* fname)
 	{
 		if ( NULL == lib_handle )	return false;
 
-		*(void **)(f) =  dlsym( lib_handle, fname );
+		#if ( defined (LINUX) || defined (__linux__) )
+			*(void **)(f) =  dlsym( lib_handle, fname );
+			error << dlerror();
+		#endif
 
-		error << dlerror();
+		#if ( defined (_WIN32) || defined (_WIN64) )
+			*(void **)(f) =  GetProcAddress( lib_handle, fname );
+			error << GetLastError();
+		#endif
+
 		if ( error.str().empty() )  
 			return true;
 		else
@@ -966,5 +1007,5 @@ private:
 #endif
 
 
-#endif
+
 

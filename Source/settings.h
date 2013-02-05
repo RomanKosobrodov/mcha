@@ -2,7 +2,7 @@
 #define MCHA_SETTINGS_H
 
 // Version number
-#define MCHA_VERSION_NUMBER	"0.0.2"
+#define MCHA_VERSION_NUMBER	"0.0.3"
 
 #define XML_SETTINGS_FILE	"defaultsettings.xml"
 
