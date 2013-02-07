@@ -19,17 +19,18 @@
 #ifndef MCHA_AUDIOMEX_H
 #define MCHA_AUDIOMEX_H
 
+#include "mex.h"
+#include <math.h> // for ceil
+#include <sstream>
+
 #if ( defined (LINUX) || defined (__linux__) )
 	#include <dlfcn.h>
 #endif
 
 #if  (defined (_WIN32) || defined (_WIN64))
-	#include <windows.h>
+	#include <Windows.h>
 #endif
 
-#include "mex.h"
-#include <math.h> // for ceil
-#include <sstream>
 
 class Mcha
 {
@@ -55,7 +56,7 @@ public:
 
 		#if (defined (_WIN32) || defined (_WIN64))
 			if (lib_handle)
-				FreeLibrary( lib_handle ); // release the handle			
+				FreeLibrary( (HMODULE) lib_handle ); // release the handle			
 		#endif
 	}
 
@@ -947,7 +948,7 @@ private:
 		#endif
 
 		#if ( defined (_WIN32) || defined (_WIN64) )
-			*(void **)(f) =  GetProcAddress( lib_handle, fname );
+			*f =  reinterpret_cast<T>( GetProcAddress( (HMODULE)lib_handle, fname ) );
 			error << GetLastError();
 		#endif
 

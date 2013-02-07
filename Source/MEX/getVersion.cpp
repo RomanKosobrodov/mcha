@@ -20,38 +20,18 @@
 #include "mex.h"
 #include "audioMEX.h"
 
-#if ( defined (LINUX) || defined (__linux__) )
-
-
-	void mexFunction(
-		int nlhs, 	mxArray *plhs[],
-		int nrhs, const mxArray *prhs[])
+void mexFunction(
+	int nlhs, 	mxArray *plhs[],
+	int nrhs, const mxArray *prhs[])
+{
+	Mcha	mcha;
+	if ( mcha.noError() )  
 	{
-		Mcha	mcha;
-
-		if ( mcha.noError() )  
-		{
-			plhs[0] = mxCreateString( mcha.getVersion() );
-		}
-		else
-		{
-			plhs[0] = mxCreateString( mcha.getErrorStr() );
-		}
+		plhs[0] = mxCreateString( mcha.getVersion() );
 	}
-
-#endif
-
-
-#if (defined (_WIN32) || defined (_WIN64))
-
-	#include "audioMEX.h"
-
-	/* Entry point */
-	void mexFunction(
-		int nlhs, 	mxArray *plhs[],
-		int nrhs, const mxArray *prhs[])
+	else
 	{
-		plhs[0] = mxCreateString( getVersion() );
+		plhs[0] = mxCreateString( mcha.getErrorStr() );
 	}
+}
 
-#endif

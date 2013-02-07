@@ -549,6 +549,7 @@ bool MchaRecordPlayer::start()
 		dbgOut( "MchaRecordPlayer::start" );		
 	}
 	
+	dbgOut( "MchaRecordPlayer Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
 
 	/* get the Xml device settings from mchaRecordPlayer::audioDeviceSettings */
 	XmlElement* tmpDeviceSettings = audioDeviceSettings->getXmlDeviceSettings();
@@ -725,18 +726,20 @@ bool MchaRecordPlayer::start()
 // ============================================================================================
 void MchaRecordPlayer::timerCallback ()
 {
-	if ( stopProcessing )
+/*	if ( stopProcessing )
 	{		
 		dbgOut("timerCallback is calling stop.");		
 		stopTimer();
 		stopProcessing = false;
 		this->stop();
-	}
+	} */
 }
 
 // ============================================================================================
 bool MchaRecordPlayer::stop()
 {
+	dbgOut( "mchaRecordPlayer::stop called" );
+	dbgOut( "MchaRecordPlayer Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
 
 	if (processIsRunning)
 	{
@@ -760,7 +763,8 @@ bool MchaRecordPlayer::stop()
 			playbackFilter->releaseResources(); 
 		}
 		Time now = Time::getCurrentTime();
-		dbgOut( "mchaRecordPlayer::stop - terminating audioSampleProcessor\t" + now.toString(false, true, true, true) + ":" + String(now.getMilliseconds()) );
+		dbgOut( "mchaRecordPlayer::stop - terminating audioSampleProcessor\t" 
+				+ now.toString(false, true, true, true) + ":" + String(now.getMilliseconds()) );
 		
 		processIsRunning = false;
 

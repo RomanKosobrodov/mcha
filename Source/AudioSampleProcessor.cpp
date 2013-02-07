@@ -158,7 +158,9 @@ void AudioSampleProcessor::audioDeviceAboutToStart(AudioIODevice* )
 	Time now;
 	now = Time::getCurrentTime();
 
-	mchaRecordPlayer->dbgOut( "AudioSampleProcessor started\t"  + now.toString(false, true, true, true) + ":" + String(now.getMilliseconds()) );
+	mchaRecordPlayer->dbgOut( "AudioSampleProcessor started\t"  + now.toString(false, true, true, true) + ":" 
+								+ String(now.getMilliseconds()) );
+	mchaRecordPlayer->dbgOut( "Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
 	mchaRecordPlayer->dbgOut( "\tRecorder\t= " + audioSampleRecorder->getName() );
 	mchaRecordPlayer->dbgOut( "\tPlayer\t\t= " + audioSamplePlayer->getName() );
 	
@@ -211,6 +213,7 @@ void AudioSampleProcessor::audioDeviceStopped()
 {
 	
 	mchaRecordPlayer->dbgOut( "AudioSampleProcessor stopped\t");
+	mchaRecordPlayer->dbgOut( "Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
 
 	/* Stop processing data */
 	audioSampleRecorder->stopProcessing();
@@ -281,7 +284,7 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 			if ( !audioSampleRecorder->copyData (const_cast <const float**>  (tempBufferIn),	inputProcessorChannels, numSamples) )
 			{
 				/* error has occured - stop processing */
-				mchaRecordPlayer->processShouldStop();
+				mchaRecordPlayer->stop(); //processShouldStop();
 			}
 		}
 		else
@@ -290,16 +293,20 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 			if ( !audioSampleRecorder->copyData (const_cast <const float**>  (inputChannelData),	totalNumInputChannels, numSamples) )
 			{
 				/* error has occured - stop processing */
-				mchaRecordPlayer->processShouldStop();
+				mchaRecordPlayer->stop(); //processShouldStop();
 			}		
 		}
 	}
 	else
 	{
 		/* Stop processing */
-		mchaRecordPlayer->processShouldStop();
+		mchaRecordPlayer->stop(); //processShouldStop();
 	}
 	
+	if (currentAudioPosition == 0)	
+		mchaRecordPlayer->dbgOut( "Audio Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
+
+
  }
 
 }
