@@ -23,6 +23,8 @@
 #include <math.h> // for ceil
 #include <sstream>
 
+#include "../MchaLib.h"
+
 #if ( defined (LINUX) || defined (__linux__) )
 	#include <dlfcn.h>
 #endif
@@ -32,36 +34,18 @@
 #endif
 
 
-class Mcha
+class Mcha : public MchaLib
 {
-public:
-	Mcha() 
-		: lib_handle(NULL)
-	{
-		loadAndCheck("");
-	};
+public: 
+	Mcha () : MchaLib("")
+	{};
 
-	Mcha(const char* mchaPath)
-		: lib_handle(NULL)
-	{
-		loadAndCheck( mchaPath);
-	};
+	Mcha (const char* mchaPath)
+		: MchaLib (mchaPath)
+	{};
 
 	~Mcha()
-	{
-		#if ( defined (LINUX) || defined (__linux__) )
-			if (lib_handle)
-				dlclose( lib_handle ); // release the handle
-		#endif
-
-		#if (defined (_WIN32) || defined (_WIN64))
-			if (lib_handle)
-				FreeLibrary( (HMODULE) lib_handle ); // release the handle			
-		#endif
-	}
-
-	const char* getErrorStr() const	{ return error.str().c_str(); };
-	bool	noError() const				{ return error.str().empty(); };
+	{}
 
 	// function identification 
 	enum FunctionID   { d0d0 = 0x00, d0d1 = 0x01, d1d0 = 0x04, d1d1 = 0x05,
@@ -70,99 +54,6 @@ public:
 						m0m0 = 0x0A, m0m1 = 0x0B, m1m0 = 0x0E, m1m1 = 0x0F,
 						errorId = 0xFF };
 
-	// public function pointers
-	typedef 	bool (*fptrInitAudioDevice)();
-	fptrInitAudioDevice		initAudioDevice;
-
-	typedef 	bool (*fptrInitAudioDeviceFile)(const char* );
-	fptrInitAudioDeviceFile	initAudioDeviceFile;
-
-	typedef 	bool (*fptrSetDebugMode)(const char* );
-	fptrSetDebugMode	setDebugMode;
-
-	typedef 	const char* (*fptrGetLastError)();
-	fptrGetLastError	getLastError;
-
-	typedef 	const char* (*fptrGetVersion)();
-	fptrGetVersion	getVersion;
-
-	typedef 	bool (*fptrAddFilter)(const char* , bool );
-	fptrAddFilter	addFilter;
-
-	typedef 	bool (*fptrPlayFiles) (const char** , const int , const int *, const int );
-	fptrPlayFiles	playFiles;
-
-	typedef 	bool (*fptrPlayData_s) (const float** , const int , const size_t , const int *, const int );
-	fptrPlayData_s	playData_s;
-
-	typedef 	bool (*fptrPlayData_d) (const double** , const int , const size_t , const int *, const int );
-	fptrPlayData_d	playData_d;
-
-	typedef 	bool (*fptrRecordFiles) (const char* , const int , const float , const int *, const int );
-	fptrRecordFiles	recordFiles;
-
-	typedef 	bool (*fptrRecordData) (float** , const int , const size_t , const int *, const int );
-	fptrRecordData	recordData;
-
-	typedef 	bool (*fptrPlayRecordDataMM_s) ( float** , const int , const size_t , const int *, const int ,
-								 const float** , const int , const size_t , const int* , const int );
-	fptrPlayRecordDataMM_s	playRecordDataMM_s;
-
-	typedef 	bool (*fptrPlayRecordDataMM_d) ( float** , const int , const size_t , const int *, const int ,
-								 const double** , const int , const size_t , const int* , const int  );
-	fptrPlayRecordDataMM_d	playRecordDataMM_d;
-
-	typedef 	bool (*fptrPlayRecordDataMD_s) (   const char* , const int , const float , const int* , const int , 
-									const float** , const int , const size_t , const int* , const int );
-	fptrPlayRecordDataMD_s	playRecordDataMD_s;
-
-	typedef 	bool (*fptrPlayRecordDataMD_d) (   const char* , const int , const float , const int* , const int , 
-									const double** , const int , const size_t , const int* , const int );
-	fptrPlayRecordDataMD_d	playRecordDataMD_d;
-
-	typedef 	bool (*fptrPlayRecordDataDM) ( float** , const int , const size_t , const int *, const int ,
-							const char**  , const int , const int* , const int );
-	fptrPlayRecordDataDM	playRecordDataDM;
-
-	typedef 	bool (*fptrPlayRecordDataDD) ( const char* , const int , const float , const int* , const int , 
-							const char**  , const int , const int* , const int );
-	fptrPlayRecordDataDD	playRecordDataDD;
-
-	typedef 	int	(*fptrGetRecordedChannelsNum) ();
-	fptrGetRecordedChannelsNum	getRecordedChannelsNum;
-
-	typedef 	size_t	(*fptrGetRecordedSamplesNum) ();
-	fptrGetRecordedSamplesNum	getRecordedSamplesNum;
-
-	typedef  bool	(*fptrGetData_s) (float**	,  const int* , const int, size_t, size_t);
-	fptrGetData_s	getData_s;
-
-	typedef  bool	(*fptrGetData_d) (double**	,  const int* , const int , size_t , size_t );
-	fptrGetData_d	getData_d;
-
-	typedef  	bool (*fptrSetGain) (int *, int , float *);
-	fptrSetGain	setGain;
-
-	typedef  bool (*fptrStopAudio)();
-	fptrStopAudio	stopAudio;
-
-	typedef  bool (*fptrIsRunning)();
-	fptrIsRunning	isRunning;
-
-	typedef  double (*fptrGetCurrentPosition)();
-	fptrGetCurrentPosition	getCurrentPosition;
-
-	typedef  bool (*fptrSetPosition) (double );
-	fptrSetPosition	setPosition;
-
-	typedef  bool (*fptrGetDeviceSettings)(double& , int& , int& , int& , int& );
-	fptrGetDeviceSettings	getDeviceSettings;
-
-	typedef  void (*fptrGetFilterSettings)(bool , int& , int& );
-	fptrGetFilterSettings	getFilterSettings;
-
-	typedef  void	(*fptrLogError)(const char* );
-	fptrLogError	logError;
 
 	// helper mex functions
 	// ---------------------------------------------------------------------------------	
@@ -889,123 +780,10 @@ public:
 		return res;
 	}
 
-private:
-	void *lib_handle; // equivalent to HINSTANCE/HANDLE/PVOID
-	std::stringstream error;
-
-	void loadAndCheck( const char* libpath)
-	{
-		std::string libPathString(libpath);
-
-		if ( libPathString.empty() )
-		{
-			#if ( defined (LINUX) || defined (__linux__) )
-				libPathString = "libmcha.so";
-			#endif
-
-			#if ( defined (_WIN32) )
-				libPathString = "mcha-Win32.dll";		
-			#endif
-
-			#if ( defined (_WIN64))
-				libPathString = "mcha-x64.dll";		
-			#endif
-		}
-			
-		// loading the library dynamically 
-		#if ( defined (LINUX) || defined (__linux__) )
-			lib_handle = dlopen( libPathString.c_str(), RTLD_LAZY );
-			if (!lib_handle) 
-			{
-				error << dlerror();
-			}
-			else // resolve functions
-			{
-				resolveAll();
-			}
-		#endif
-
-		#if ( defined (_WIN32) || defined (_WIN64) )
-			lib_handle = LoadLibrary( TEXT( libPathString.c_str() ) );
-			if (!lib_handle) 
-			{
-				error << GetLastError();
-			}
-			else // resolve functions
-			{
-				resolveAll();
-			}
-		#endif
-	}
-
-	template <typename T> bool resolveFunction(T* f, const char* fname)
-	{
-		if ( NULL == lib_handle )	return false;
-
-		#if ( defined (LINUX) || defined (__linux__) )
-			*(void **)(f) =  dlsym( lib_handle, fname );
-			error << dlerror();
-		#endif
-
-		#if ( defined (_WIN32) || defined (_WIN64) )
-			*f =  reinterpret_cast<T>( GetProcAddress( (HMODULE)lib_handle, fname ) );
-			error << GetLastError();
-		#endif
-
-		if ( error.str().empty() )  
-			return true;
-		else
-			return false;	
-	}
-
-	void resolveAll()
-	{
-		if ( !resolveFunction( &initAudioDevice, "initAudioDevice" ) )  return;
-		if ( !resolveFunction( &initAudioDeviceFile, "initAudioDeviceFile" ) )  return;
-		if ( !resolveFunction( &setDebugMode, "setDebugMode" ) )  return;
-		if ( !resolveFunction( &getLastError, "getLastError" ) )  return;
-
-		if ( !resolveFunction( &getVersion, "getVersion" ) )  return;
-		if ( !resolveFunction( &addFilter, "addFilter" ) )  return;
-		if ( !resolveFunction( &playFiles, "playFiles" ) )  return;
-		if ( !resolveFunction( &playData_s, "playData_s" ) )  return;
-
-		if ( !resolveFunction( &playData_d, "playData_d" ) )  return;
-		if ( !resolveFunction( &recordFiles, "recordFiles" ) )  return;
-		if ( !resolveFunction( &recordData, "recordData" ) )  return;
-		if ( !resolveFunction( &playRecordDataMM_s, "playRecordDataMM_s" ) )  return;
-
-		if ( !resolveFunction( &playRecordDataMM_d, "playRecordDataMM_d" ) )  return;
-		if ( !resolveFunction( &playRecordDataMD_s, "playRecordDataMD_s" ) )  return;
-		if ( !resolveFunction( &playRecordDataMD_d, "playRecordDataMD_d" ) )  return;
-		if ( !resolveFunction( &playRecordDataDM, "playRecordDataDM" ) )  return;
-
-		if ( !resolveFunction( &playRecordDataDD, "playRecordDataDD" ) )  return;
-		if ( !resolveFunction( &getRecordedChannelsNum, "getRecordedChannelsNum" ) )  return;
-		if ( !resolveFunction( &getRecordedSamplesNum, "getRecordedSamplesNum" ) )  return;
-		if ( !resolveFunction( &getData_s, "getData_s" ) )  return;
-
-		if ( !resolveFunction( &getData_d, "getData_d" ) )  return;
-		if ( !resolveFunction( &setGain, "setGain" ) )  return;
-		if ( !resolveFunction( &stopAudio, "stopAudio" ) )  return;
-		if ( !resolveFunction( &isRunning, "isRunning" ) )  return;
-
-		if ( !resolveFunction( &getCurrentPosition, "getCurrentPosition" ) )  return;
-		if ( !resolveFunction( &setPosition, "setPosition" ) )  return;
-		if ( !resolveFunction( &getDeviceSettings, "getDeviceSettings" ) )  return;
-		if ( !resolveFunction( &getFilterSettings, "getFilterSettings" ) )  return;
-		if ( !resolveFunction( &logError, "logError" ) )  return;
-
-	};
-
 };
 
 #endif
 
-
-#if (defined (_WIN32) || defined (_WIN64))
-	#define MCHAIMPORT extern "C" __declspec(dllimport)
-#endif
 
 
 

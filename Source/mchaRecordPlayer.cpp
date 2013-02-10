@@ -57,6 +57,8 @@ MchaRecordPlayer::MchaRecordPlayer():
 	/* Generate full path to default XML settings file */
 	curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
 	
+	DBG(curDirStr);
+	
 	fileLogger = FileLogger::createDefaultAppLogger( "mcha", "mcha.log.txt", String::empty, 0 );	
 	
 	printSystemInfo(); 
@@ -726,13 +728,13 @@ bool MchaRecordPlayer::start()
 // ============================================================================================
 void MchaRecordPlayer::timerCallback ()
 {
-/*	if ( stopProcessing )
+	/*if ( stopProcessing )
 	{		
 		dbgOut("timerCallback is calling stop.");		
 		stopTimer();
 		stopProcessing = false;
 		this->stop();
-	} */
+	}*/
 }
 
 // ============================================================================================

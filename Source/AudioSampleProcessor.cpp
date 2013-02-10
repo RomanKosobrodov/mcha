@@ -284,7 +284,7 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 			if ( !audioSampleRecorder->copyData (const_cast <const float**>  (tempBufferIn),	inputProcessorChannels, numSamples) )
 			{
 				/* error has occured - stop processing */
-				mchaRecordPlayer->stop(); //processShouldStop();
+				mchaRecordPlayer->processShouldStop(); //processShouldStop();
 			}
 		}
 		else
@@ -293,14 +293,14 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 			if ( !audioSampleRecorder->copyData (const_cast <const float**>  (inputChannelData),	totalNumInputChannels, numSamples) )
 			{
 				/* error has occured - stop processing */
-				mchaRecordPlayer->stop(); //processShouldStop();
+				mchaRecordPlayer->processShouldStop(); //processShouldStop();
 			}		
 		}
 	}
 	else
 	{
 		/* Stop processing */
-		mchaRecordPlayer->stop(); //processShouldStop();
+		mchaRecordPlayer->processShouldStop(); //processShouldStop();
 	}
 	
 	if (currentAudioPosition == 0)	
