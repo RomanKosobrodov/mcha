@@ -294,7 +294,16 @@ Timer::TimerThread::LockType Timer::TimerThread::lock;
 
 //==============================================================================
 #if JUCE_DEBUG
-static SortedSet <Timer*> activeTimers;
+struct sstracker : public SortedSet <Timer*>
+{
+	sstracker() {DBG("  +  active timers")};
+	~sstracker() {DBG("  -  active timers")};
+
+}; 
+
+//static SortedSet <Timer*> activeTimers;
+static sstracker activeTimers;
+
 #endif
 
 Timer::Timer() noexcept
@@ -305,6 +314,7 @@ Timer::Timer() noexcept
 {
    #if JUCE_DEBUG
     const TimerThread::LockType::ScopedLockType sl (TimerThread::lock);
+	DBG("Adding Timer");
     activeTimers.add (this);
    #endif
 }
@@ -323,7 +333,8 @@ Timer::Timer (const Timer&) noexcept
 
 Timer::~Timer()
 {
-    stopTimer();
+	DBG("Calling stopTimer from Timer::~Timer()") 
+   stopTimer();
 
    #if JUCE_DEBUG
     activeTimers.removeValue (this);

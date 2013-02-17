@@ -25,6 +25,7 @@ void mexFunction(
 	int nrhs, const mxArray *prhs[])
 {
 	Mcha	mcha;
+
 	if ( mcha.noError() )  
 	{
 		plhs[0] = mxCreateString( mcha.getVersion() );

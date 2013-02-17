@@ -57,7 +57,7 @@ if (strcmp(platformStr, 'x64')|| strcmp(platformStr, 'Win32'))
     copyfile('..\..\Source\m\*.m', outPath );     
     copyfile(['..\..\Lib\' platformStr '\libfftw3f-3.dll'], outPath );
     for k=1:length(fileList)
-        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ' ' outPath 'mCha-' platformStr '.lib'];
+        cmdStr = ['mex -largeArrayDims -outdir ' outPath ' ' srcFolder fileList{k} ];
         fn = fileList{k};
         disp([fn(1:(end-3)) extStr]);
         eval(cmdStr); 

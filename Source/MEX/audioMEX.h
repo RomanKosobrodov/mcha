@@ -25,14 +25,6 @@
 
 #include "../MchaLib.h"
 
-#if ( defined (LINUX) || defined (__linux__) )
-	#include <dlfcn.h>
-#endif
-
-#if  (defined (_WIN32) || defined (_WIN64))
-	#include <Windows.h>
-#endif
-
 
 class Mcha : public MchaLib
 {

@@ -231,16 +231,14 @@ MCHAEXPORT void logAddress(const char* infoStr, const int64 addr)
 /* ------------------------------------------------------------------------------ */
 void onMchaLoad()
 {
-	DBG("onMchaLoad()");
-	//initialiseJuce_GUI();
-	DBG("GUI initialised");	
-	//MchaRecordPlayer::getInstance();
+	DBG("Loading MCHA library ...");
+	// according to Jules, putting initialiseJuce_GUI() here is a bad idea (at least on Linux)
 }
 
 /* ------------------------------------------------------------------------------ */
 void onMchaUnload()
 {
-	DBG("onMchaUnLoad()");	
+	DBG("Unloading MCHA library ...");	
 	
 	MchaRecordPlayer* mchaRecordPlayer = MchaRecordPlayer::getInstanceWithoutCreating();
 	if ( mchaRecordPlayer != nullptr )
@@ -255,7 +253,8 @@ void onMchaUnload()
 		conv->deleteInstance();
 	}
 
-	shutdownJuce_GUI();
+	// according to Jules, putting shutdownJuce_GUI() here is a bad idea (at least on Linux)
+
 }
 
 /* ------------------------------------------------------------------------------ */

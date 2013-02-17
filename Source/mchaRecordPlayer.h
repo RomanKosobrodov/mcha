@@ -9,6 +9,11 @@
 #include "AudioSampleProcessor.h"
 #include "mchaFilter.h"
 
+#if JUCE_LINUX
+	#include "LinuxMessageThread.h"
+#endif
+
+
 namespace mcha
 {
 	
@@ -18,6 +23,11 @@ class	AudioSampleProcessor;
 class	AudioSampleRecorder;
 class	AudioSamplePlayer;
 class	MchaFilter;
+
+#if JUCE_LINUX
+	class LinuxMessageThread;
+#endif
+
 
 // ============================================================================================
 class MchaRecordPlayer: public Timer
@@ -92,6 +102,9 @@ public:
 	void 	timerCallback();
 
 private:
+	#if JUCE_LINUX
+	LinuxMessageThread	linuxMessageThread;
+	#endif
 	
 	String	lastError;
 	volatile bool stopProcessing;
@@ -149,7 +162,7 @@ private:
 
 	volatile bool			processIsRunning;
 
-	JUCE_LEAK_DETECTOR(MchaRecordPlayer)
+	// JUCE_LEAK_DETECTOR(MchaRecordPlayer) // this does not work properly for some reason
 
 public:
 	juce_DeclareSingleton (MchaRecordPlayer, true)

@@ -8,7 +8,7 @@
 
    JUCE can be redistributed and/or modified under the terms of the GNU General
    Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
+   A copy of the license is included in the/home/roman/Projects/juce/modules/juce_events/native/juce_linux_Messaging.cpp JUCE distribution, or can be found
    online at www.gnu.org/licenses.
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
@@ -289,13 +289,18 @@ namespace LinuxErrorHandling
 //==============================================================================
 void MessageManager::doPlatformSpecificInitialisation()
 {
-    if (JUCEApplicationBase::isStandaloneApp())
+	DBG("MessageManager::doPlatformSpecificInitialisation()")    
+	
+	if (JUCEApplicationBase::isStandaloneApp())
     {
         // Initialise xlib for multiple thread support
         static bool initThreadCalled = false;
 
         if (! initThreadCalled)
         {
+
+			DBG("Calling XInitThreads() ...")    
+
             if (! XInitThreads())
             {
                 // This is fatal!  Print error and closedown
@@ -341,6 +346,8 @@ void MessageManager::doPlatformSpecificInitialisation()
 
 void MessageManager::doPlatformSpecificShutdown()
 {
+	DBG("MessageManager::doPlatformSpecificShutdown()")    
+
     InternalMessageQueue::deleteInstance();
 
     if (display != 0 && ! LinuxErrorHandling::errorOccurred)

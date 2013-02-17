@@ -54,10 +54,15 @@ MchaRecordPlayer::MchaRecordPlayer():
 										memMode(safe),
 										memModeString(L"safe")
 {
+	/* Initialise JUCE GUI stuff here */
+	#if JUCE_WINDOWS
+		initialiseJuce_GUI();
+	#endif
+
 	/* Generate full path to default XML settings file */
 	curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
 	
-	DBG(curDirStr);
+	//DBG(curDirStr);
 	
 	fileLogger = FileLogger::createDefaultAppLogger( "mcha", "mcha.log.txt", String::empty, 0 );	
 	
@@ -75,7 +80,6 @@ MchaRecordPlayer::MchaRecordPlayer():
 	outChannelsArray.clear();
 
 	audioDeviceManager = new AudioDeviceManager();
-
 
 }
 
@@ -101,7 +105,12 @@ MchaRecordPlayer::~MchaRecordPlayer()
 	releaseBuffer(recordBuffer, recordChannels);
 	releaseBuffer(recChanArray);
 
+	#if JUCE_WINDOWS
+		shutdownJuce_GUI(); // clean up GUI
+	#endif
+
 	clearSingletonInstance();
+
 }
 //==============================================================================
 template <class T>  void	MchaRecordPlayer::releaseBuffer(T** &buf, size_t len)
@@ -728,13 +737,12 @@ bool MchaRecordPlayer::start()
 // ============================================================================================
 void MchaRecordPlayer::timerCallback ()
 {
-	/*if ( stopProcessing )
+	if ( stopProcessing )
 	{		
-		dbgOut("timerCallback is calling stop.");		
 		stopTimer();
 		stopProcessing = false;
 		this->stop();
-	}*/
+	}
 }
 
 // ============================================================================================
@@ -751,9 +759,9 @@ bool MchaRecordPlayer::stop()
 		/* close the audio device */
 		audioDeviceManager->closeAudioDevice();
 
-		/* stop the timer if still running */
+		/* stop the timer if still running 
 		if ( isTimerRunning() )
-			stopTimer();
+			stopTimer(); */
 	
 		/* release filters' resources */
 		if (recordingFilter != nullptr)

@@ -182,7 +182,7 @@ disp(' ')
 % disk to disk
 disp('disk -> disk')
 
-filesToPlay = {[pwd '\noise01.wav'] [pwd '\noise02.wav']};
+filesToPlay = {[pwd '/noise01.wav'] [pwd '/noise02.wav']};
 err = playRecord(pwd, 0, 3, filesToPlay, [1 0]);
 if (~isempty(err))
     error(err);
@@ -298,4 +298,4 @@ disp(' ')
 delete('noise01.wav');
 delete('noise02.wav');
 pause(3);
-delete([pwd '\channel*.wav']);
+delete([pwd '/channel*.wav']);
