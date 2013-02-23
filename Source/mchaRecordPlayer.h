@@ -85,8 +85,27 @@ public:
 	template <class T> bool	allocateBuffer(T** &buf, size_t bufferCount, size_t singleBufferSize, bool shouldBeCleared, String bufferVariableName );
 	template <class T> bool allocateBuffer(T* &buf, size_t singleBufferSize, bool shouldBeCleared, String bufferVariableName );
 
-	template <class T> void	releaseBuffer(T** &buf, size_t len); // Releases the double buffer of type T
-	template <class T> void	releaseBuffer(T* &buf);
+	template <class T> void	releaseBuffer(T** &buf, size_t len) // Releases the double buffer of type T
+	{
+		if (buf == nullptr) return;
+
+		for (size_t i=0; i < len; i++)
+		{  
+			fftwf_free(buf[i]);
+		}
+
+		delete [] buf;
+		buf = nullptr;
+	}
+
+	template <class T> void	releaseBuffer(T* &buf)
+	{
+		if (buf != nullptr)
+		{
+			fftwf_free(buf);
+			buf = nullptr;
+		}
+	}
 
 	void	debugBuffer(float** buf, size_t bufferCount, size_t singleBufferSize, String bufferVariableName );
 	void	debugBuffer(float* buf, size_t bufferSize, String bufferVariableName );

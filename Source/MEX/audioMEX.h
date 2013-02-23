@@ -29,7 +29,7 @@
 class Mcha : public MchaLib
 {
 public: 
-	Mcha () : MchaLib("")
+	Mcha () : MchaLib("./libmcha.so.1")
 	{};
 
 	Mcha (const char* mchaPath)

@@ -112,32 +112,6 @@ MchaRecordPlayer::~MchaRecordPlayer()
 	clearSingletonInstance();
 
 }
-//==============================================================================
-template <class T>  void	MchaRecordPlayer::releaseBuffer(T** &buf, size_t len)
-{
-	/* Release double buffer */
-	if (buf != nullptr)
-	{
-		for (size_t i=0; i < len; i++)	// release each buffer first ...
-		{  
-			fftwf_free(buf[i]);
-		}
-		delete [] buf;
-
-		buf = nullptr;
-	}
-}
-
-//==============================================================================
-template <class T>  void	MchaRecordPlayer::releaseBuffer(T* &buf)
-{
-	/* Release buffer */
-	if (buf != nullptr)
-	{
-		fftwf_free(buf);
-		buf = nullptr;
-	}
-}
 
 //==============================================================================
 template <class T> bool	MchaRecordPlayer::allocateBuffer(T** &buf, size_t bufferCount, size_t singleBufferSize, bool shouldBeCleared, String bufferVariableName)
@@ -1540,10 +1514,6 @@ template bool MchaRecordPlayer::getData<float> (float**	dat,  const int* channel
 template bool MchaRecordPlayer::getData<double> (double** dat,  const int* channels, const int channelsNumber, size_t startSample, size_t endSample); 
 
 template bool MchaRecordPlayer::allocateBuffer<fftwf_complex> (fftwf_complex** &buf, size_t bufferCount, size_t singleBufferSize, bool shouldBeCleared, String bufferVariableName );
-
-template void MchaRecordPlayer::releaseBuffer<fftwf_complex>(fftwf_complex** &buf, size_t len); 
-
-template void MchaRecordPlayer::releaseBuffer<float>(float* &buf); 
 
 template bool MchaRecordPlayer::allocateBuffer<float>(float* &buf, size_t singleBufferSize, bool shouldBeCleared, String bufferVariableName );
 
