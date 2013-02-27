@@ -77,7 +77,7 @@ private:
     class LeakCounter
     {
     public:
-        LeakCounter() noexcept { DBG("LeakCounter created for" << getLeakedObjectClassName() );}
+        LeakCounter() noexcept { DBG("LeakCounter created for " << getLeakedObjectClassName() );}
 
         ~LeakCounter()
         {

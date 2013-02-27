@@ -158,6 +158,11 @@ void AudioSampleProcessor::audioDeviceAboutToStart(AudioIODevice* )
 	Time now;
 	now = Time::getCurrentTime();
 
+	{	// Lock MessageManager temporarily as we are calling it from another thread
+		const MessageManagerLock mmLock;
+		addChangeListener(mchaRecordPlayer);
+	}
+	
 	mchaRecordPlayer->dbgOut( "AudioSampleProcessor started\t"  + now.toString(false, true, true, true) + ":" 
 								+ String(now.getMilliseconds()) );
 	mchaRecordPlayer->dbgOut( "Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
@@ -211,6 +216,10 @@ void AudioSampleProcessor::audioDeviceAboutToStart(AudioIODevice* )
 // ============================================================================================
 void AudioSampleProcessor::audioDeviceStopped()
 {
+	{	// Lock MessageManager temporarily as we are calling it from another thread
+		const MessageManagerLock mmLock;
+		removeChangeListener(mchaRecordPlayer);
+	}
 	
 	mchaRecordPlayer->dbgOut( "AudioSampleProcessor stopped\t");
 	mchaRecordPlayer->dbgOut( "Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
@@ -284,7 +293,8 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 			if ( !audioSampleRecorder->copyData (const_cast <const float**>  (tempBufferIn),	inputProcessorChannels, numSamples) )
 			{
 				/* error has occured - stop processing */
-				mchaRecordPlayer->processShouldStop(); 
+				mchaRecordPlayer->processShouldStop();
+				sendChangeMessage(); //mchaRecordPlayer->processShouldStop(); 
 			}
 		}
 		else
@@ -294,6 +304,7 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 			{
 				/* error has occured - stop processing */
 				mchaRecordPlayer->processShouldStop();
+				sendChangeMessage(); //
 			}		
 		}
 	}
@@ -301,7 +312,7 @@ void AudioSampleProcessor::audioDeviceIOCallback (const float** inputChannelData
 	{
 		/* Stop processing */
 		mchaRecordPlayer->processShouldStop(); 
-
+		sendChangeMessage(); 
 	}
 	
 	if (currentAudioPosition == 0)	

@@ -9,9 +9,9 @@
 #include "AudioSampleProcessor.h"
 #include "mchaFilter.h"
 
-#if JUCE_LINUX
-	#include "LinuxMessageThread.h"
-#endif
+//#if JUCE_LINUX
+//	#include "LinuxMessageThread.h"
+//#endif
 
 
 namespace mcha
@@ -24,13 +24,14 @@ class	AudioSampleRecorder;
 class	AudioSamplePlayer;
 class	MchaFilter;
 
-#if JUCE_LINUX
-	class LinuxMessageThread;
-#endif
+//#if JUCE_LINUX
+//	class LinuxMessageThread;
+//#endif
 
 
 // ============================================================================================
-class MchaRecordPlayer: public Timer
+class MchaRecordPlayer:	 //public Timer,
+						 public ChangeListener
 {
 public:
 	MchaRecordPlayer();
@@ -118,12 +119,13 @@ public:
 	AudioDeviceSettings& getDeviceSettings() {return *audioDeviceSettings;};
 
 	/* Timer method */
-	void 	timerCallback();
+	//void 	timerCallback();
+	void 	changeListenerCallback (ChangeBroadcaster *source);
 
 private:
-	#if JUCE_LINUX
-	LinuxMessageThread	linuxMessageThread;
-	#endif
+//	#if JUCE_LINUX
+//	LinuxMessageThread	linuxMessageThread;
+//	#endif
 	
 	String	lastError;
 	volatile bool stopProcessing;

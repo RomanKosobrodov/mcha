@@ -99,7 +99,7 @@ if ~processStopped
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');
@@ -128,7 +128,7 @@ if ~processStopped
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');
@@ -166,7 +166,7 @@ if ~processStopped
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');
@@ -189,22 +189,23 @@ if (~isempty(err))
 else
     disp('   recording/playback started ...');
 end
-pause(2);
+pause(5);
 
 disp('   waiting ...');
-[processStopped, timeElapsed] = wait(2);
+[processStopped, timeElapsed] = wait(5);
 if ~processStopped
     disp('   stopping ...');
     err = stop();
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');
 end
 disp(' ')
+wait(2);
 
 % --------------------------------------------------------
 % disk to memory
@@ -226,7 +227,7 @@ if ~processStopped
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');
@@ -243,7 +244,7 @@ else
     disp('   recording/playback started ...');
 end
 
-pause(2);
+pause(3);
 
 disp('   waiting ...');
 [processStopped, timeElapsed] = wait(2);
@@ -254,7 +255,7 @@ if ~processStopped
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');
@@ -282,7 +283,7 @@ if ~processStopped
     if (~isempty(err))
         error(err);
     else
-        disp('stopped.');
+        disp('the process was forced to stop.');
     end
 else
     disp('stopped.');

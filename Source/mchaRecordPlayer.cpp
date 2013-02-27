@@ -59,6 +59,7 @@ MchaRecordPlayer::MchaRecordPlayer():
 		initialiseJuce_GUI();
 	#endif
 
+
 	/* Generate full path to default XML settings file */
 	curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
 	
@@ -86,17 +87,17 @@ MchaRecordPlayer::MchaRecordPlayer():
 // ============================================================================================
 MchaRecordPlayer::~MchaRecordPlayer()
 {
-	dbgOut( "Deleting mchaRecordPlayer" );
+	DBG( "Deleting mchaRecordPlayer" );
 	if (processIsRunning)
 	{
-		dbgOut( "\tmchaRecordPlayer is running a task: trying to stop..." );
+		DBG( "\tmchaRecordPlayer is running a task: trying to stop..." );
 		if ( stop() )
 		{
-			dbgOut( "\tmchaRecordPlayer: task terminated successfully" );
+			DBG( "\tmchaRecordPlayer: task terminated successfully" );
 		}
 		else
 		{
-			dbgOut( "\tmchaRecordPlayer: failed to terminate task." );
+			DBG( "\tmchaRecordPlayer: failed to terminate task." );
 		}
 	}
 
@@ -110,6 +111,8 @@ MchaRecordPlayer::~MchaRecordPlayer()
 	#endif
 
 	clearSingletonInstance();
+
+	DBG("\t..done");
 
 }
 
@@ -696,7 +699,7 @@ bool MchaRecordPlayer::start()
 		processIsRunning = true;
 		stopProcessing = false;
 
-		startTimer(20);
+		//startTimer(20);
 
 		return true;
 	}
@@ -709,13 +712,15 @@ bool MchaRecordPlayer::start()
 }
 
 // ============================================================================================
-void MchaRecordPlayer::timerCallback ()
+//void MchaRecordPlayer::timerCallback ()
+void MchaRecordPlayer::changeListenerCallback (ChangeBroadcaster *source)
 {
 	if ( stopProcessing )
 	{		
-		stopTimer();
+//		stopTimer();
 		stopProcessing = false;
-		this->stop();
+		stop();
+		dbgOut(" stop processing message received ");
 	}
 }
 

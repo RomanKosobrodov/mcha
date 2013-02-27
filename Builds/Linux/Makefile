@@ -79,6 +79,7 @@ $(OUTDIR)/$(TARGET): $(OBJECTS) $(LDDEPS) $(RESOURCES)
 	-@mkdir -p $(LIBDIR)
 	-@mkdir -p $(OUTDIR)
 	@$(BLDCMD)
+	-@ln -s -f $(OUTDIR)/$(TARGET) /lib/$(TARGET)
 
 clean:
 	@echo Cleaning mcha

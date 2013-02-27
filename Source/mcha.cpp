@@ -31,6 +31,11 @@
 	#define MCHAEXPORT extern "C" 
 #endif
 
+#if JUCE_LINUX
+	#include "LinuxMessageThread.h"
+#endif
+
+
 using namespace mcha;
 
 // -----------------------------------------------------------------
@@ -232,7 +237,11 @@ MCHAEXPORT void logAddress(const char* infoStr, const int64 addr)
 void onMchaLoad()
 {
 	DBG("Loading MCHA library ...");
+
 	// according to Jules, putting initialiseJuce_GUI() here is a bad idea (at least on Linux)
+	#if JUCE_LINUX
+		LinuxMessageThread::getInstance(); // this will create the message thread and initialise GUI on Linux
+	#endif
 }
 
 /* ------------------------------------------------------------------------------ */
@@ -254,6 +263,13 @@ void onMchaUnload()
 	}
 
 	// according to Jules, putting shutdownJuce_GUI() here is a bad idea (at least on Linux)
+
+	// kill the message thread
+	LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
+	if ( linuxMessageThread != nullptr )
+	{	
+		LinuxMessageThread::deleteInstance();
+	}
 
 }
 

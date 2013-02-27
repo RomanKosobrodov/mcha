@@ -53,9 +53,13 @@ public:
 		
     }
 
+    juce_DeclareSingleton (LinuxMessageThread, false);
+
 private:
     bool initialised;
 };
+
+juce_ImplementSingleton (LinuxMessageThread)
 
 } // end of namespace
 

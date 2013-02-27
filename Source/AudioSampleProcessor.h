@@ -161,7 +161,8 @@ public:
 };
 
 /* ---------------------------------------------------------- */
-class AudioSampleProcessor: public AudioIODeviceCallback
+class AudioSampleProcessor: public AudioIODeviceCallback,
+							 public ChangeBroadcaster
 { 
 public:
 
