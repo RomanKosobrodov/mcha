@@ -60,14 +60,26 @@ MchaRecordPlayer::MchaRecordPlayer():
 	#endif
 
 
-	/* Generate full path to default XML settings file */
-	curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
+	//curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
 	
-	//DBG(curDirStr);
 	
 	fileLogger = FileLogger::createDefaultAppLogger( "mcha", "mcha.log.txt", String::empty, 0 );	
 	
 	printSystemInfo(); 
+
+	/* Generate full path to default XML settings file */
+	File curDirFile( File::getSpecialLocation( File::userApplicationDataDirectory ).getFullPathName() + 						File::separatorString + L"mcha" );
+
+	if ( !curDirFile.isDirectory() )
+	{
+		if ( !curDirFile.createDirectory() )
+		{
+			logError( L"Unable to create directory for XML settings file" );		
+		}
+	}
+
+	curDirStr = curDirFile.getFullPathName() + File::separatorString;
+
 	
 	audioDeviceSettings = new AudioDeviceSettings();
 
@@ -595,7 +607,8 @@ bool MchaRecordPlayer::start()
 
 		/* Modify XML settings element */
 		tmpDeviceSettings->setAttribute("audioDeviceInChans", outChanStringCleared );
-	}	
+	}
+	
 	/* Initialise the device */
 	lastError = audioDeviceManager->initialise (	2,	/* number of input channels */
 													2,	/* number of output channels */
@@ -607,6 +620,25 @@ bool MchaRecordPlayer::start()
 	{
 		dbgOut( "mchaRecordPlayer::initAudioDevice failed:\t" + lastError );
 		return false;
+	}
+
+	/* read MCHASETTINGS element */
+	XmlElement*	el = tmpDeviceSettings->getChildByName("MCHASETTINGS");
+	if (el == NULL)
+	{
+		dbgOut( L"Warning: wrong format of XML settings file (<MCHASETTINGS>). Using default values.");
+	}
+	else
+	{
+		/* set Memory mode */
+		String memMode = el->getStringAttribute( L"memoryMode", L"normal" ); // use normal mode by default
+		if ( !setMemoryMode( memMode.toUTF8() ) )
+			dbgOut( L"Warning: wrong memory mode value: " + memMode + L". Using default value.");
+		
+		/* set Logging level */
+		String logMode = el->getStringAttribute( L"loggingLevel", 	L"safe" ); // use safe mode by defaul
+		if ( !setDebugMode( logMode.toUTF8() ) )
+			dbgOut( L"Warning: wrong logging level value: " + logMode + L". Using default value.");
 	}
 
 	/* get the settings from the device */
@@ -699,8 +731,6 @@ bool MchaRecordPlayer::start()
 		processIsRunning = true;
 		stopProcessing = false;
 
-		//startTimer(20);
-
 		return true;
 	}
 	else
@@ -712,12 +742,10 @@ bool MchaRecordPlayer::start()
 }
 
 // ============================================================================================
-//void MchaRecordPlayer::timerCallback ()
 void MchaRecordPlayer::changeListenerCallback (ChangeBroadcaster *source)
 {
 	if ( stopProcessing )
 	{		
-//		stopTimer();
 		stopProcessing = false;
 		stop();
 		dbgOut(" stop processing message received ");
@@ -791,8 +819,9 @@ bool MchaRecordPlayer::init(const char* xmlSettingsFile)
 	if ( !tempPath.containsChar(File::separator) ) 	
 	{	
 		// add program directory to the path
-		tempPath = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() 
-					+ File::separatorString + String(xmlSettingsFile);
+		//tempPath = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() 
+		//			+ File::separatorString + String(xmlSettingsFile);
+		tempPath = curDirStr + String(xmlSettingsFile);		
 		dbgOut( "WARNING: Relative path specified. Expanded to:\t" + tempPath );
 	}
 
@@ -815,134 +844,19 @@ bool MchaRecordPlayer::init(const char* xmlSettingsFile)
 bool MchaRecordPlayer::init()
 {
 	dbgOut( "mchaRecordPlayer::init" );
-	
+
 	clearError();
 
-	/* check if the settings file exists or could be created */
-	String fileNameStr( curDirStr + File::createLegalFileName(XML_SETTINGS_FILE) );
+	ChildProcess initProcess;
 
-	File settingsFile( fileNameStr );
-	
-	bool createSettingsFile(false);
-
-	if ( !settingsFile.existsAsFile() )
+	if ( !initProcess.start( "./mchaInit" ) )
 	{
-		dbgOut( L"\tUnable to find settings file:\t" + fileNameStr );
-		dbgOut( L"\tCreating file:\t" + fileNameStr );
-		const Result res ( settingsFile.create() );
-		if (res.failed())
-		{
-			logError( L"\tSettings file was not created. " + res.getErrorMessage() );
-			return false;
-		}
-		else
-		{
-			createSettingsFile = true;
-		}
-	}	
-	
-	AudioIODevice* aio = audioDeviceManager->getCurrentAudioDevice();
-
-	if (aio == NULL)	// the device has not been initialised
-	{
-		dbgOut(L"\tAudio device has not been initialised yet.");
-
-		String errorStr;
-
-		if (createSettingsFile)
-		{
-			dbgOut(L"\tInitialising default audio device ..");
-			errorStr = audioDeviceManager->initialise (2, 2, 0, true, String::empty, 0);
-		}
-		else
-		{
-			/* try initialising the device using the settings from the file */			
-			dbgOut(L"\tIinitialising the device using the settings from the file ..");
-			errorStr = audioDeviceManager->initialise (	2,	/* number of input channels */
-																2,	/* number of output channels */
-																audioDeviceSettings->getXmlDeviceSettings(),		/* XML settings */
-																false				/* select default device on failure */ );
-		}
-		if (errorStr.isNotEmpty()) 
-		{
-			logError(L"\tUnable to initialise default audio device.");
-			return false;			
-		}
-		else
-		{
-			dbgOut(L"\t\tDone.");
-		}
-
+		logError(L"Unable to start process mchaInit");
+		return false;	
 	}
 
-	AudioDeviceSelectorComponent audioSettingsComp (	*audioDeviceManager,
-														MIN_AUDIO_INPUT_CHANNELS,
-														MAX_AUDIO_INPUT_CHANNELS,
-														MIN_AUDIO_OUTPUT_CHANNELS,
-														MAX_AUDIO_OUTPUT_CHANNELS,
-														SHOW_MIDI_INPUT_OPTIONS,
-														SHOW_MIDI_OUTPUT_SELECTOR,
-														SHOW_STEREO_PAIRS,
-														HIDE_ADVANCED_OPTIONS);
+	dbgOut( initProcess.readAllProcessOutput() );
 
-	audioSettingsComp.setSize (500, 450);
-
-	DialogWindow::showModalDialog ( "Audio Device Settings",
-									&audioSettingsComp,
-									NULL,
-									Colours::azure,
-									true );
-
-
-	AudioDeviceManager::AudioDeviceSetup	audioDeviceSetup;
-	audioDeviceManager->getAudioDeviceSetup(audioDeviceSetup);
-
-	ScopedPointer<XmlElement> audioDeviceState ( audioDeviceManager->createStateXml() );
-
-	/* if the settings have not been returned by createStateXml create them using audioDeviceManager */
-	if (audioDeviceState == NULL)
-	{
-		audioDeviceState = audioDeviceSettings->createXmlSettings(audioDeviceManager);	
-		if (audioDeviceState == NULL)
-		{
-			logError(L"Unable to update device settings using AudioDeviceManager");
-			return false;
-		}
-	}
-
-	dbgOut(L"\tDevice settings updated.");
-
-	/* Check if audioDeviceState is complete */
-	String attrString;
-
-	attrString = "audioDeviceRate";
-	if ( !audioDeviceState->hasAttribute( attrString ) )
-		audioDeviceState->setAttribute( attrString, audioDeviceSetup.sampleRate );
-	
-	attrString = "audioDeviceBufferSize";
-	if ( !audioDeviceState->hasAttribute( attrString ) )
-		audioDeviceState->setAttribute( attrString, audioDeviceSetup.bufferSize );
-
-	attrString = "audioDeviceInChans";
-	if ( !audioDeviceState->hasAttribute( attrString ) )
-		audioDeviceState->setAttribute( attrString,  audioDeviceSetup.inputChannels.toString(2, 1) );
-
-	attrString = "audioDeviceOutChans";
-	if ( !audioDeviceState->hasAttribute( attrString ) )
-		audioDeviceState->setAttribute( attrString,  audioDeviceSetup.outputChannels.toString(2, 1) );
-
-
-	if	( !audioDeviceState->writeToFile ( settingsFile, String::empty ) )
-	{
-		logError( L"Unable to save settings in the file." );
-		return false;
-	}
-
-	/* update settings */
-	audioDeviceSettings->setXmlSettingsFile( settingsFile.getFullPathName() );
-
-	audioDeviceManager->closeAudioDevice();
-	
 	return true;
 }
 
@@ -953,15 +867,15 @@ bool	MchaRecordPlayer::setDebugMode(const char* dmStr)
 	
 	dbgOut( L"mchaRecordPlayer::setDebugMode(\"" + debugModeString + L"\")" );
 	
-	if (debugModeString == L"advanced")
+	if (debugModeString == "advanced")
 	{
 		debugMode = advanced;	
 	}
-	else if (debugModeString == L"normal")
+	else if (debugModeString == "normal")
 	{
 		debugMode = normal;		 
 	}
-	else if (debugModeString == L"none")
+	else if (debugModeString == "none")
 	{
 		debugMode = none;
 	}
@@ -980,14 +894,15 @@ bool	MchaRecordPlayer::setDebugMode(const char* dmStr)
 bool	MchaRecordPlayer::setMemoryMode(const char* mMode)
 { 
 	memModeString = String(mMode);
+
 	
 	dbgOut( L"mchaRecordPlayer::setMemoryMode(\"" + memModeString + L"\")" );
 	
-	if (debugModeString == L"safe")
+	if (memModeString == "safe")
 	{
 		memMode = safe;	
 	}
-	else if (debugModeString == L"smart")
+	else if (memModeString == "smart")
 	{
 		memMode = smart;		 
 	}
@@ -1000,6 +915,8 @@ bool	MchaRecordPlayer::setMemoryMode(const char* mMode)
 	dbgOut(L"\tMemory mode set to:\t" + memModeString);
 	return true;
 }
+
+
 //==============================================================================
 template <class D, class S> bool MchaRecordPlayer::playRecord(D** recordData, const int recordChannelCount, const float recordSamplesNumber, const int *recDeviceChannels, const int recDeviceChannelsCount,
 																const S** playbackData, const int playbackDataChannels, const size_t playbackSamplesNumber, const int* devicePlayChannels, const int devicePlayChannelsCount)

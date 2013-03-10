@@ -7,6 +7,12 @@ function mcha_test_filters(deviceconfig)
 % If the function is called without the parameter the Audio Device Settings
 % dialog is displayed.
 
+%% get location of sounds
+thisFile = which('mcha_test_filters.m');
+[pathName, file, ext] = fileparts( thisFile );
+examplesDir = [pathName '/../'];
+soundDir = [pathName '/../sound/'];
+
 %% initialise device
 clc;
 disp('Record and playback test')
@@ -34,14 +40,14 @@ end
 disp('==================================')
 disp('Playback Filters')
 
-folder = '../sound/samples/';
+folder = [ soundDir 'samples/'];
 snd = { [folder 'tone_1kHz.wav'] ,  [folder 'tone_2kHz.wav'] };
 
 for ch = 1:length(snd)
     disp(['   channel' num2str(ch-1, '%02d') ': ' snd{ch}])
 end
 
-filterfile = '../filters/notch_fir.xml';
+filterfile = [ examplesDir 'filters/notch_fir.xml' ];
 disp(['   filter: ' filterfile]); 
 disp('');
 
@@ -82,8 +88,8 @@ end
 disp('==================================')
 disp('Recording Filters')
 
-folder = '../sound/recorded/';
-filterRec = '../filters/third_octave_IIR.xml';
+folder = [ soundDir 'recorded/'];
+filterRec = [ examplesDir 'filters/third_octave_IIR.xml' ];
 
 disp(['   folder: ' folder])
 disp(['   filter: ' filterRec]); 
@@ -121,12 +127,12 @@ disp('==================================')
 disp('Playback and Recording Test')
 disp(' ')
 
-folderPlay = '../sound/samples/';
-folderRec = '../sound/recorded/';
+folderPlay = [ soundDir 'samples/' ];
+folderRec = [ soundDir 'recorded/' ];
 snd = { [folderPlay 'noise01.wav'] };
 
-filterPlayback = '../filters/a-weighting_IIR.xml';
-filterRecord = '../filters/third_octave_IIR.xml';
+filterPlayback = [ examplesDir 'filters/a-weighting_IIR.xml' ];
+filterRecord = [ examplesDir 'filters/third_octave_IIR.xml' ];
 
 err = playRecord(folderRec, 0, 3, filterRecord, snd, 0, filterPlayback);
 if (~isempty(err))
@@ -139,4 +145,8 @@ pause(3);
 if (~processStopped)
     error(getError());
 end
+
+disp('==================================')
+disp('Tests complete')
+disp(' ')
 

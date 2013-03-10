@@ -2,7 +2,7 @@
 #define MCHA_AUDIODEVICESETTINGS_H
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "mchaRecordPlayer.h"
+//#include "mchaRecordPlayer.h"
 
 namespace mcha
 {
@@ -65,6 +65,7 @@ private:
 	String		inputChannelsStr;
 	int			outputChannels;
 	String		outputChannelsStr;
+
 	String		xmlSettings;
 	XmlElement*	deviceSettings;
 	Result		lastResult;	

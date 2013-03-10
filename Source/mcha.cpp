@@ -38,11 +38,39 @@
 
 using namespace mcha;
 
+// helper function to call init from the MessageManager thread
+void* initCallback(void* result)
+{
+	MchaRecordPlayer* mrp = MchaRecordPlayer::getInstance(); // create the instance if not existing
+
+	// call init ...
+	bool* tmpRes = static_cast<bool*>(result);	
+	*tmpRes = mrp->init();
+
+	return result;	
+}
+
 // -----------------------------------------------------------------
 
 MCHAEXPORT bool initAudioDevice()
 {
-	return MchaRecordPlayer::getInstance()->init();
+	// init() uses GUI so it has to run from the MessageThread or bad things would happen
+
+	bool  res(false);
+	void* resptr = static_cast<void*>(&res);
+	void* dummyptr;
+
+	if ( MessageManager::getInstance()->isThisTheMessageThread() )
+    {
+		res = MchaRecordPlayer::getInstance()->init(); // OK, calling from the MessageThread
+	}
+	else
+	{
+		// use some ugly JUCE voodoo to invoke init() from the MessageThread
+		//  pointer to res is passed to initCallback, which puts the result in res 		
+		dummyptr = MessageManager::getInstance()->callFunctionOnMessageThread (initCallback, resptr);
+    }
+	return res;	
 }
 
 MCHAEXPORT bool initAudioDeviceFile(const char* xmlSettingsFile)

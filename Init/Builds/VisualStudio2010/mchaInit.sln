@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{D435CFEF-09A0-58AC-3ECB-040940826134}") = "mchaInit", "mchaInit.vcxproj", "{CB554FD4-A8B8-B8F4-AF6E-ECACBD95F6A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB554FD4-A8B8-B8F4-AF6E-ECACBD95F6A3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CB554FD4-A8B8-B8F4-AF6E-ECACBD95F6A3}.Debug|Win32.Build.0 = Debug|Win32
+		{CB554FD4-A8B8-B8F4-AF6E-ECACBD95F6A3}.Release|Win32.ActiveCfg = Release|Win32
+		{CB554FD4-A8B8-B8F4-AF6E-ECACBD95F6A3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

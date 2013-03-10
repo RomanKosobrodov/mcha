@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mchaInit">
+      <UniqueIdentifier>{6B688449-4DBA-D85E-AC17-8F524329829F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mchaInit\Source">
+      <UniqueIdentifier>{8A198FD8-2483-88B6-DE11-8AD2C48B0779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Juce Library Code">
+      <UniqueIdentifier>{8B4D1BAA-6DB4-CAEC-A0FA-271F354D5C61}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\init\initComponent.cpp">
+      <Filter>mchaInit\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\init\initMain.cpp">
+      <Filter>mchaInit\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\init\initTabComponent.cpp">
+      <Filter>mchaInit\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\init\initComponent.h">
+      <Filter>mchaInit\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\init\initTabComponent.h">
+      <Filter>mchaInit\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\resources.rc">
+      <Filter>Juce Library Code</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

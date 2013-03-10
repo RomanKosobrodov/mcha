@@ -75,12 +75,13 @@ public:
 	enum		DebugMode { none, normal, advanced };	
 	const char*	getDebugMode() 	{ return debugModeString.toUTF8(); };
 	bool		setDebugMode(const char* dmStr);
+	bool		setDebugMode(DebugMode dbgMode) { debugMode = dbgMode; };
 
 	/* memory use modes */
 	enum		MemoryMode { safe, smart };
 	const char* getMemoryMode() { return memModeString.toUTF8(); };
 	bool		setMemoryMode(const char* mMode);
-	void		setMemoryMode(MemoryMode mMode) { memMode = mMode;};
+	void		setMemoryMode(MemoryMode mMode) { memMode = mMode; };
 
 	/* memory management */
 	template <class T> bool	allocateBuffer(T** &buf, size_t bufferCount, size_t singleBufferSize, bool shouldBeCleared, String bufferVariableName );
