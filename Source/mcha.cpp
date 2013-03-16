@@ -290,15 +290,14 @@ void onMchaUnload()
 		conv->deleteInstance();
 	}
 
-	// according to Jules, putting shutdownJuce_GUI() here is a bad idea (at least on Linux)
-
-	// kill the message thread
-	LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
-	if ( linuxMessageThread != nullptr )
-	{	
-		LinuxMessageThread::deleteInstance();
-	}
-
+	// kill Linux message thread
+	#if JUCE_LINUX
+		LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
+		if ( linuxMessageThread != nullptr )
+		{	
+			LinuxMessageThread::deleteInstance();
+		}
+	#endif
 }
 
 /* ------------------------------------------------------------------------------ */

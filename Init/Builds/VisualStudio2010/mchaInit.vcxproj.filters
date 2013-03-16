@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="mchaInit">
@@ -11,6 +10,9 @@
     <Filter Include="Juce Library Code">
       <UniqueIdentifier>{8B4D1BAA-6DB4-CAEC-A0FA-271F354D5C61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mchaCode">
+      <UniqueIdentifier>{e4eb51f8-2ae1-4786-86be-110d336f8e21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Source\init\initComponent.cpp">
@@ -19,27 +21,61 @@
     <ClCompile Include="..\..\..\Source\init\initMain.cpp">
       <Filter>mchaInit\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\init\initTabComponent.cpp">
+    <ClCompile Include="..\..\..\Source\init\MchaSettingsComponent.cpp">
       <Filter>mchaInit\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_basics\juce_audio_basics.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_devices\juce_audio_devices.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_formats\juce_audio_formats.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_processors\juce_audio_processors.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_utils\juce_audio_utils.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_core\juce_core.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_data_structures\juce_data_structures.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_events\juce_events.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_graphics\juce_graphics.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AudioDeviceSettings.cpp">
+      <Filter>mchaCode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\init\initComponent.h">
       <Filter>mchaInit\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\init\initTabComponent.h">
+    <ClInclude Include="..\..\..\Source\init\MchaSettingsComponent.h">
       <Filter>mchaInit\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
-      <Filter>Juce Library Code</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include=".\resources.rc">
+    <ClInclude Include="..\..\..\JuceLibraryCode\AppConfig.h">
       <Filter>Juce Library Code</Filter>
-    </ResourceCompile>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AudioDeviceSettings.h">
+      <Filter>mchaCode</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
