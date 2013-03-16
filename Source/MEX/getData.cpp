@@ -68,7 +68,11 @@ void mexFunction(	int nlhs, 	mxArray *plhs[],
 	if ( !mcha.getData_s(memData, NULL, 0, 0, 0) )
 	{
 		delete [] memData;
-		mexErrMsgTxt("Unable to retrieve data from memory. Call getError() for details.");
+
+		std::string error("Unable to retrieve data from memory. ");
+		error += mcha.getLastError();
+		
+		mexErrMsgTxt( error.c_str() );
 	}
 	else
 	{

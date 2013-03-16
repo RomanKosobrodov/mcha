@@ -262,12 +262,13 @@ void onMchaUnload()
 	}
 
 	// kill the message thread
-	LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
-	if ( linuxMessageThread != nullptr )
-	{	
-		LinuxMessageThread::deleteInstance();
-	}
-
+	#if JUCE_LINUX
+		LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
+		if ( linuxMessageThread != nullptr )
+		{	
+			LinuxMessageThread::deleteInstance();
+		}
+	#endif
 }
 
 /* ------------------------------------------------------------------------------ */
@@ -277,6 +278,20 @@ void onMchaUnload()
 		if (dwReason == DLL_PROCESS_ATTACH)
 		{
 			Process::setCurrentModuleInstanceHandle (instance);
+			
+			// Prevent library from being unloaded when the MEX function that called it terminates
+			const size_t moduleNameSize = 1024;
+			TCHAR moduleName[moduleNameSize];
+			
+			/* get the full qualified name to the DLL */
+			if ( 0 != GetModuleFileName( instance, moduleName, moduleNameSize ) )
+			{
+				/* make the library stay in memory */
+				HMODULE module;
+				GetModuleHandleEx( GET_MODULE_HANDLE_EX_FLAG_PIN, moduleName, &module );
+			} 
+			
+			/* call platform-independent startup code */
 			onMchaLoad();
 		}
 		else if (dwReason == DLL_PROCESS_DETACH)

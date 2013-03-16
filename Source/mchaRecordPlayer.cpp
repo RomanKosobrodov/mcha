@@ -59,12 +59,16 @@ MchaRecordPlayer::MchaRecordPlayer():
 		initialiseJuce_GUI();
 	#endif
 
+	String	loggerName = File::getSpecialLocation(File::userApplicationDataDirectory).getFullPathName() +
+							File::separatorString + "mcha" + File::separatorString + "mcha.log.txt";
+	File	logger(loggerName);
 
-	//curDirStr = File::getSpecialLocation(File::currentApplicationFile).getParentDirectory().getFullPathName() + File::separatorString;
-	
-	
-	fileLogger = FileLogger::createDefaultAppLogger( "mcha", "mcha.log.txt", String::empty, 0 );	
-	
+	fileLogger = new FileLogger(logger, String::empty);
+	if (fileLogger == NULL)
+	{
+		DBG("Failed to create file logger.");
+	}
+
 	printSystemInfo(); 
 
 	/* Generate full path to default XML settings file */

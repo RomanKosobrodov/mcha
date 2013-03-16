@@ -77,4 +77,6 @@ if (strcmp(platformStr, 'Linux-x86_64') || strcmp(platformStr, 'Linux-i386'))
     end
 end
 
-%exit;
+if nargin == 0
+  exit
+end

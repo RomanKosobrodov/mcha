@@ -3,9 +3,9 @@
 
 // Version number
 #ifdef _DEBUG
-	#define MCHA_VERSION_NUMBER	"0.0.8 Debug"
+	#define MCHA_VERSION_NUMBER	"0.0.9 Debug"
 #else
-	#define MCHA_VERSION_NUMBER	"0.0.8 Release"
+	#define MCHA_VERSION_NUMBER	"0.0.9 Release"
 #endif
 
 #define XML_SETTINGS_FILE	"defaultsettings.xml"

@@ -59,7 +59,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MCHA-Debug-Win32|Win32'">$(ProjectName)-$(Platform)</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MCHA-Debug-Win32|Win32'">true</GenerateManifest>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='MCHA-Debug-Win32|Win32'">$(LibraryPath);..\..\Lib\$(Platform)</LibraryPath>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MCHA-Release-Win32|Win32'">.\..\..\..\..\Bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MCHA-Release-Win32|Win32'">.\..\..\Bin\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MCHA-Release-Win32|Win32'">.\MCHA-Release-Win32\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MCHA-Release-Win32|Win32'">$(ProjectName)-$(Platform)</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MCHA-Release-Win32|Win32'">true</GenerateManifest>

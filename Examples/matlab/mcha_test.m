@@ -36,6 +36,8 @@ fsample = 48000;     % sampling frequency
 N = fsample*T + 5;   % number of samples
 dat = 0.75 * (rand(N, 2) - 0.5); % generate T seconds of white noise
 
+err =[];
+
 % start playing data
 disp('==================================')
 disp('Playback test. Memory')

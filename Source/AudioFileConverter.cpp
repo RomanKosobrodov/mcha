@@ -14,17 +14,10 @@ AudioFileConverter::AudioFileConverter()
 							File::separatorString + "mcha" + File::separatorString + "mcha.log.txt";
 	File	logger(loggerName);
 
-	if ( logger.existsAsFile() )
+	fileLogger = new FileLogger(logger, String::empty);
+	if (fileLogger == NULL)
 	{
-		fileLogger = new FileLogger(logger, String::empty);
-		if (fileLogger == NULL)
-		{
-			DBG("** AudioFileConverter ** Failed to create file logger.");
-		}
-	}
-	else
-	{
-		DBG( String("** AudioFileConverter ** Unable to create logger with nonexistent file ") + loggerName );
+		DBG("** AudioFileConverter ** Failed to create file logger.");
 	}
 }
 

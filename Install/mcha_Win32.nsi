@@ -1,7 +1,3 @@
-;NSIS Modern User Interface
-;Header Bitmap Example Script
-;Written by Joost Verburg
-
 ;--------------------------------
 ;Include Modern UI
 
@@ -103,7 +99,8 @@ SectionIn RO
   File	..\Bin\MCHA-Release-Win32\*.mexw32
   File	..\Bin\MCHA-Release-Win32\*.m
  
- 
+  File  ..\Bin\MCHA-Release-Win32\*.exe
+
   CreateDirectory $INSTDIR\doc
   SetOutPath "$INSTDIR\doc" 
 

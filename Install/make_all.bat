@@ -10,7 +10,7 @@ REM =============================
 REM               COMPILATION
 REM =============================
 "C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-Win32
-REM "C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-x64
+"C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Init\Builds\VisualStudio2010\mchaInit.sln  /rebuild MCHA-Release-Win32
 
 REM =============================
 REM               MEX FILES
@@ -32,8 +32,8 @@ echo 64-bit...
 REM =============================
 REM               COMPILATION
 REM =============================
-"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-Win32
 "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Builds\VisualStudio2010\mcha.sln  /rebuild MCHA-Release-x64
+"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.com" ..\Init\Builds\VisualStudio2010\mchaInit.sln  /rebuild MCHA-Release-x64
 
 REM =============================
 REM               MEX FILES
@@ -84,18 +84,37 @@ REM --------- Builds files -----------
 mkdir .\install\mcha\Builds
 mkdir .\install\mcha\Builds\Linux
 mkdir .\install\mcha\Builds\MEX
-mkdir .\install\mcha\Builds\Octave
+mkdir .\install\mcha\Builds\MacOSX
 mkdir .\install\mcha\Builds\VisualStudio2010
+
+copy ..\Builds\VisualStudio2010\*.sln		.\install\mcha\Builds\VisualStudio2010
+copy ..\Builds\VisualStudio2010\*.suo		.\install\mcha\Builds\VisualStudio2010
+copy ..\Builds\VisualStudio2010\*.vcxproj.filters	.\install\mcha\Builds\VisualStudio2010
+copy ..\Builds\VisualStudio2010\*.vcxproj	.\install\mcha\Builds\VisualStudio2010
 
 xcopy /s ..\Builds\Linux .\install\mcha\Builds\Linux
 xcopy /s ..\Builds\MEX .\install\mcha\Builds\MEX
-xcopy /s ..\Builds\Octave .\install\mcha\Builds\Octave
+xcopy /s ..\Builds\MacOSX .\install\mcha\Builds\MacOSX
 
 
-copy  ..\Builds\VisualStudio2010\*.sln		.\install\mcha\Builds\VisualStudio2010
-copy ..\Builds\VisualStudio2010\*.suo		.\install\mcha\Builds\VisualStudio2010
-copy ..\Builds\VisualStudio2010\*.vcxproj.filters	.\install\mcha\Builds\VisualStudio2010
-copy  ..\Builds\VisualStudio2010\*.vcxproj	.\install\mcha\Builds\VisualStudio2010
+REM - Init --
+
+mkdir .\install\mcha\Init\Builds
+mkdir .\install\mcha\Init\Builds\Linux
+mkdir .\install\mcha\Init\Builds\MacOSX
+mkdir .\install\mcha\Init\Builds\VisualStudio2010
+mkdir .\install\mcha\Init\JuceLibraryCode
+
+xcopy /s ..\Init\Builds\Linux  .\install\mcha\Init\Builds\Linux
+xcopy /s ..\Init\Builds\MacOSX .\install\mcha\Init\Builds\MacOSX
+xcopy /s ..\Init\JuceLibraryCode .\install\mcha\Init\JuceLibraryCode
+
+copy ..\Init\*.jucer .\install\mcha\Init
+
+copy ..\Init\Builds\VisualStudio2010\*.sln		.\install\mcha\Init\Builds\VisualStudio2010
+copy ..\Init\Builds\VisualStudio2010\*.suo		.\install\mcha\Init\Builds\VisualStudio2010
+copy ..\Init\Builds\VisualStudio2010\*.vcxproj.filters	.\install\mcha\Init\Builds\VisualStudio2010
+copy ..\Init\Builds\VisualStudio2010\*.vcxproj	.\install\mcha\Init\Builds\VisualStudio2010
 
 REM --------- Installer files -----------
 mkdir .\install\mcha\Install
