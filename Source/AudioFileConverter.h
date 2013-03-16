@@ -1,7 +1,8 @@
 #ifndef MCHA_AUDIOFILECONVERTER_H
 #define MCHA_AUDIOFILECONVERTER_H
 
-#include "mchaRecordPlayer.h"
+#include "../JuceLibraryCode/JuceHeader.h"
+#include "AudioDeviceSettings.h"
 
 namespace mcha
 {
@@ -45,17 +46,35 @@ public:
 	void run();
 	void addTask(const ConverterTask	*newTask) 
 	{  
-		jobQueue.add(newTask);
+		{  // lock jobQueue before adding a task
+			const ScopedLock lock (queueLock);
+			jobQueue.add(newTask);
+		} // unlocks here
+		
 		if (!isThreadRunning())
 		{
 			startThread();
 		}
 	};
+	
+	int getQueueSize() const
+	{
+		const ScopedLock lock (queueLock);
+		return jobQueue.size();			
+	}
+
+	void removeFromQueue()
+	{
+		const ScopedLock lock (queueLock);
+		jobQueue.remove(0, true);			
+	}
 
 	void	dbgOut(const String& msg)
 	{
 		if (fileLogger != NULL)
 			fileLogger->logMessage(msg);
+		else
+			DBG( msg );
 	}
 
 	juce_UseDebuggingNewOperator
@@ -65,6 +84,7 @@ private:
 	OwnedArray<ConverterTask>	jobQueue;
 	ConverterTask*				task;
 	FileLogger*					fileLogger;
+	CriticalSection				queueLock;
 
 	//==============================================================================
     // (prevent copy constructor and operator= being generated..)

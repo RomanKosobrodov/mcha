@@ -27,22 +27,20 @@ public:
 
     ~LinuxMessageThread()
     {
-		DBG("Stopping message thread ...");
- 		
-        signalThreadShouldExit();
-        //JUCEApplication::quit();		
-        waitForThreadToExit (5000);
 
-		shutdownJuce_GUI();
-		DBG("JUCE GUI shut down .");
+		//DBG("Stopping message thread ...");	
 
+        signalThreadShouldExit();		
+        waitForThreadToExit (-1); // wait forever
+		
+		clearSingletonInstance();
+		//DBG("Message thread stopped.");
 
-		DBG("Message thread stopped.");
     }
 
     void run()
     {
-		DBG("initialising Juce GUI")        
+		//DBG("initialising Juce GUI")        
 		initialiseJuce_GUI();
         initialised = true;
 
@@ -50,6 +48,10 @@ public:
 
         while ((! threadShouldExit()) && MessageManager::getInstance()->runDispatchLoopUntil (250))
         {}
+	
+		//DBG("Shutting down JUCE GUI ...");
+		shutdownJuce_GUI();
+		//DBG("GUI shutdown complete");
 		
     }
 

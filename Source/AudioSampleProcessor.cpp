@@ -142,7 +142,8 @@ AudioSampleProcessor::AudioSampleProcessor ()
 							tempBufferOut(NULL),
 							inputProcessorChannels(0),
 							outputProcessorChannels(0),
-							debugChannelCount(0)
+							debugChannelCount(0),
+							deviceStopped(true)
 {
 	mchaRecordPlayer = MchaRecordPlayer::getInstance();
 }
@@ -157,6 +158,8 @@ void AudioSampleProcessor::audioDeviceAboutToStart(AudioIODevice* )
 {
 	Time now;
 	now = Time::getCurrentTime();
+
+	deviceStopped = false;
 
 	{	// Lock MessageManager temporarily as we are calling it from another thread
 		const MessageManagerLock mmLock;
@@ -211,6 +214,7 @@ void AudioSampleProcessor::audioDeviceAboutToStart(AudioIODevice* )
 		debugChannelCount = debugRecorder->getOutputsNumber();
 		debugRecorder->startProcessing();
 	}
+
 }
 
 // ============================================================================================
@@ -242,6 +246,8 @@ void AudioSampleProcessor::audioDeviceStopped()
 	debugRecorder = NULL;
 	inputProcessor = NULL;
 	outputProcessor = NULL;
+
+	deviceStopped = true;
 }
 
 // ============================================================================================

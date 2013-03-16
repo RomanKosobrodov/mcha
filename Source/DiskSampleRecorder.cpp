@@ -183,8 +183,11 @@ bool DiskSampleRecorder::copyData( const float** inputChannelData,	int totalNumI
 //==============================================================================
 void DiskSampleRecorder::startProcessing()
 {
+	// Create time label (milliseconds from the beginning of epoch
+	String timeLabel( Time::currentTimeMillis() );
+ 	
 	// Create dataWriter thread
-	dataWriter	=	new DataWriter(outputDir + "data.dat", processorOutputs, bufferSize, sizeof(float), CIRCULAR_BUFFER_LENGTH, endBuffer);
+	dataWriter	=	new DataWriter(outputDir + "data" + timeLabel + ".dat", processorOutputs, bufferSize, sizeof(float), CIRCULAR_BUFFER_LENGTH, endBuffer);
 
 	dataWriter->startThread();
 }
@@ -194,13 +197,13 @@ void DiskSampleRecorder::stopProcessing()
 {
 	// Terminate DataReader
 	dataWriter->signalThreadShouldExit();
-	dataWriter->waitForThreadToExit(1000);
+	dataWriter->waitForThreadToExit(-1);
 	
 	bytesSaved = dataWriter->getBytesSaved();
 	mchaRecordPlayer->dbgOut("Bytes saved to disk:\t" + String( bytesSaved ) );
 
 	// Save audio files
-	String datFileName = outputDir + L"data.dat";
+	String datFileName ( dataWriter->getFileName() );
 	AudioFileConverter::getInstance()->addTask( new ConverterTask( datFileName, processorOutputs, L"wav" ,mchaRecordPlayer->getDeviceSettings() ) );
 
 	delete dataWriter;

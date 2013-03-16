@@ -27,6 +27,8 @@ public:
 	// The number of bytes saved in the temporary data file
 	int64 getBytesSaved();
 	
+	String getFileName() const { return outputFileName; };
+
 	juce_UseDebuggingNewOperator
 
 private:
