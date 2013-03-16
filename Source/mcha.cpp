@@ -38,39 +38,11 @@
 
 using namespace mcha;
 
-// helper function to call init from the MessageManager thread
-void* initCallback(void* result)
-{
-	MchaRecordPlayer* mrp = MchaRecordPlayer::getInstance(); // create the instance if not existing
-
-	// call init ...
-	bool* tmpRes = static_cast<bool*>(result);	
-	*tmpRes = mrp->init();
-
-	return result;	
-}
-
 // -----------------------------------------------------------------
 
 MCHAEXPORT bool initAudioDevice()
 {
-	// init() uses GUI so it has to run from the MessageThread or bad things would happen
-
-	bool  res(false);
-	void* resptr = static_cast<void*>(&res);
-	void* dummyptr;
-
-	if ( MessageManager::getInstance()->isThisTheMessageThread() )
-    {
-		res = MchaRecordPlayer::getInstance()->init(); // OK, calling from the MessageThread
-	}
-	else
-	{
-		// use some ugly JUCE voodoo to invoke init() from the MessageThread
-		//  pointer to res is passed to initCallback, which puts the result in res 		
-		dummyptr = MessageManager::getInstance()->callFunctionOnMessageThread (initCallback, resptr);
-    }
-	return res;	
+	return MchaRecordPlayer::getInstance()->init();;	
 }
 
 MCHAEXPORT bool initAudioDeviceFile(const char* xmlSettingsFile)
@@ -266,7 +238,6 @@ void onMchaLoad()
 {
 	DBG("Loading MCHA library ...");
 
-	// according to Jules, putting initialiseJuce_GUI() here is a bad idea (at least on Linux)
 	#if JUCE_LINUX
 		LinuxMessageThread::getInstance(); // this will create the message thread and initialise GUI on Linux
 	#endif
@@ -285,19 +256,18 @@ void onMchaUnload()
 
 	AudioFileConverter* conv = AudioFileConverter::getInstanceWithoutCreating();
 	if ( conv != nullptr )
-	{
+	{		
 		conv->waitForThreadToExit(-1); // wait forever
 		conv->deleteInstance();
 	}
 
-	// kill Linux message thread
-	#if JUCE_LINUX
-		LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
-		if ( linuxMessageThread != nullptr )
-		{	
-			LinuxMessageThread::deleteInstance();
-		}
-	#endif
+	// kill the message thread
+	LinuxMessageThread* linuxMessageThread = LinuxMessageThread::getInstanceWithoutCreating();
+	if ( linuxMessageThread != nullptr )
+	{	
+		LinuxMessageThread::deleteInstance();
+	}
+
 }
 
 /* ------------------------------------------------------------------------------ */

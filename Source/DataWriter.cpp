@@ -78,10 +78,10 @@ DataWriter::~DataWriter()
 	delete fileOutputStream;
 
 	// delete the temporary data file from disk
-	mchaRecordPlayer->dbgOut( "DataWriter:\tDeleting temporary file:\t" + outputDataFile->getFileName() + "\t size in bytes:\t" + String(outputDataFile->getSize()));
+/*	mchaRecordPlayer->dbgOut( "DataWriter:\tDeleting temporary file:\t" + outputDataFile->getFileName() + "\t size in bytes:\t" + String(outputDataFile->getSize()));
 	if (!outputDataFile->deleteFile())
 		mchaRecordPlayer->dbgOut( "\t\tTemporary file:\t" + outputDataFile->getFileName() + " was not deleted." );
-
+*/
 	delete outputDataFile;	
 }
 

@@ -289,7 +289,7 @@ namespace LinuxErrorHandling
 //==============================================================================
 void MessageManager::doPlatformSpecificInitialisation()
 {
-	DBG("MessageManager::doPlatformSpecificInitialisation()")    
+//	DBG("MessageManager::doPlatformSpecificInitialisation()")    
 	
 	if (JUCEApplicationBase::isStandaloneApp())
     {
@@ -299,7 +299,7 @@ void MessageManager::doPlatformSpecificInitialisation()
         if (! initThreadCalled)
         {
 
-			DBG("Calling XInitThreads() ...")    
+		//	DBG("Calling XInitThreads() ...")    
 
             if (! XInitThreads())
             {
@@ -346,7 +346,7 @@ void MessageManager::doPlatformSpecificInitialisation()
 
 void MessageManager::doPlatformSpecificShutdown()
 {
-	DBG("MessageManager::doPlatformSpecificShutdown()")    
+	//DBG("MessageManager::doPlatformSpecificShutdown()")    
 
     InternalMessageQueue::deleteInstance();
 

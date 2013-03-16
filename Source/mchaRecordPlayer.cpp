@@ -124,7 +124,7 @@ MchaRecordPlayer::~MchaRecordPlayer()
 
 	clearSingletonInstance();
 
-	DBG("\t..done");
+	DBG("mchaRecordPlayer is deleted");
 
 }
 
@@ -610,6 +610,16 @@ bool MchaRecordPlayer::start()
 	}
 	
 	/* Initialise the device */
+	AudioIODevice* currentAudioDevice = audioDeviceManager->getCurrentAudioDevice();
+	if (currentAudioDevice != NULL)
+	{
+		if ( currentAudioDevice->isOpen() )
+		{
+			dbgOut( "mchaRecordPlayer::start: Current audio device is still open. Attempting to stop ..." );
+			currentAudioDevice->close();
+		}	
+	}
+
 	lastError = audioDeviceManager->initialise (	2,	/* number of input channels */
 													2,	/* number of output channels */
 													tmpDeviceSettings,		/* XML settings */
@@ -618,7 +628,37 @@ bool MchaRecordPlayer::start()
 
 	if (lastError.isNotEmpty())
 	{
-		dbgOut( "mchaRecordPlayer::initAudioDevice failed:\t" + lastError );
+		dbgOut( "mchaRecordPlayer::start: Unable to initialise audio device:\t" + lastError );
+
+		/* try initialising default audio device */
+		dbgOut( "mchaRecordPlayer::start: Initialising default device ..." );
+		lastError = audioDeviceManager->initialise (	2,	/* number of input channels */
+														2,	/* number of output channels */
+														0,	/* XML settings */
+														true	/* select default device on failure */ );
+		if ( lastError.isNotEmpty() )
+		{
+			dbgOut( "mchaRecordPlayer::start: Failed to initialise default device:\t" + lastError );
+			return false;
+		}
+		else
+		{
+			dbgOut( "mchaRecordPlayer::start: Default device initialised successfully." );
+			dbgOut( "mchaRecordPlayer::start: Initialisind device again with user settings ..." );
+			
+			/* try again with user XML settings */
+			lastError = audioDeviceManager->initialise (	2,	/* number of input channels */
+													2,	/* number of output channels */
+													tmpDeviceSettings,		/* XML settings */
+													false				/* select default device on failure */ );
+			if ( lastError.isNotEmpty() )
+			{
+				dbgOut( "mchaRecordPlayer::start: Failed to initialise device:\t" + lastError );
+				return false;
+			}
+			
+		}
+
 		return false;
 	}
 
@@ -645,7 +685,7 @@ bool MchaRecordPlayer::start()
 	AudioIODevice* device = audioDeviceManager->getCurrentAudioDevice();
 	if (device == NULL)
 	{
-		logError( L"AudioDeviceManager::getCurrentAudioDevice() returned NULL");
+		logError( L"mchaRecordPlayer::start: AudioDeviceManager::getCurrentAudioDevice() returned NULL. Device is not 						initialised properly.");
 		return false;
 	}
 
@@ -748,7 +788,6 @@ void MchaRecordPlayer::changeListenerCallback (ChangeBroadcaster *source)
 	{		
 		stopProcessing = false;
 		stop();
-		dbgOut(" stop processing message received ");
 	}
 }
 
@@ -756,7 +795,7 @@ void MchaRecordPlayer::changeListenerCallback (ChangeBroadcaster *source)
 bool MchaRecordPlayer::stop()
 {
 	dbgOut( "mchaRecordPlayer::stop called" );
-	dbgOut( "MchaRecordPlayer Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
+	dbgOut( "mchaRecordPlayer Thread ID\t= " + String( uint64(Thread::getCurrentThreadId()) ) );
 
 	if (processIsRunning)
 	{
@@ -766,10 +805,6 @@ bool MchaRecordPlayer::stop()
 		/* close the audio device */
 		audioDeviceManager->closeAudioDevice();
 
-		/* stop the timer if still running 
-		if ( isTimerRunning() )
-			stopTimer(); */
-	
 		/* release filters' resources */
 		if (recordingFilter != nullptr)
 		{
@@ -779,9 +814,17 @@ bool MchaRecordPlayer::stop()
 		{
 			playbackFilter->releaseResources(); 
 		}
+
 		Time now = Time::getCurrentTime();
 		dbgOut( "mchaRecordPlayer::stop - terminating audioSampleProcessor\t" 
 				+ now.toString(false, true, true, true) + ":" + String(now.getMilliseconds()) );
+		
+		
+		if ( !audioSampleProcessor->isStopped() )
+		{		
+			dbgOut( "mchaRecordPlayer::stop - audioSampleProcessor is still running!" );
+			while ( !audioSampleProcessor->isStopped() )  { };		
+		}		
 		
 		processIsRunning = false;
 

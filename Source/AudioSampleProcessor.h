@@ -191,6 +191,8 @@ public:
 	/* Implementation of the AudioIODeviceCallback method. */
 	virtual void audioDeviceStopped();
 
+	bool	isStopped () { return deviceStopped; }
+
 //==============================================================================
 	juce_UseDebuggingNewOperator
 
@@ -215,6 +217,8 @@ protected:
 	int					inputProcessorChannels;
 	int					outputProcessorChannels;
 	int					debugChannelCount;
+
+	bool				deviceStopped;
 
 private:
 	//==============================================================================

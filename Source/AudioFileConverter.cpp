@@ -11,32 +11,57 @@ AudioFileConverter::AudioFileConverter()
 		fileLogger(NULL)
 {
 	String	loggerName = File::getSpecialLocation(File::userApplicationDataDirectory).getFullPathName() +
-							File::separatorString + L"mcha\\mcha.log.txt";
+							File::separatorString + "mcha" + File::separatorString + "mcha.log.txt";
 	File	logger(loggerName);
 
-	if (logger.existsAsFile())
+	if ( logger.existsAsFile() )
+	{
 		fileLogger = new FileLogger(logger, String::empty);
-
+		if (fileLogger == NULL)
+		{
+			DBG("** AudioFileConverter ** Failed to create file logger.");
+		}
+	}
+	else
+	{
+		DBG( String("** AudioFileConverter ** Unable to create logger with nonexistent file ") + loggerName );
+	}
 }
 
 //==============================================================================
 AudioFileConverter::~AudioFileConverter()
 {
-	jobQueue.clear();
+	
+	dbgOut("*** Deleting AudioFileConverter ***");
+
+	if ( isThreadRunning() )	
+	{
+		dbgOut("** AudioFileConverter **  PANIC: The process is still running !!!");		
+	}
+
+	{ 	// Lock job queue and clear it
+		const ScopedLock lock (queueLock);
+		jobQueue.clear();
+	}
 	
 	if (fileLogger != NULL)
 		delete fileLogger;
-
+	
 	clearSingletonInstance();
+
+	DBG("*** AudioFileConverter Deleted ***");
 }
 
 //==============================================================================
 void AudioFileConverter::run()
 {
 	
-	while ( jobQueue.size() > 0 )
+	while ( getQueueSize() > 0 )
 	{	
-		task  = jobQueue[0];
+		{   // lock jobQueue before retrieving a task
+			const ScopedLock lock (queueLock);
+			task  = jobQueue[0];
+		}
 
 		/* try opening the file */
 		File	inputDataFile( task->getFileName() );
@@ -44,8 +69,8 @@ void AudioFileConverter::run()
 
 		if ( !inputDataFile.existsAsFile() || (inputDataFile.getSize() == 0) )
 		{
-			dbgOut(L"Invalid or corrupted temporary file:\t" + inputFileName);
-			jobQueue.remove(0, true);
+			dbgOut(L"** AudioFileConverter ** Invalid or corrupted temporary file:\t" + inputFileName);
+			removeFromQueue();
 			continue;
 		}
 	
@@ -53,14 +78,15 @@ void AudioFileConverter::run()
 		FileInputStream*	fileInputStream	=	inputDataFile.createInputStream();
 		if (fileInputStream == NULL)
 		{
-			dbgOut(L"Unable to create input stream for file:\t" + inputFileName);
-			jobQueue.remove(0, true);
+			dbgOut(L"** AudioFileConverter ** Unable to create input stream for file:\t" + inputFileName);
+			removeFromQueue();
 			continue;
 		}
 		
 		dbgOut(L"");
 		dbgOut(L" ***  AudioFileConverter ***");
-		dbgOut(L"Converting file:\t" + inputFileName);
+		dbgOut(L"** AudioFileConverter ** Converting file:\t" + inputFileName 
+               + L" (" + String( inputDataFile.getSize() ) + L" b)");
 
 		int		processorOutputs = task->getChannelNumber();
 		const int bytesPerSample = processorOutputs * sizeof(float);
@@ -91,12 +117,12 @@ void AudioFileConverter::run()
 
 			if ( tmpDataFile != File::nonexistent)
 			{
-				dbgOut( L"\tDeleting temporary file:\t" + tmpDataFile.getFullPathName() );
+				dbgOut( L"** AudioFileConverter ** \tDeleting temporary file:\t" + tmpDataFile.getFullPathName() );
 				tmpDataFile.deleteFile();
 			}
 			else
 			{
-				dbgOut( "Unable to delete temporary file:\t\t" + tmpDataFile.getFullPathName() );
+				dbgOut( "** AudioFileConverter ** Unable to delete temporary file:\t\t" + tmpDataFile.getFullPathName() );
 			}
 
 		
@@ -121,7 +147,7 @@ void AudioFileConverter::run()
 			tmpAudioFile = new File (audioFileName);
 			if (*tmpAudioFile == File::nonexistent)
 			{
-				dbgOut( L"Unable to create file:\t" + audioFileName );
+				dbgOut( L"** AudioFileConverter ** Unable to create file:\t" + audioFileName );
 				audioFormatWriters.clear(true);
 				someAudioFormats.clear(true);
 				audioFiles.clear(true);
@@ -129,7 +155,8 @@ void AudioFileConverter::run()
 
 				delete fileInputStream;
 				
-				jobQueue.remove(0, true);
+				removeFromQueue();
+
 				continue;
 			}
 		
@@ -138,28 +165,29 @@ void AudioFileConverter::run()
 			// Delete existing files
 			if (audioFiles[i]->existsAsFile())
 			{
-				dbgOut( "\tDeleting existing audio file:\t\t" + audioFileName );			
+				dbgOut( "** AudioFileConverter ** \tDeleting existing audio file:\t\t" + audioFileName );			
 				if	(!audioFiles[i]->deleteFile())
 				{
-					dbgOut( L"Unable to delete existing file:\t" + audioFileName );
+					dbgOut( L"** AudioFileConverter ** Unable to delete existing file:\t" + audioFileName );
 					audioFormatWriters.clear(true);
 					someAudioFormats.clear(true);
 					audioFiles.clear(true);
 					outStreams.clear();
 					delete fileInputStream;
 
-					jobQueue.remove(0, true);
+					removeFromQueue();
+
 					continue;
 				}
 			}
 
-			dbgOut( "\tSaving audio file:\t\t" + audioFileName );
+			dbgOut( "** AudioFileConverter ** \tSaving audio file:\t\t" + audioFileName );
 
 			/* Create output stream for this file */
 			tmpStream = audioFiles[i]->createOutputStream();
 			if (tmpStream == NULL)
 				{
-					dbgOut( L"Unable to create output stream for file:\t" + audioFileName );
+					dbgOut( L"** AudioFileConverter ** Unable to create output stream for file:\t" + audioFileName );
 					delete tmpAudioFile;
 					audioFormatWriters.clear(true);
 					someAudioFormats.clear(true);
@@ -167,7 +195,8 @@ void AudioFileConverter::run()
 					outStreams.clear();
 					delete fileInputStream;
 
-					jobQueue.remove(0, true);
+					removeFromQueue();
+
 					continue;
 				}
 
@@ -185,7 +214,7 @@ void AudioFileConverter::run()
 
 			if (tmpWriter == NULL)
 			{
-					dbgOut( L"Unable to create audio format writer for:\t" + audioFileName );
+					dbgOut( L"** AudioFileConverter ** Unable to create audio format writer for:\t" + audioFileName );
 					delete tmpAudioFile;
 					audioFormatWriters.clear(true);
 					someAudioFormats.clear(true);
@@ -193,7 +222,8 @@ void AudioFileConverter::run()
 					outStreams.clear();
 					delete fileInputStream;
 
-					jobQueue.remove(0, true);
+					removeFromQueue();
+		
 					continue;
 			}
 			audioFormatWriters.add( tmpWriter );
@@ -242,15 +272,18 @@ void AudioFileConverter::run()
 		delete fileInputStream;	
 
 		// Delete the data.dat file
-		dbgOut( L"\tDeleting temporary file:\t" + inputFileName );
+		dbgOut( L"** AudioFileConverter ** \tDeleting temporary file:\t" + inputFileName );
 		inputDataFile.deleteFile();
 
-
 		// Delete the task
-		jobQueue.remove(0, true);
-		dbgOut( "Files saved." );
+		removeFromQueue();		
+		
+		dbgOut( "** AudioFileConverter ** Files saved." );
 
 	}
-}
+
+	dbgOut( "** AudioFileConverter ** Thread terminates." );
 
 }
+
+} // end of namespace

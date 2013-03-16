@@ -393,8 +393,30 @@ public:
           outputId (outputId_),
           numCallbacks (0),
           inputChannelBuffer (1, 1),
-          outputChannelBuffer (1, 1)
+          outputChannelBuffer (1, 1),
+		  fileLogger(NULL)
     {
+	// Debug logging added here ...
+	String	loggerName = File::getSpecialLocation(File::userApplicationDataDirectory).getFullPathName() +
+							File::separatorString + "mcha" + File::separatorString + "alsa.log.txt";
+	File	logger(loggerName);
+
+	if ( logger.existsAsFile() )
+	{
+		fileLogger = new FileLogger(logger, String::empty);
+		if (fileLogger == NULL)
+		{
+			DBG("Failed to create file logger.");
+		}
+	}
+	else
+	{
+		fileLogger = FileLogger::createDefaultAppLogger( "mcha", "alsa.log.txt", String::empty, 0 );
+		DBG( String(" Unable to create logger with nonexistent file ") + loggerName );
+	}
+
+// End of debug logging section
+
         initialiseRatesAndChannels();
     }
 
@@ -408,6 +430,8 @@ public:
                const double sampleRate_,
                const int bufferSize_)
     {
+		dbgOut("ALSA thread open called ...");        
+
         close();
 
         error = String::empty;
@@ -515,25 +539,53 @@ public:
         if (outputDevice != nullptr && failed (snd_pcm_prepare (outputDevice->handle)))
             return;
 
-        startThread (9);
+		dbgOut("About to start ALSA thread  "  + 
+				Time::getCurrentTime().toString(false, true, true, true) + "." 
+				+ String(Time::getCurrentTime().getMilliseconds()) );        
+
+		startThread (9);
+
+		if 	( threadShouldExit() )
+		{		
+			dbgOut("ALSA thread 'should exit' is TRUE "  + 
+				Time::getCurrentTime().toString(false, true, true, true) + "." 
+				+ String(Time::getCurrentTime().getMilliseconds()) );        
+		}
 
         int count = 1000;
 
         while (numCallbacks == 0)
         {
-            sleep (5);
+            sleep (15);
 
             if (--count < 0 || ! isThreadRunning())
             {
                 error = "device didn't start";
+
+				if (count < 0)
+					dbgOut("ERROR:  Time out");
+				if (! isThreadRunning() )
+					dbgOut("ERROR:  ALSA Thread is not running ...");
                 break;
             }
         }
+		
+		dbgOut("Time elapsed:  " + String( (1000-count)*15 ) + " ms.");
     }
 
     void close()
     {
+		if (isThreadRunning())
+			dbgOut("ALSA thread close called (running) ...");
+		else
+			dbgOut("ALSA thread close called (idle) ...");
+        
         stopThread (6000);
+		
+		dbgOut("ALSA thread close(): stopThread returned " + 
+				Time::getCurrentTime().toString(false, true, true, true) + "." 
+				+ String(Time::getCurrentTime().getMilliseconds()) );
+		
 
         inputDevice = nullptr;
         outputDevice = nullptr;
@@ -552,7 +604,11 @@ public:
 
     void run()
     {
-        while (! threadShouldExit())
+		dbgOut("ALSA thread starting "  + 
+				Time::getCurrentTime().toString(false, true, true, true) + "." 
+				+ String(Time::getCurrentTime().getMilliseconds()) );
+        
+		while (! threadShouldExit())
         {
             if (inputDevice != nullptr)
             {
@@ -601,7 +657,12 @@ public:
                 }
             }
         }
-    }
+
+	dbgOut("ALSA thread terminates " + 
+				Time::getCurrentTime().toString(false, true, true, true) + "." 
+				+ String(Time::getCurrentTime().getMilliseconds()) );        
+    
+	}
 
     int getBitDepth() const noexcept
     {
@@ -634,6 +695,20 @@ private:
 
     AudioSampleBuffer inputChannelBuffer, outputChannelBuffer;
     Array<float*> inputChannelDataForCallback, outputChannelDataForCallback;
+
+
+	FileLogger*					fileLogger;
+	void	dbgOut(const String& msg)
+	{
+		if (fileLogger != NULL)
+			fileLogger->logMessage(msg);
+		else
+			DBG( msg );
+	}
+
+
+
+
 
     unsigned int minChansOut, maxChansOut;
     unsigned int minChansIn, maxChansIn;
